@@ -188,7 +188,7 @@
 
 </IfModule>
 
-<FilesMatch "(.*)\.sql">
+<FilesMatch "(.*)\.sql.gz">
     deny from all
 </FilesMatch>
 
