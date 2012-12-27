@@ -24,7 +24,7 @@
 ############################################
 ## default index file
 
-    DirectoryIndex index.php
+   # DirectoryIndex index.php
 
 <IfModule mod_php5.c>
 
@@ -188,6 +188,10 @@
 
 </IfModule>
 
+<FilesMatch "(.*)\.sql">
+    deny from all
+</FilesMatch>
+
 ############################################
 ## By default allow all access
 
@@ -207,3 +211,5 @@
 ## http://developer.yahoo.com/performance/rules.html#etags
 
     #FileETag none
+
+   
