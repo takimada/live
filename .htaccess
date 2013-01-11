@@ -26,6 +26,25 @@
 
    # DirectoryIndex index.php
 
+SetEnvIf Host www\.kozmologic\.com MAGE_RUN_CODE=www_kozmologic
+SetEnvIf Host www\.kozmologic\.com MAGE_RUN_TYPE=website
+
+SetEnvIf Host ^kozmologic\.com MAGE_RUN_CODE=www_kozmologic
+SetEnvIf Host ^kozmologic\.com MAGE_RUN_TYPE=website
+
+SetEnvIf Host www\.takimada\.com MAGE_RUN_CODE=www_takimada
+SetEnvIf Host www\.takimada\.com MAGE_RUN_TYPE=website
+
+SetEnvIf Host ^takimada\.com MAGE_RUN_CODE=www_takimada
+SetEnvIf Host ^takimada\.com MAGE_RUN_TYPE=website
+
+SetEnvIf Host www\.7x24petshop\.com MAGE_RUN_CODE=www_7x24petshop
+SetEnvIf Host www\.7x24petshop\.com MAGE_RUN_TYPE=website
+
+SetEnvIf Host ^7x24petshop\.com MAGE_RUN_CODE=www_7x24petshop
+SetEnvIf Host ^7x24petshop\.com MAGE_RUN_TYPE=website
+
+
 <IfModule mod_php5.c>
 
 ############################################
