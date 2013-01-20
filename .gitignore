@@ -10,6 +10,7 @@ var/log/*
 var/lock/*
 var/report/*
 var/locks/*
+var/export/*
 var/package/tmp/*
 downloader/.cache/*
 downloader/cache.cfg
