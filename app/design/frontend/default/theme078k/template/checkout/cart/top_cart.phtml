@@ -4,11 +4,11 @@
 <?php $_items = $this->getRecentItems() ?>
 <?php if(count($_items)): ?>
 				<?php if ($_cartQty==1): ?>
-								<p class="amount"><?php echo $this->__('<a href="%s"><span>1</span> item</a>', $this->getUrl('checkout/cart')) ?></p>
+								<p class="amount"><?php echo $this->__('<a href="%s"><span>1</span> adet</a>', $this->getUrl('checkout/cart')) ?></p>
 				<?php else: ?>
-								<p class="amount"><?php echo $this->__('<a href="%s"><span>%s</span> items</a>', $this->getUrl('checkout/cart'), $_cartQty) ?></p>
+								<p class="amount"><?php echo $this->__('<a href="%s"><span>%s</span> adet</a>', $this->getUrl('checkout/cart'), $_cartQty) ?></p>
 				<?php endif ?>
 <?php else: ?>
-				<p class="amount"><?php echo $this->__('<span>0</span> items') ?></p>
+				<p class="amount"><?php echo $this->__('<span>0</span> adet') ?></p>
 <?php endif ?>
 </div>

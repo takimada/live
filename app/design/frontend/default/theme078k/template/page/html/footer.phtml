@@ -28,13 +28,7 @@
     <div class="footer">
 							<div class="right_foot"><?php echo $this->getChildHtml('footer_block') ?></div>
 							<div class="footer_row">
-        <address>
-        <?php echo $this->getCopyright() ?> <?php $current_page = Mage::app()->getFrontController()->getRequest()->getRouteName(); 
-        if ($current_page == 'cms'):
-        echo 'More <a rel="nofollow" href="http://www.templatemonster.com/category/pet-shop-magento-themes/" target="_blank">Pet Shop Magento Themes at TemplateMonster.com</a>';
-        endif;
-        ?>
-        </address>
+        <address><?php echo $this->getCopyright() ?></address>
        </div>
     </div>
 </div>

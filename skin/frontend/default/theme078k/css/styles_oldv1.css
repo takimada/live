@@ -554,7 +554,7 @@ tr.summary-details-excluded { font-style:italic; }
 
 /* 2nd Level */
 #nav ul,
-#nav div { position:absolute; width:135px; top:36px; left:-10000px; background:#E4E4E4; padding:10px 18px; padding-bottom:3px; }
+#nav div { position:absolute; width:135px; top:36px; left:-10000px; background:#454545; padding:10px 18px; padding-bottom:3px; }
 #nav div ul { position:static; width:auto; border:none; }
 
 /* 3rd+ leven */
@@ -564,9 +564,9 @@ tr.summary-details-excluded { font-style:italic; }
 #nav ul li { float:none; padding-bottom:6px; font-family: 'Open Sans', sans-serif; font-size:11px; text-transform:uppercase; }
 #nav ul li.last {  }
 #nav ul li a { float:none;  font-weight:normal; color:#979696 !important; }
-#nav ul li a:hover { color:#242424 !important; }
+#nav ul li a:hover { color:#FCCE2B !important; }
 #nav ul li.active > a,
-#nav ul li.over > a { color:#242424 !important; }
+#nav ul li.over > a { color:#FCCE2B !important; }
 
 /* Show menu */
 #nav li ul.shown-sub,
@@ -980,7 +980,7 @@ tr.summary-details-excluded { font-style:italic; }
 .product-collateral .box-collateral h2 { font-family:'Bowlby One SC'; font-size:22px; margin:0 0 15px; }
 
 /* Product Images */
-.product-view .product-img-box { float:right; width:263px; }
+.product-view .product-img-box { float:left; width:263px; }
 .product-view .product-img-box .product-image { border:1px solid #E9E9E9; text-align:center; margin:0 0 18px 0; }
 .product-view .product-img-box .product-image-zoom { position:relative; width:261px; height:261px; overflow:hidden; z-index:9; }
 .product-view .product-img-box .product-image-zoom img { position:absolute; left:0; top:0; cursor:move; }
@@ -1003,8 +1003,8 @@ tr.summary-details-excluded { font-style:italic; }
 .product-image-popup .image-label {}
 
 /* Product Shop */
-.product-view .product-shop { float:left; width:420px; }
-.product-view .product-shop .product-name h1 { font-family:'Bowlby One SC'; font-size:22px; font-weight:bold; padding:0 0 10px 0; color:#454545; }
+.product-view .product-shop { float:right; width:420px; }
+.product-view .product-shop .product-name h1 { font-size:13px; font-weight:normal; padding:0 0 10px 0; color:#454545; }
 .product-view .product-shop .ratings { margin:0 0 18px 0; }
 .product-view .product-shop .rating-links { padding:0 0 0 100px; font-size:12px; }
 .product-view .product-shop .no-rating { padding-bottom:13px; }
