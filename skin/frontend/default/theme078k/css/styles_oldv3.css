@@ -303,7 +303,7 @@ p.required { font-size:12px; text-align:right; color:#FD596C; }
 /* Page Heading */
 .page-title { margin:-4px 0 11px; }
 .page-title h1,
-.page-title h2 { font-family:'Bowlby One SC', cursive; font-size:33px; font-weight:normal; color:#454545; }
+.page-title h2 { font-family:'Bowlby One SC'; font-size:33px; font-weight:normal; color:#454545; }
 .page-title .separator { margin:0 3px; }
 .page-title .link-rss { float:right; }
 .title-buttons { text-align:right; }
