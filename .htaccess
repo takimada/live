@@ -44,6 +44,9 @@ SetEnvIf Host www\.7x24petshop\.com MAGE_RUN_TYPE=website
 SetEnvIf Host ^7x24petshop\.com MAGE_RUN_CODE=www_7x24petshop
 SetEnvIf Host ^7x24petshop\.com MAGE_RUN_TYPE=website
 
+# for staging
+SetEnvIf Host 7x24petshop.takimada\.net MAGE_RUN_CODE=www_7x24petshop
+SetEnvIf Host 7x24petshop.takimada\.net MAGE_RUN_TYPE=website 
 
 <IfModule mod_php5.c>
 
