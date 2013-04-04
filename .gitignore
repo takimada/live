@@ -11,7 +11,9 @@ var/lock/*
 var/report/*
 var/locks/*
 var/export/*
+var/import/*
 var/package/tmp/*
+var/tmp/*
 downloader/.cache/*
 downloader/cache.cfg
 downloader/connect.cfg
