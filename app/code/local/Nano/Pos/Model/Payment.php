@@ -42,11 +42,11 @@ class Nano_Pos_Model_Payment extends Mage_Payment_Model_Method_Cc
 			//$Mode = "TEST";
 			$Version = "v0.01";
 			$TerminalID = "10001115";
-			$TerminalID_ = "010001115"; //TerminalID basina 000 ile 9 digit yapilmali
+			$TerminalID_ = "010018149"; //TerminalID basina 000 ile 9 digit yapilmali
 			$ProvUserID = "PROVAUT";
 			$ProvisionPassword = "edcRFV2011"; //SanalPos sifreniz
 			$UserID = "APDENEME";
-			$MerchantID = "9247614"; //MerchantID (Uye isyeri no)
+			$MerchantID = "9289986"; //MerchantID (Uye isyeri no)
 			$CustomerName = "APDENEME";
 			$Type = "sales";
 			$CurrencyCode = "949";
