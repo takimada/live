@@ -41,7 +41,7 @@ class Nano_Pos_Model_Payment extends Mage_Payment_Model_Method_Cc
 			$Mode = "PROD";
 			//$Mode = "TEST";
 			$Version = "v0.01";
-			$TerminalID = "010018149";
+			$TerminalID = "10018149";
 			$TerminalID_ = "010018149"; //TerminalID basina 000 ile 9 digit yapilmali
 			$ProvUserID = "PROVAUT";
 			$ProvisionPassword = "XkS7fyeJ5MI5Zizu"; //SanalPos sifreniz
