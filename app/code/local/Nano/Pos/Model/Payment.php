@@ -53,7 +53,7 @@ class Nano_Pos_Model_Payment extends Mage_Payment_Model_Method_Cc
 			$CardholderPresentCode = "0";
 			$MotoInd = "N";
 			$EmailAddress = Mage::getSingleton('customer/session')->getCustomer()->getEmail(); 
-			$OrderID = "koz_".$orderId; 
+			$OrderID = "pet_".$orderId; 
 			$InstallmentCnt = ""; 
 			$Number = $payment->getCcNumber();
 			//$Number = "4741510000029037";
