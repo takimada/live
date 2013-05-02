@@ -21,3 +21,4 @@ errors/local.xml
 .DS_Store
 .boss/*
 development/db/*.sql
+development/db/*.sql.*
