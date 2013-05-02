@@ -62,7 +62,7 @@
         <routers>
             <adminhtml>
                 <args>
-                    <frontName><![CDATA[admin]]></frontName>
+                    <frontName><![CDATA[1gokadmin]]></frontName>
                 </args>
             </adminhtml>
         </routers>
