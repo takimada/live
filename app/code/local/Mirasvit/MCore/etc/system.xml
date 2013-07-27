@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <tabs>
+        <mcore translate="label">
+            <label>Mirasvit Extensions</label>
+            <sort_order>1000</sort_order>
+            <class>mcore</class>
+        </mcore>
+    </tabs>   
+</config>
