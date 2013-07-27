@@ -41,6 +41,9 @@ SetEnvIf Host ^takimada\.com MAGE_RUN_TYPE=website
 SetEnvIf Host www\.7x24petshop\.com MAGE_RUN_CODE=www_7x24petshop
 SetEnvIf Host www\.7x24petshop\.com MAGE_RUN_TYPE=website
 
+SetEnvIf Host takimada\.local MAGE_RUN_CODE=www_7x24petshop
+SetEnvIf Host takimada\.local MAGE_RUN_TYPE=website
+
 SetEnvIf Host ^7x24petshop\.com MAGE_RUN_CODE=www_7x24petshop
 SetEnvIf Host ^7x24petshop\.com MAGE_RUN_TYPE=website
 

@@ -140,7 +140,8 @@ class Nano_Pos_Model_Payment extends Mage_Payment_Model_Method_Cc
             $this->setStore($payment->getOrder()->getStoreId());
             $payment->setStatus(self::STATUS_ERROR);
             //Throw an exception to fail the current transaction...
-            Mage::throwException($response['ErrorMessage']);
+            $error = $response['ErrorMessage'] . PHP_EOL . $response['SystemErrorMessage'];
+            Mage::throwException($error);
 		}
 
 		return $this;
