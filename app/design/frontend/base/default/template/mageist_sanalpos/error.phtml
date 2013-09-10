@@ -1,0 +1,19 @@
+<?php
+    $session = Mage::getSingleton('checkout/session');
+    $gatewayError = $session->getGatewayError();
+    $session->unsGatewayError();
+    
+    $errorTextTop = Mage::helper('sanalpos')->__('Gateway has encountered an error:');
+    $errorTextLink = Mage::helper('sanalpos')->__('Please click here to try again.');
+    
+    $checkoutLink = Mage::getUrl('checkout');
+?>
+
+<div class="info-box error">
+    <?php echo $errorTextTop; ?>
+    <br /><br />
+    <?php echo $gatewayError; ?>
+    <br /><br />
+    <a href="<?php echo $checkoutLink; ?>"><?php echo $errorTextLink; ?></a>
+
+</div>

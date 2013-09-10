@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Mageist_Sanalpos>
+            <version>0.5.7</version>
+        </Mageist_Sanalpos>
+    </modules>
+    <global>
+        <models>
+            <sanalpos>
+                <class>Mageist_Sanalpos_Model</class>
+                <resourceModel>sanalpos_resource</resourceModel>
+            </sanalpos>
+            <sanalpos_resource>
+                <class>Mageist_Sanalpos_Model_Resource</class>
+                <entities>
+                    <gateway>
+                        <table>sanalpos_gateway</table>
+                    </gateway>
+                    <logger>
+                        <table>sanalpos_logger</table>
+                    </logger>
+                </entities>
+            </sanalpos_resource>
+        </models>
+        <resources>
+            <sanalpos_setup>
+                <setup>
+                    <module>Mageist_Sanalpos</module>
+                    <class>Mageist_Sanalpos_Model_Resource_Setup</class>
+                </setup>
+            </sanalpos_setup>
+        </resources>
+        <helpers>
+            <sanalpos>
+                <class>Mageist_Sanalpos_Helper</class>
+            </sanalpos>
+        </helpers>
+        <blocks>
+            <sanalpos>
+                <class>Mageist_Sanalpos_Block</class>
+            </sanalpos>
+        </blocks>
+        <!--
+        <sales>
+            <quote>
+                <totals>
+                    <sanalpos>
+                        <class>sanalpos/quote_address</class>
+                        <after>grand_total</after>
+                    </sanalpos>
+                </totals>
+            </quote>
+        </sales>
+        <fieldsets>
+            <sales_convert_quote_address>
+                <base_sanalpos><to_order>*</to_order></base_sanalpos>
+                <sanalpos><to_order>*</to_order></sanalpos>
+            </sales_convert_quote_address>
+
+            <sales_convert_order>
+                <base_sanalpos><to_invoice>*</to_invoice><to_shipment>*</to_shipment><to_cm>*</to_cm></base_sanalpos>
+                <sanalpos><to_invoice>*</to_invoice><to_shipment>*</to_shipment><to_cm>*</to_cm></sanalpos>
+            </sales_convert_order>
+
+        </fieldsets>
+        -->
+    </global>
+    <default>
+        <payment>
+            <sanalpos>
+                <model>sanalpos/sanalpos</model>
+                <active>0</active>
+                <order_status>pending_payment</order_status>
+                <title>Mageist Sanalpos Module</title>
+                <single_payment_title>All Other Banks</single_payment_title>
+                <allowspecific>0</allowspecific>
+                <cctypes>VI,MC</cctypes>
+                <payment_action>authorize_capture</payment_action>
+                <useccv>1</useccv>
+                <debug>1</debug>
+                <debug_detailed>0</debug_detailed>
+                <sort_order>1</sort_order>
+            </sanalpos>
+        </payment>
+    </default>
+    <frontend>
+        <routers>
+            <sanalpos>
+                <use>standart</use>
+                <args>
+                    <module>Mageist_Sanalpos</module>
+                    <frontname>sanalpos</frontname>
+                </args>
+            </sanalpos>
+        </routers>
+        <layout>
+            <updates>
+                <sanalpos>
+                    <file>mageist_sanalpos.xml</file>
+                </sanalpos>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <Mageist_Sanalpos>
+                    <files>
+                        <default>Mageist_Sanalpos.csv</default>
+                    </files>
+                </Mageist_Sanalpos>
+            </modules>
+        </translate>
+    </frontend>
+    <admin>
+        <routers>
+            <sanalpos>
+                <use>admin</use>
+                <args>
+                    <module>Mageist_Sanalpos</module>
+                    <frontName>sanalpos</frontName>
+                </args>
+            </sanalpos>
+        </routers>
+    </admin>
+    <adminhtml>
+        <layout>
+            <updates>
+                <sanalpos>
+                    <file>mageist_sanalpos.xml</file>
+                </sanalpos>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <Mageist_Sanalpos>
+                    <files>
+                        <default>Mageist_Sanalpos.csv</default>
+                    </files>
+                </Mageist_Sanalpos>
+            </modules>
+        </translate>
+        <menu>
+            <sanalpos module="sanalpos">
+                <title>Mageist Sanalpos</title>
+                <sort_order>71</sort_order>               
+                <children>
+                    <items module="sanalpos">
+                        <title>Manage Gateways</title>
+                        <sort_order>0</sort_order>
+                        <action>sanalpos/adminhtml_index</action>
+                    </items>
+                    <logs module="sanalpos">
+                        <title>Gateway Logs</title>
+                        <sort_order>0</sort_order>
+                        <action>sanalpos/adminhtml_logger</action>
+                    </logs>
+                    <config module="sanalpos">
+                        <title>Configuration</title>
+                        <sort_order>2</sort_order>
+                        <action>adminhtml/system_config/edit/section/payment</action>
+                        <urlParams>
+                            <_fragment>payment_sanalpos-head</_fragment>
+                        </urlParams>
+                    </config>
+                </children>
+            </sanalpos>
+        </menu>
+        <acl>
+            <resources>
+                <all>
+                    <title>Allow Everything</title>
+                </all>
+                <admin>
+                    <children>
+                        <sanalpos translate="title" module="sanalpos">
+                            <title>Mageist Sanalpos Module</title>
+                            <sort_order>200</sort_order>
+                            <children>
+                                <items translate="title" module="sanalpos">
+                                    <title>Manage Gateways</title>
+                                    <sort_order>10</sort_order>
+                                </items>    
+                            </children>
+                        </sanalpos>
+                    </children>
+                </admin>
+            </resources>   
+        </acl>
+    </adminhtml>
+</config>

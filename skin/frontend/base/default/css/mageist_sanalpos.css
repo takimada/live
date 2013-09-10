@@ -1,0 +1,125 @@
+/* Pos ikon stilleri - Gateway icon styles */
+
+.gateway_icon {
+    float: left;
+    margin-bottom: 10px;
+    margin-left: 8px;
+    opacity: 0.2;
+}
+
+.gateway_icon > img {
+    width: 75px;
+}
+
+.gateway_icon.selected {
+    opacity: 1;
+}
+/* Pos ikon stilleri - Gateway icon styles - END */
+
+
+/* Taksit tablosu stilleri - Installment table styles */
+
+#installmentTableOpener {
+    color: #FFFFFF;
+    display: inline-block;
+    font-weight: bold;
+    text-decoration: none;
+    background: url('../images/mageist_sanalpos/installment_button_bg.png') top left transparent;
+    
+}
+#installmentTableOpener span {
+    padding: 7px 10px 7px 0;
+    display: block;
+    margin-left: 10px;
+    background: url('../images/mageist_sanalpos/installment_button_bg.png') bottom right transparent;
+}
+
+#installmentTable {
+}
+
+#installmentTable {
+    font-family: Tahoma;
+    font-size: 11px;
+}
+#installmentTable h1 {
+    border-bottom: 1px solid #CECECE;
+    font-size: 20px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    text-align: left;
+}
+#installmentTable h2 {
+    font-size: 14px;
+    text-align: left;
+}
+#installmentTable h3 {
+    font-size: 11px;
+    font-weight: bold;
+}
+#installmentTable table {
+    border-spacing: 3px;
+}
+
+#installmentTable thead .centered {
+    text-align: center;
+    vertical-align: bottom;
+    padding: 0;
+}
+#installmentTable td {
+    padding: 5px;
+    font-size: 11px;
+}
+#installmentTable .centered {
+    text-align: center;
+}
+#installmentTable .rightaligned {
+    text-align: right;
+}
+#installmentTable tbody .centered {
+    width: 70px;
+}
+#installmentTable tbody .gray {
+    background-color: #EFEFEF;
+    width: 50px;
+}
+
+#installmentTable tbody .akbank { background-color: #f0d1a8; } 
+#installmentTable tbody .altheader .akbank { background-color: #f0bc78; } 
+#installmentTable tbody .anadolubank { background-color: #8bb0cd; } 
+#installmentTable tbody .altheader .anadolubank { background-color: #4893cd; } 
+#installmentTable tbody .cardplus { background-color: #f7d1cf; } 
+#installmentTable tbody .altheader .cardplus { background-color: #e97a75; } 
+#installmentTable tbody .citibank { background-color: #6ed1ff; } 
+#installmentTable tbody .altheader .citibank { background-color: #0099df; } 
+#installmentTable tbody .denizbank { background-color: #5a9edb; } 
+#installmentTable tbody .altheader .denizbank { background-color: #00529b; } 
+#installmentTable tbody .finansbank { background-color: #e8f1ff; } 
+#installmentTable tbody .altheader .finansbank { background-color: #b8d3fe; } 
+#installmentTable tbody .halkbank { background-color: #95bfdd; } 
+#installmentTable tbody .altheader .halkbank { background-color: #4e95c7; } 
+#installmentTable tbody .ingbank { background-color: #4e70ae; } 
+#installmentTable tbody .altheader .ingbank { background-color: #ff812f; } 
+#installmentTable tbody .isbankasi { background-color: #f9e3f0; } 
+#installmentTable tbody .altheader .isbankasi { background-color: #fca8d9; } 
+#installmentTable tbody .kuveytturk { background-color: #52cca9; } 
+#installmentTable tbody .altheader .kuveytturk { background-color: #00996e; } 
+#installmentTable tbody .teb { background-color: #00cc7a; } 
+#installmentTable tbody .altheader .teb { background-color: #00824e; } 
+#installmentTable tbody .garanti { background-color: #edf5e6; } 
+#installmentTable tbody .altheader .garanti { background-color: #ceedb2; } 
+#installmentTable tbody .yapikredi { background-color: #f1e7f2; } 
+#installmentTable tbody .altheader .yapikredi { background-color: #e2b6e9; } 
+#installmentTable tbody .vakifbank { background-color: #DCE6DC; } 
+#installmentTable tbody .altheader .vakifbank { background-color: #ABE6AB; } 
+#installmentTable tbody .hsbc { background-color: #ffcf82; } 
+#installmentTable tbody .altheader .hsbc { background-color: #fc8315; } 
+
+
+#installmentTable tbody .finansbank {
+    background-color: #E8F1FF;
+}
+#installmentTable tbody .altheader .finansbank {
+    background-color: #B8D3FE;
+}
+
+/* Taksit tablosu stilleri - Installment table styles - END */

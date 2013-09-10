@@ -1,0 +1,36 @@
+<?php
+        $session = Mage::getSingleton('checkout/session');
+        $ThreeDData = $session->get3DPostData();
+        $data = $ThreeDData['data'];
+        $post = $ThreeDData['post'];
+
+        $loggerId = Mage::getSingleton('checkout/session')->getLoggerId();
+
+        $logger = Mage::getModel('sanalpos/logger')->load($loggerId);
+
+        $lastOrderId = $session->getLastOrderId();
+        
+        $order = Mage::getModel('sales/order')->load($lastOrderId);
+
+        $logger->setData('order_id', $order->getIncrementId());
+        $logger->setData('real_order_id', $order->getId());
+
+        if($order->getCustomerId() !== NULL){
+            $logger->setData('customer_id', $order->getCustomerId());
+        }
+
+        $logger->setData('created_at', $order->getCreatedAt());
+
+        $logger->save();
+?>
+<form method="POST" id="3d_form" action="<?php echo $data['_formurl']; ?>">
+    <?php foreach($post as $name => $val) : ?>
+    <input type="hidden" name="<?php echo $name; ?>" value="<?php echo $val; ?>">
+    <?php endforeach; ?>
+</form>
+<script>
+    jQuery(document).ready(function(){
+       jQuery("#3d_form").submit();
+     });
+</script>
+<div class="info-box error"><?php echo Mage::helper('sanalpos')->__('You are being redirected to the payment gateway. Please wait.');?></div>
