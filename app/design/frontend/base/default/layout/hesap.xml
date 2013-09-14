@@ -1,6 +1,12 @@
 <?xml version="1.0"?>
 
 <layout version="0.1.0">
+
+    <default>
+        <remove name="catalog.compare.sidebar" />
+        <remove name="right.reports.product.compared"/>
+    </default>
+
 	<checkout_cart_index>
 		<remove name="checkout.cart.shipping" />
 	</checkout_cart_index>
@@ -16,7 +22,5 @@
             <action method="removeLinkByName"><name>autoresponderlists</name></action>
         </reference>
     </customer_account>
-
-
 
 </layout>

@@ -17,6 +17,11 @@
             <hesap>
                 <class>Mageist_Hesap_Helper</class>
             </hesap>
+            <catalog>
+                <rewrite>
+                    <product_compare>Mageist_Hesap_Helper_Product_Compare</product_compare>
+                </rewrite>
+            </catalog>
         </helpers>
 	</global>
 	<frontend>
