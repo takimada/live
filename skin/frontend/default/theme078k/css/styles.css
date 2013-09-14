@@ -615,9 +615,9 @@ tr.summary-details-excluded { font-style:italic; }
 /* Block: Layered Navigation */
 .block-layered-nav {}
 .block-layered-nav .block-title strong { color:#FE834C; }
-.block-layered-nav .block-subtitle { padding-bottom:3px; }
-.block-layered-nav dt { padding:0 0 1px 23px; }
-.block-layered-nav dd { padding:0 0 20px 23px; line-height:18px; }
+.block-layered-nav .block-subtitle { font-size: 14px; font-weight: bold; margin-bottom: 10px; }
+.block-layered-nav dt { padding:0 0 1px 5px; font-weight: bold; margin-bottom: 3px; }
+.block-layered-nav dd { line-height: 18px; margin-bottom: 10px; max-height: 90px; overflow: auto; padding: 0 0 0 7px; }
 .block-layered-nav dd.last { padding-bottom:0 !important; }
 .block-layered-nav dd a { color:#696969; text-decoration:none; }
 .block-layered-nav dd a:hover { text-decoration:underline; }
