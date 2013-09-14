@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Mageist_Hesap>
+            <version>0.1.0</version>
+        </Mageist_Hesap>
+    </modules>
+	<global>
+	    <blocks>
+	        <customer>
+	            <rewrite>
+	                <account_navigation>Mageist_Hesap_Block_Customer_Account_Navigation</account_navigation>
+	            </rewrite>
+	        </customer>
+	    </blocks>
+        <helpers>
+            <hesap>
+                <class>Mageist_Hesap_Helper</class>
+            </hesap>
+        </helpers>
+	</global>
+	<frontend>
+        <layout>
+            <updates>
+                <hesap>
+                    <file>hesap.xml</file>
+                </hesap>
+            </updates>
+        </layout>
+    </frontend>
+</config>
