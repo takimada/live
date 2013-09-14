@@ -682,3 +682,5 @@ Sitemizde hesap açarak, daha hızlı alışveriş yapabilir, siparişinizi bird
 "There was an error validating the VAT ID. The customer would belong to Customer Group %s.","Vergi numarası doğrulanırken bir hata oluştu. Müşteri %s grubuna bağlanacaktır."
 "To show VAT number on frontend, set Show VAT Number on Frontend option to Yes.","Vergi numarasını ön sayfada göstermek için, Vergi Numarası Ön Sayfada Gösterilsin seçeneğini Evet olarak seçiniz."
 "--------------- v 1.7.0.0 2012-04-28 SONU --------------------","////////////////////////////////////////////////////////////////////////"
+"Male","Erkek"
+"Female","Kadin"
