@@ -1004,7 +1004,7 @@ tr.summary-details-excluded { font-style:italic; }
 .product-image-popup .image-label {}
 
 /* Product Shop */
-.product-view .product-shop { float:left; width:420px; }
+.product-view .product-shop { float:right; width:420px; margin-left: 18px; }
 .product-view .product-shop .product-name h1 { font-family:'Bowlby One SC'; font-size:22px; font-weight:bold; padding:0 0 10px 0; color:#454545; }
 .product-view .product-shop .ratings { margin:0 0 18px 0; }
 .product-view .product-shop .rating-links { padding:0 0 0 100px; font-size:12px; }
