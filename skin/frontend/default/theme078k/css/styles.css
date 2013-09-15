@@ -1277,6 +1277,8 @@ tr.summary-details-excluded { font-style:italic; }
 .checkout-agreements .agreement-content { border:1px solid #ddd; background-color:#f6f6f6; padding:5px; height:10em; overflow:auto; }
 .checkout-agreements .agree { padding:6px; }
 
+.checkout-agreements .agree label { font-weight: bold; margin-left: 5px; }
+
 /* Centinel */
 .centinel {}
 .centinel .authentication { border:1px solid #ddd; background:#fff; }
