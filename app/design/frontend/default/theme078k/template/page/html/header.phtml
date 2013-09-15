@@ -30,25 +30,27 @@
 <div class="header-container">
     <div class="header">
         <?php echo $this->getChildHtml('store_language') ?>
-								<?php if ($this->getIsHomePage()):?>
+		<?php if ($this->getIsHomePage()):?>
         <h1 class="logo"><strong><?php echo $this->getLogoAlt() ?></strong><a href="<?php echo $this->getUrl('') ?>" title="<?php echo $this->getLogoAlt() ?>"><img src="<?php echo $this->getLogoSrc() ?>" alt="<?php echo $this->getLogoAlt() ?>" /></a></h1>
         <?php else:?>
         <a href="<?php echo $this->getUrl('') ?>" title="<?php echo $this->getLogoAlt() ?>" class="logo"><strong><?php echo $this->getLogoAlt() ?></strong><img src="<?php echo $this->getLogoSrc() ?>" alt="<?php echo $this->getLogoAlt() ?>" /></a>
         <?php endif?>
-        <div class="head_row1">
-        	<?php echo $this->getChildHtml('header_info'); ?>
+
+        <div class="header_right clearfix">
+            <?php //echo $this->getChildHtml('header_info'); ?>
+            <div class="cart_area clearfix">
+                <?php echo $this->getChildHtml('header_sidebar') ?>
+                <div class="wlinks_holder">
+                    <p class="welcome-msg"><?php echo $this->getWelcome() ?> <?php echo $this->getAdditionalHtml() ?></p>
+                    <?php echo $this->getChildHtml('topLinks') ?>
+                </div>
+            </div>
+            <div class="header_phone">
+                <img alt="" src="<?php echo $this->getUrl('media') ?>wysiwyg/phone.png" />
+            </div>
+            <?php echo $this->getChildHtml('topSearch') ?>
         </div>
-        <div class="head_row2">
-        	<?php echo $this->getChildHtml('header_sidebar') ?>
-         <div class="wlinks_holder">
-         	<p class="welcome-msg"><?php echo $this->getWelcome() ?> <?php echo $this->getAdditionalHtml() ?></p>
-          <?php echo $this->getChildHtml('topLinks') ?>
-         </div>
-        </div>
-        <div class="head_row3">
-        	<?php echo $this->getChildHtml('header_links') ?>
-         <?php echo $this->getChildHtml('topSearch') ?>
-        </div>
+
         <?php echo $this->getChildHtml('topMenu') ?>
     </div>
 </div>

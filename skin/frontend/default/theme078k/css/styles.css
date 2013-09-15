@@ -497,11 +497,6 @@ tr.summary-details-excluded { font-style:italic; }
 .head_row3 { height:43px; }
 .header_info { font-family:'Quattrocento Sans'; font-size:23px; color:#3F3F3F; text-align:right; }
 .header_info span { padding-left:12px; }
-.top_cart { position:relative; float:right; border:solid 1px #E2E2E2; background:#F6F6F6; padding:10px 0 10px 89px; width:116px; }
-.top_cart .amount { border-left:solid 1px #ddd; padding:0 0 2px 20px; font-family: 'Open Sans', sans-serif; font-size:22px; color:#73A9DF; }
-.top_cart .amount span { color:#000; }
-.top_cart .amount a { text-decoration:none; color:#73A9DF; }
-.top_cart .amount a span { color:#000 !important; }
 .icon_cart { position:absolute; left:0; top:0; margin:3px 0 0 10px; background:url(../images/icon_cart.png) no-repeat; width:64px; height:64px; }
 .wlinks_holder { float:right; padding:0 20px 0 0; }
 .header_menu { float:left; padding-left:14px; }
@@ -1659,16 +1654,49 @@ tr.summary-details-excluded { font-style:italic; }
 .map-popup-price { margin:5px 0 0; }
 .map-popup-text { clear:right; margin:0 10px; padding:10px 0; text-align:left; word-wrap:break-word; }
 .map-popup-only-text { border-top:1px solid #ddd; }
-/* =======================================================================================
+/* ======================================================================================= */
 
+.header-container {
+    height: 250px;
+}
 
+.header_right {
+    height: 160px;
+    position: relative;
+    text-align: right;
+}
+.header .logo {
+    margin: 30px 0 0 4px;
+}
 
+.cart_area {
+    padding-right: 5px;
+}
 
+.header .logo img {
+    width: 250px;
+}
 
+.header_phone {
+    bottom: 50px;
+    position: absolute;
+    right: 20px;
+}
 
+.top_cart {
+    width: 156px;
+    height: 43px;
+    background: url('../images/cart_bg.png') no-repeat top left transparent;
+    float: right;
+}
 
-
-
-
-
-
+.top_cart a.cart_not_empty, .top_cart span.cart_empty {
+    display: block;
+    padding: 14px 20px 14px 0;
+}
+.top_cart a.cart_not_empty span, .top_cart span.cart_empty span {
+    display: block;
+    float: right;
+    text-align: center;
+    width: 21px;
+}
