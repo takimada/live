@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+        <reference name="head">
+            <action method="addCss"><stylesheet>css/mageist_sanalpos.css</stylesheet></action>
+            <action method="addItem"><type>skin_js</type><name>js/mageist_sanalpos/jquery-1.7.2.min.js</name><params/></action>
+            <action method="addItem"><type>skin_js</type><name>js/mageist_sanalpos/colorpicker.js</name><params/></action>
+            <action method="addItem"><type>skin_js</type><name>js/mageist_sanalpos/custom.js</name><params/></action>
+        </reference>
+    </default>
+</layout>

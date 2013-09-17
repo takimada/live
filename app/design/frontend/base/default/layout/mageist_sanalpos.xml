@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+        <reference name="head">
+            <action method="addCss"><stylesheet>css/mageist_sanalpos.css</stylesheet></action>
+            <action method="addCss"><stylesheet>js/mageist_sanalpos/fancybox/jquery.fancybox-1.3.4.css</stylesheet></action>
+            <!-- <action method="addJs"><script>js/mageist_sanalpos.js</script></action> -->
+            <action method="addItem"><type>skin_js</type><name>js/mageist_sanalpos/jquery-1.7.2.min.js</name><params/></action>
+            <action method="addItem"><type>skin_js</type><name>js/mageist_sanalpos/fancybox/jquery.fancybox-1.3.4.pack.js</name><params/></action>
+            <action method="addItem"><type>skin_js</type><name>js/mageist_sanalpos/custom.js</name><params/></action>
+
+        </reference>
+    </default>
+    <sanalpos_payment_table>
+        <block type="page/html" name="root" output="toHtml" template="mageist_sanalpos/form/table.phtml"/>
+    </sanalpos_payment_table>
+</layout>

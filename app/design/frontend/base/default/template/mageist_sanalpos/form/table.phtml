@@ -1,0 +1,96 @@
+<?php $installmentTable = Mage::getModel('sanalpos/gateway')->getInstallmentTable(); ?>
+<?php $recognizePrefix = Mage::getStoreConfig('payment/sanalpos/bin_recognition');  ?>
+<?php $singlePaymentTitle = Mage::getStoreConfig("payment/sanalpos/single_payment_title"); ?>
+
+<h1><?php echo $this->__('All installment options') ?></h1>
+<h2><?php echo $this->__('Single installment for all other cards:') . ' ' . $installmentTable['singlePayment']['total']; ?></h2>
+<table>
+    <thead>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+            <?php foreach($installmentTable['gatewaylist'] as $gateway) : ?>
+            <?php if($gateway['is_installment_active'] == true): ?>
+            <td colspan="2" class="centered <?php echo $gateway['gateway_code']; ?>">
+                <h3><?php echo $gateway['top_text']; ?></h3>
+                <div class="gateway_top_icon">
+                <?php 
+                if($gateway['gateway_image'] != '') :
+                    echo '<img src="'. Mage::getBaseUrl('media').$gateway['gateway_image'] .'" alt="'.$gateway['gateway_title'].'"/>';
+                else:
+                    echo '<img src="'. $this->getSkinUrl('images/mageist_sanalpos/bank_logo_buyuk_'.$gateway['gateway_code'].'.png') .'" alt="'.$gateway['gateway_title'].'"/>';
+                endif;
+                ?>
+                </div>
+            </td>
+            <?php endif; ?>
+            <?php endforeach; ?>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="altheader">
+            <td class="centered gray">
+                <?php echo $this->__('Installment Number')?>
+            </td>
+            <?php foreach($installmentTable['gatewaylist'] as $gateway) : ?>
+            <?php if($gateway['is_installment_active'] == true): ?>
+            <td class="centered <?php echo $gateway['gateway_code']; ?>">
+                <?php echo $this->__('Installment Amount')?>
+            </td>
+            <td class="centered <?php echo $gateway['gateway_code']; ?>">
+                <?php echo $this->__('Total Amount')?>
+            </td>
+            <?php endif; ?>
+            <?php endforeach; ?>
+        </tr>
+        <?php foreach($installmentTable['activeInstallments'] as $activeInstallment) : ?> 
+        <tr>
+            <td class="rightaligned gray">
+                <?php if($activeInstallment == 0): ?>
+                    <?php echo $this->__('Single Installment');?>
+                <?php else: ?>
+                    <?php echo $this->__('%s Installment', $activeInstallment);?>
+                <?php endif; ?>
+            </td>
+            <?php foreach($installmentTable['gatewaylist'] as $gateway) : ?>
+            <?php if($gateway['is_installment_active'] == true): ?>
+            <td class="centered <?php echo $gateway['gateway_code']; ?>">
+                <?php if($activeInstallment == 0): ?>
+                -
+                <?php else: ?>
+
+                    <?php if(isset($gateway['installment'][$activeInstallment])): ?>
+                        <?php echo $gateway['installment'][$activeInstallment]['monthly']; ?>
+                    <?php else: ?>
+                    -
+                    <?php endif; ?>
+                <?php endif; ?>
+            </td>
+            <td class="centered <?php echo $gateway['gateway_code']; ?>">
+                <?php if(isset($gateway['installment'][$activeInstallment])): ?>
+                    <?php echo $gateway['installment'][$activeInstallment]['total']; ?>
+                <?php else: ?>
+                -
+                <?php endif; ?>
+            </td>
+            <?php endif; ?>
+            <?php endforeach; ?>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+            <?php foreach($installmentTable['gatewaylist'] as $gateway) : ?>
+            <?php if($gateway['is_installment_active'] == true): ?>
+            <td colspan="2" class="centered <?php echo $gateway['gateway_code']; ?>">
+                <h3><?php echo $gateway['bottom_text']; ?></h3>
+            </td>
+            <?php endif; ?>
+            <?php endforeach; ?>
+        </tr>
+    </tfoot>
+</table>

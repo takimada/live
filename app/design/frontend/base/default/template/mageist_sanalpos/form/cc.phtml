@@ -1,0 +1,391 @@
+<?php $_code=$this->getMethodCode() ?>
+<?php $installmentTable = Mage::getModel('sanalpos/gateway')->getInstallmentTable(); ?>
+<?php $recognizePrefix = Mage::getStoreConfig('payment/sanalpos/bin_recognition');  ?>
+<?php $singlePaymentTitle = Mage::getStoreConfig("payment/sanalpos/single_payment_title"); ?>
+
+
+<ul class="form-list" id="payment_form_<?php echo $_code ?>" style="display:none;">
+    <li>
+        <div class="input-box">
+            <label for="<?php echo $_code ?>_cc_owner" class="required"><em>*</em><?php echo $this->__('Name on Card') ?></label>
+            <input type="text" title="<?php echo $this->__('Name on Card') ?>" class="input-text required-entry" id="<?php echo $_code ?>_cc_owner" name="payment[cc_owner]" value="<?php echo $this->htmlEscape($this->getInfoData('cc_owner')) ?>" />
+        </div>
+    </li>
+    
+    <?php if($recognizePrefix) : ?>
+    <input type="hidden" id="<?php echo $_code ?>_cc_gateway" name="payment[cc_gateway]" value="" />
+    <input type="hidden" id="<?php echo $_code ?>_cc_type" name="payment[cc_type]" value="" />
+    <?php else: ?>
+    <li>
+        <label for="<?php echo $_code ?>_cc_gateway" class="required"><em>*</em><?php echo $this->__('Select Gateway') ?></label>
+        <div class="input-box">
+            <select id="<?php echo $_code ?>_cc_gateway" name="payment[cc_gateway]" class="required-entry">
+                <option value=""><?php echo $this->__('--Please Select--')?></option>
+            <?php foreach ($installmentTable['gatewaylist'] as $gateway): ?>
+                <option value="<?php echo $gateway['gateway_code'] ?>"><?php echo $gateway['gateway_title'] ?></option>
+            <?php endforeach ?>
+                <option value="other"><?php echo $singlePaymentTitle; ?></option>
+            </select>
+        </div>
+    </li>
+    <li>
+        <label for="<?php echo $_code ?>_cc_type" class="required"><em>*</em><?php echo $this->__('Credit Card Type') ?></label>
+        <div class="input-box">
+            <select id="<?php echo $_code ?>_cc_type" name="payment[cc_type]" class="required-entry validate-cc-type-select">
+                <option value=""><?php echo $this->__('--Please Select--')?></option>
+            <?php $_ccType = $this->getInfoData('cc_type') ?>
+            <?php foreach ($this->getCcAvailableTypes() as $_typeCode => $_typeName): ?>
+                <option value="<?php echo $_typeCode ?>"<?php if($_typeCode==$_ccType): ?> selected="selected"<?php endif ?>><?php echo $_typeName ?></option>
+            <?php endforeach ?>
+            </select>
+        </div>
+    </li>
+    <?php endif; ?>
+    <li>
+        <label for="<?php echo $_code ?>_cc_number" class="required"><em>*</em><?php echo $this->__('Credit Card Number') ?></label>
+        <div class="input-box">
+            <input type="text" id="<?php echo $_code ?>_cc_number" name="payment[cc_number]" title="<?php echo $this->__('Credit Card Number') ?>" class="input-text validate-cc-number validate-cc-type" value="" />
+        </div>
+    </li>
+    <li id="<?php echo $_code ?>_cc_type_exp_div">
+        <label for="<?php echo $_code ?>_expiration" class="required"><em>*</em><?php echo $this->__('Expiration Date') ?></label>
+        <div class="input-box">
+            <div class="v-fix">
+                <select id="<?php echo $_code ?>_expiration" name="payment[cc_exp_month]" class="month validate-cc-exp required-entry">
+                <?php $_ccExpMonth = $this->getInfoData('cc_exp_month') ?>
+                <?php foreach ($this->getCcMonths() as $k=>$v): ?>
+                    <option value="<?php echo $k?$k:'' ?>"<?php if($k==$_ccExpMonth): ?> selected="selected"<?php endif ?>><?php echo $v ?></option>
+                <?php endforeach ?>
+                </select>
+            </div>
+            <div class="v-fix">
+                <?php $_ccExpYear = $this->getInfoData('cc_exp_year') ?>
+                <select id="<?php echo $_code ?>_expiration_yr" name="payment[cc_exp_year]" class="year required-entry">
+                <?php foreach ($this->getCcYears() as $k=>$v): ?>
+                    <option value="<?php echo $k?$k:'' ?>"<?php if($k==$_ccExpYear): ?> selected="selected"<?php endif ?>><?php echo $v ?></option>
+                <?php endforeach ?>
+                </select>
+            </div>
+        </div>
+    </li>
+    <?php echo $this->getChildHtml() ?>
+    <?php if($this->hasVerification()): ?>
+    <li id="<?php echo $_code ?>_cc_type_cvv_div">
+        <label for="<?php echo $_code ?>_cc_cid" class="required"><em>*</em><?php echo $this->__('Card Verification Number') ?></label>
+        <div class="input-box">
+            <div class="v-fix">
+                <input type="text" title="<?php echo $this->__('Card Verification Number') ?>" class="input-text cvv required-entry validate-cc-cvn" id="<?php echo $_code ?>_cc_cid" name="payment[cc_cid]" value="" />
+            </div>
+            <a href="#" class="cvv-what-is-this"><?php echo $this->__('What is this?') ?></a>
+        </div>
+    </li>
+    <?php endif; ?>
+    
+    <?php if($installmentTable['highestInstallment'] > 0): ?>
+    <li>
+        <label for="<?php echo $_code ?>_cc_installment" class="required"><em>*</em><?php echo $this->__('Select Installment') ?></label>
+        <div class="input-box">
+            <select id="<?php echo $_code ?>_cc_installment" name="payment[cc_installment]" class="required-entry validate-cc-installment-select">
+                <option value=""><?php echo $this->__('--Please Select--')?></option>
+            </select>
+        </div>
+    </li>
+    <?php else: ?>
+        <input type="hidden" name="payment[cc_installment]" value="0" />
+    <?php endif; ?>
+    
+    <li>
+        <?php 
+        foreach($installmentTable['gatewaylist'] as $gateway) : 
+            if($gateway['gateway_image'] != '') :
+                echo '<div class="gateway_icon" id="'.$gateway['gateway_code'].'_icon"> <img src="'. Mage::getBaseUrl('media') . $gateway['gateway_icon'] .'" alt="'.$gateway['gateway_title'].'" /></div>';
+            else:
+                echo '<div class="gateway_icon" id="'.$gateway['gateway_code'].'_icon"> <img src="'. $this->getSkinUrl('images/mageist_sanalpos/bank_logo_'.$gateway['gateway_code'].'.png') .'" alt="'.$gateway['gateway_title'].'"/></div>';
+            endif;
+        endforeach;
+        echo '<div class="gateway_icon" id="visa_icon"><img src="'. $this->getSkinUrl('images/mageist_sanalpos/bank_logo_visa.png') .'" alt="Visa"/></div>';
+        echo '<div class="gateway_icon" id="mastercard_icon"><img src="'. $this->getSkinUrl('images/mageist_sanalpos/bank_logo_mastercard.png') .'" alt="Master Card"/></div>';
+        ?>
+        <style>
+        <?php 
+        foreach($installmentTable['gatewaylist'] as $gateway) : 
+            if($gateway['gateway_color_dark'] != '') :
+                echo '#installmentTable tbody .altheader .'.$gateway['gateway_code'].' { background-color: #'.$gateway['gateway_color_dark'].' !important; }';
+            endif;
+            if($gateway['gateway_color_light'] != '') :
+                echo '#installmentTable tbody .'.$gateway['gateway_code'].' { background-color: #'.$gateway['gateway_color_light'].' !important; }';
+            endif;
+            if($gateway['gateway_color_text'] != '') :
+                echo '#installmentTable tbody .altheader .'.$gateway['gateway_code'].' { color: #'.$gateway['gateway_color_text'].' !important; }';
+            endif;
+        endforeach;
+        ?>
+        </style>
+    </li>
+    <?php if($installmentTable['highestInstallment'] > 0): ?>
+    <li>
+        <a id="installmentTableOpener" class="clearer" href="#installmentTable"><span><?php echo $this->__('All Installment Options')?></span></a>
+    </li>
+    <?php endif; ?>
+    
+</ul>
+
+<div style="display: none;">
+    <div id="installmentTable" >
+        <h1><?php echo $this->__('All installment options') ?></h1>
+        <h2><?php echo $this->__('Single installment for all other cards:') . ' ' . $installmentTable['singlePayment']['total']; ?></h2>
+        <table>
+            <thead>
+                <tr>
+                    <td>
+                        &nbsp;
+                    </td>
+                    <?php foreach($installmentTable['gatewaylist'] as $gateway) : ?>
+                    <?php if($gateway['is_installment_active'] == true): ?>
+                    <td colspan="2" class="centered <?php echo $gateway['gateway_code']; ?>">
+                        <h3><?php echo $gateway['top_text']; ?></h3>
+                        <div class="gateway_top_icon">
+                        <?php 
+                        if($gateway['gateway_image'] != '') :
+                            echo '<img src="'. Mage::getBaseUrl('media').$gateway['gateway_image'] .'" alt="'.$gateway['gateway_title'].'"/>';
+                        else:
+                            echo '<img src="'. $this->getSkinUrl('images/mageist_sanalpos/bank_logo_buyuk_'.$gateway['gateway_code'].'.png') .'" alt="'.$gateway['gateway_title'].'"/>';
+                        endif;
+                        ?>
+                        </div>
+                    </td>
+                    <?php endif; ?>
+                    <?php endforeach; ?>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="altheader">
+                    <td class="centered gray">
+                        <?php echo $this->__('Installment Number')?>
+                    </td>
+                    <?php foreach($installmentTable['gatewaylist'] as $gateway) : ?>
+                    <?php if($gateway['is_installment_active'] == true): ?>
+                    <td class="centered <?php echo $gateway['gateway_code']; ?>">
+                        <?php echo $this->__('Installment Amount')?>
+                    </td>
+                    <td class="centered <?php echo $gateway['gateway_code']; ?>">
+                        <?php echo $this->__('Total Amount')?>
+                    </td>
+                    <?php endif; ?>
+                    <?php endforeach; ?>
+                </tr>
+                <?php foreach($installmentTable['activeInstallments'] as $activeInstallment) : ?> 
+                <tr>
+                    <td class="rightaligned gray">
+                        <?php if($activeInstallment == 0): ?>
+                            <?php echo $this->__('Single Installment');?>
+                        <?php else: ?>
+                            <?php echo $this->__('%s Installment', $activeInstallment);?>
+                        <?php endif; ?>
+                    </td>
+                    <?php foreach($installmentTable['gatewaylist'] as $gateway) : ?>
+                    <?php if($gateway['is_installment_active'] == true): ?>
+                    <td class="centered <?php echo $gateway['gateway_code']; ?>">
+                        <?php if($activeInstallment == 0): ?>
+                        -
+                        <?php else: ?>
+
+                            <?php if(isset($gateway['installment'][$activeInstallment])): ?>
+                                <?php echo $gateway['installment'][$activeInstallment]['monthly']; ?>
+                            <?php else: ?>
+                            -
+                            <?php endif; ?>
+                        <?php endif; ?>
+                    </td>
+                    <td class="centered <?php echo $gateway['gateway_code']; ?>">
+                        <?php if(isset($gateway['installment'][$activeInstallment])): ?>
+                            <?php echo $gateway['installment'][$activeInstallment]['total']; ?>
+                        <?php else: ?>
+                        -
+                        <?php endif; ?>
+                    </td>
+                    <?php endif; ?>
+                    <?php endforeach; ?>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td>
+                        &nbsp;
+                    </td>
+                    <?php foreach($installmentTable['gatewaylist'] as $gateway) : ?>
+                    <?php if($gateway['is_installment_active'] == true): ?>
+                    <td colspan="2" class="centered <?php echo $gateway['gateway_code']; ?>">
+                        <h3><?php echo $gateway['bottom_text']; ?></h3>
+                    </td>
+                    <?php endif; ?>
+                    <?php endforeach; ?>
+                </tr>
+            </tfoot>
+        </table>
+    </div>   
+</div>
+
+<script type="text/javascript">
+    var installments = <?php echo json_encode($installmentTable); ?>;
+    var checkedNumbers = [];
+    var checkedValues = [];
+    function getInstallmentForGateway(gatewayCode){
+        var selectedGateway = null;
+        var selectedGatewayOptions = getEmptyInstallmentLine();
+        jQuery.each(installments.gatewaylist, function(i){
+            if( installments.gatewaylist[i].gateway_code == gatewayCode && 
+                installments.gatewaylist[i].is_installment_active == 1) {
+                selectedGateway = installments.gatewaylist[i];
+                jQuery.each(installments.gatewaylist[i].installment, function(j){
+                    if(installments.gatewaylist[i].installment[j].installment != 0) {
+                        selectedGatewayOptions += getInstallmentLine(
+                                installments.gatewaylist[i].installment[j].installment,
+                                installments.gatewaylist[i].installment[j].monthly,
+                                installments.gatewaylist[i].installment[j].total
+                            );
+                    } else {
+                        selectedGatewayOptions += getInstallmentLineSingle(installments.gatewaylist[i].installment[j].total);
+                    }
+                });
+            }
+        });
+        
+        if(!selectedGateway) {
+            selectedGatewayOptions += getInstallmentLineSingle(installments.singlePayment.total);
+        }
+        
+        jQuery("#<?php echo $_code ?>_cc_installment").html(selectedGatewayOptions);
+        jQuery("#<?php echo $_code ?>_cc_installment").removeAttr('disabled');
+    }
+    
+    function emptyInstallmentDropdown() {
+        jQuery("#<?php echo $_code ?>_cc_installment").html(getEmptyInstallmentLine());
+    }
+    
+    function getInstallmentLine(installmentNumber, installmentMonthly, installmentTotal) {
+        return '<option value="'+installmentNumber+'">'+installmentNumber+' x '+installmentMonthly+' (<?php echo $this->__('Total'); ?> : '+installmentTotal+')</option>';
+    }
+    
+    function getInstallmentLineSingle(installmentTotal) {
+        return '<option value="0"> <?php echo $this->__('Cash'); ?> ('+installmentTotal+')</option>';
+    }
+    
+    function getEmptyInstallmentLine() {
+        return '<option value=""><?php echo $this->__('--Please Select--'); ?></option>';
+    }
+    
+    <?php if($recognizePrefix) : ?>
+    
+    function checkBin(bin) {
+        jQuery("#<?php echo $_code ?>_cc_installment").attr('disabled','disabled');
+        var checkUrl = '<?php echo $this->getUrl('sanalpos/payment/checkbin', array('_secure'=>true)) ?>';
+        jQuery.post( checkUrl, { bin: bin }, function( data ) {
+            if(data.gateway != '') {
+                var gatewayName = data.gateway;
+                var gatewayType = data.type;
+                var gatewayTypeCode = data.typecode;
+                getInstallmentForGateway(gatewayName);
+
+                jQuery('#<?php echo $_code ?>_cc_type').val(gatewayTypeCode);
+                jQuery('#<?php echo $_code ?>_cc_gateway').val(gatewayName);
+
+                checkedValues.push({'bin': bin, 'gatewayName': gatewayName, 'gatewayType': gatewayType, 'gatewayTypeCode': gatewayTypeCode});
+                jQuery('.gateway_icon').removeClass('selected');
+                jQuery('#'+gatewayName+'_icon').addClass('selected');
+                jQuery('#'+gatewayType+'_icon').addClass('selected');
+            }
+        }, "json");
+    }
+    
+    jQuery('#<?php echo $_code ?>_cc_number').live("propertychange keyup input paste", function(){
+        var ccval = jQuery('#<?php echo $_code ?>_cc_number').val();
+        if(ccval.length > 6) {
+            var ccBin = ccval.substring(0, 6);
+            var found = false;
+            jQuery.each(checkedNumbers, function(i){
+                if(checkedNumbers[i] == ccBin) {
+                    found = true;
+                }
+            });
+            
+            if(!found) {
+                checkedNumbers.push(ccBin);
+                checkBin(ccBin);
+            } else {
+                jQuery.each(checkedValues, function(i){
+                    if(checkedValues[i].bin == ccBin) {
+                        var gatewayName = checkedValues[i].gatewayName;
+                        var gatewayType = checkedValues[i].gatewayType;
+                        var gatewayTypeCode = checkedValues[i].gatewayTypeCode;
+                        getInstallmentForGateway(gatewayName);
+                        jQuery('#<?php echo $_code ?>_cc_type').val(gatewayTypeCode);
+                        jQuery('#<?php echo $_code ?>_cc_gateway').val(gatewayName);
+                        jQuery('.gateway_icon').removeClass('selected');
+                        jQuery('#'+gatewayName+'_icon').addClass('selected');
+                        jQuery('#'+gatewayType+'_icon').addClass('selected');
+                    }
+                });
+            }
+        } else {
+            jQuery('.gateway_icon').removeClass('selected');
+            jQuery('#<?php echo $_code ?>_cc_type').val('');
+            jQuery('#<?php echo $_code ?>_cc_gateway').val('');
+            emptyInstallmentDropdown();
+        }
+    });
+    
+    <?php else: ?>
+    jQuery('#<?php echo $_code ?>_cc_gateway').live("change", function(){
+        selectGatewayAndType(true);
+    });
+    jQuery('#<?php echo $_code ?>_cc_type').live("change", function(){
+        selectGatewayAndType(false);
+    });
+    
+    function selectGatewayAndType(gatewayChanged){
+        var gatewayName = jQuery('#<?php echo $_code ?>_cc_gateway').val();
+        var gatewayType = jQuery('#<?php echo $_code ?>_cc_type').val();
+        gatewayType = (gatewayType == 'VI') ? 'visa' : (gatewayType == '') ? '' : 'mastercard';
+        if(gatewayName == '' && gatewayType == '') {
+            emptyInstallmentDropdown();
+        } else if (gatewayName != '' && gatewayType == '') {
+            if(gatewayChanged) {
+                getInstallmentForGateway(gatewayName);
+            }
+            jQuery('.gateway_icon').removeClass('selected');
+            jQuery('#'+gatewayName+'_icon').addClass('selected');
+        } else if (gatewayName == '' && gatewayType != '') {
+            jQuery('.gateway_icon').removeClass('selected');
+            jQuery('#'+gatewayType+'_icon').addClass('selected');
+        } else {
+            if(gatewayChanged) {
+                getInstallmentForGateway(gatewayName);
+            }
+            jQuery('.gateway_icon').removeClass('selected');
+            jQuery('#'+gatewayType+'_icon').addClass('selected');
+            jQuery('#'+gatewayName+'_icon').addClass('selected');
+        }
+    }
+        
+
+    <?php endif; ?>
+
+    var valueUrl = '<?php echo Mage::getUrl('sanalpos/payment/values', array('_secure' => true));?>';
+    var tableUrl = '<?php echo Mage::getUrl('sanalpos/payment/table', array('_secure' => true));?>';
+
+    jQuery.post( valueUrl, function( data ) {
+        installments = data.data;
+    }, "json");
+
+    jQuery.ajax({
+        url: tableUrl
+        //,cache: false
+    }).done(function( html ) {
+        jQuery("#installmentTable").html(html);
+    });
+    
+    jQuery('#installmentTableOpener').fancybox();
+    
+</script>
