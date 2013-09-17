@@ -29,20 +29,32 @@
 ?>
 <div class="header-container">
     <div class="header">
-        <?php echo $this->getChildHtml('store_language') ?>
-		<?php if ($this->getIsHomePage()):?>
-        <h1 class="logo"><strong><?php echo $this->getLogoAlt() ?></strong><a href="<?php echo $this->getUrl('') ?>" title="<?php echo $this->getLogoAlt() ?>"><img src="<?php echo $this->getLogoSrc() ?>" alt="<?php echo $this->getLogoAlt() ?>" /></a></h1>
-        <?php else:?>
-        <a href="<?php echo $this->getUrl('') ?>" title="<?php echo $this->getLogoAlt() ?>" class="logo"><strong><?php echo $this->getLogoAlt() ?></strong><img src="<?php echo $this->getLogoSrc() ?>" alt="<?php echo $this->getLogoAlt() ?>" /></a>
-        <?php endif?>
+        <div class="header_top clearfix">
 
-        <div class="header_right clearfix">
+            <?php echo $this->getChildHtml('store_language') ?>
+            <?php if ($this->getIsHomePage()):?>
+                <h1 class="logo"><strong><?php echo $this->getLogoAlt() ?></strong><a href="<?php echo $this->getUrl('') ?>" title="<?php echo $this->getLogoAlt() ?>"><img src="<?php echo $this->getLogoSrc() ?>" alt="<?php echo $this->getLogoAlt() ?>" /></a></h1>
+            <?php else:?>
+                <a href="<?php echo $this->getUrl('') ?>" title="<?php echo $this->getLogoAlt() ?>" class="logo"><strong><?php echo $this->getLogoAlt() ?></strong><img src="<?php echo $this->getLogoSrc() ?>" alt="<?php echo $this->getLogoAlt() ?>" /></a>
+            <?php endif?>
+
             <?php //echo $this->getChildHtml('header_info'); ?>
             <div class="cart_area clearfix">
                 <?php echo $this->getChildHtml('header_sidebar') ?>
                 <div class="wlinks_holder">
                     <p class="welcome-msg"><?php echo $this->getWelcome() ?> <?php echo $this->getAdditionalHtml() ?></p>
-                    <?php echo $this->getChildHtml('topLinks') ?>
+                    <ul class="links">
+                        <?php if (Mage::getSingleton('customer/session')->isLoggedIn()) : ?>
+                            <li class="first"><a title="<?php echo $this->__('My Account')?>" href="<?php echo $this->getUrl('customer/account') ?>"><?php echo $this->__('My Account')?></a></li>
+                            <li class="first"><a title="<?php echo $this->__('My Wishlist')?>" href="<?php echo $this->getUrl('wishlist') ?>"><?php echo $this->__('My Wishlist')?></a></li>
+                            <li class="last"><a title="<?php echo $this->__('Log Out')?>" href="<?php echo $this->getUrl('customer/account/logout') ?>"><?php echo $this->__('Log Out')?></a></li>
+                        <?php else: ?>
+                            <li class="first"><a title="<?php echo $this->__('Log In')?>" href="<?php echo $this->getUrl('customer/account/login') ?>"><?php echo $this->__('Log In')?></a></li>
+                            <li class="last"><a title="<?php echo $this->__('Create an Account')?>" href="<?php echo $this->getUrl('customer/account/create') ?>"><?php echo $this->__('Create an Account')?></a></li>
+                        <?php endif; ?>
+                    </ul>
+
+                    <?php //echo $this->getChildHtml('topLinks') ?>
                 </div>
             </div>
             <div class="header_phone">

@@ -1,5 +1,5 @@
 <div class="top_cart">
-    <?php $_cartQty = $this->getSummaryCount() ?>
+    <?php $_cartQty = intval($this->getSummaryCount()) ?>
     <?php if($_cartQty): ?>
         <a class="cart_not_empty clearfix" href="<?php echo $this->getUrl('checkout/cart')?>">
             <span><?php echo $_cartQty; ?></span>

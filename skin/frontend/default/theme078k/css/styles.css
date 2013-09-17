@@ -474,7 +474,7 @@ tr.summary-details-excluded { font-style:italic; }
 .header {  }
 .header .logo { position:absolute; margin:38px 0 0 4px; text-decoration:none !important; }
 .header .logo strong { position:absolute; top:-999em; left:-999em; width:0; height:0; font-size:0; line-height:0; text-indent:-999em; overflow:hidden; }
-.header .welcome-msg { font-family: 'Open Sans'; font-size:12px; padding:8px 0 0 0; text-align:right; color:#F77A88; }
+.header .welcome-msg { font-family: 'Open Sans'; font-size:12px; padding:2px 0 0 0; text-align:right; color:#F77A88; }
 .header .welcome-msg a { color:#F77A88 }
 .header .links { text-align:right; font-family: 'Open Sans'; font-size:12px; padding:5px 0 0 0; }
 .header .links li { padding:0 20px 0 0; }
@@ -1011,7 +1011,7 @@ tr.summary-details-excluded { font-style:italic; }
 
 /* Product Shop */
 .product-view .product-shop { float:right; width:420px; margin-left: 18px; }
-.product-view .product-shop .product-name h1 { font-family:'bowlby_one_scregular'; font-size:22px; font-weight:bold; padding:0 0 10px 0; color:#454545; }
+.product-view .product-shop .product-name h1 { font-family:'bowlby_one_scregular'; font-size:22px; padding:0 0 10px 0; color:#454545; }
 .product-view .product-shop .ratings { margin:0 0 18px 0; }
 .product-view .product-shop .rating-links { padding:0 0 0 100px; font-size:12px; }
 .product-view .product-shop .no-rating { padding-bottom:13px; }
@@ -1657,16 +1657,18 @@ tr.summary-details-excluded { font-style:italic; }
 /* ======================================================================================= */
 
 .header-container {
-    height: 250px;
+    height: 200px;
 }
 
-.header_right {
-    height: 160px;
+.header_top {
+    height: 110px;
     position: relative;
     text-align: right;
 }
 .header .logo {
-    margin: 30px 0 0 4px;
+    margin: 0px 0 0 4px;
+    position: relative;
+    float: left;
 }
 
 .cart_area {
@@ -1678,9 +1680,9 @@ tr.summary-details-excluded { font-style:italic; }
 }
 
 .header_phone {
-    bottom: 50px;
+    bottom: 0px;
     position: absolute;
-    right: 20px;
+    right: 230px;
 }
 
 .top_cart {
