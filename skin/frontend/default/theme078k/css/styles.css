@@ -23,6 +23,17 @@
  * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
+@font-face {
+    font-family: 'bowlby_one_scregular';
+    src: url('../fonts/bowlbyonesc-regular-webfont.eot');
+    src: url('../fonts/bowlbyonesc-regular-webfont.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/bowlbyonesc-regular-webfont.woff') format('woff'),
+    url('../fonts/bowlbyonesc-regular-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
 /* Reset ================================================================================= */
 * { margin:0; padding:0; }
 
@@ -150,7 +161,7 @@ input.qty { width:2.5em !important; }
 button.button::-moz-focus-inner { padding:0; border:0; } /* FF Fix */
 button.button { -webkit-border-fit:lines; } /* <- Safari & Google Chrome Fix */
 button.button { overflow:visible; width:auto; border:0; padding:0; margin:0; background:transparent; cursor:pointer; }
-button.button span { float:left; height:28px; background:#FD596C; font:normal 14px/28px 'Bowlby One SC', Helvetica, sans-serif; text-align:center; white-space:nowrap; color:#fff; }
+button.button span { float:left; height:28px; background:#FD596C; font:normal 14px/28px 'bowlby_one_scregular', Helvetica, sans-serif; text-align:center; white-space:nowrap; color:#fff; }
 button.button:hover span { background:#454545 !important; }
 button.button span span { padding:0 11px; -moz-box-shadow: 1px 4px 5px #E0E0E0; -webkit-box-shadow: 1px 4px 5px #E0E0E0; box-shadow: 1px 4px 5px #E0E0E0; }
 button.disabled {}
@@ -303,7 +314,7 @@ p.required { font-size:12px; text-align:right; color:#FD596C; }
 /* Page Heading */
 .page-title { margin:-4px 0 11px; }
 .page-title h1,
-.page-title h2 { font-family:'Bowlby One SC', cursive; font-size:33px; font-weight:normal; color:#454545; }
+.page-title h2 { font-family:'bowlby_one_scregular', cursive; font-size:33px; font-weight:normal; color:#454545; }
 .page-title .separator { margin:0 3px; }
 .page-title .link-rss { float:right; }
 .title-buttons { text-align:right; }
@@ -463,7 +474,7 @@ tr.summary-details-excluded { font-style:italic; }
 .header {  }
 .header .logo { position:absolute; margin:38px 0 0 4px; text-decoration:none !important; }
 .header .logo strong { position:absolute; top:-999em; left:-999em; width:0; height:0; font-size:0; line-height:0; text-indent:-999em; overflow:hidden; }
-.header .welcome-msg { font-family: 'Open Sans'; font-size:12px; padding:8px 0 0 0; text-align:right; color:#F77A88; }
+.header .welcome-msg { font-family: 'Open Sans'; font-size:12px; padding:2px 0 0 0; text-align:right; color:#F77A88; }
 .header .welcome-msg a { color:#F77A88 }
 .header .links { text-align:right; font-family: 'Open Sans'; font-size:12px; padding:5px 0 0 0; }
 .header .links li { padding:0 20px 0 0; }
@@ -486,11 +497,6 @@ tr.summary-details-excluded { font-style:italic; }
 .head_row3 { height:43px; }
 .header_info { font-family:'Quattrocento Sans'; font-size:23px; color:#3F3F3F; text-align:right; }
 .header_info span { padding-left:12px; }
-.top_cart { position:relative; float:right; border:solid 1px #E2E2E2; background:#F6F6F6; padding:10px 0 10px 89px; width:116px; }
-.top_cart .amount { border-left:solid 1px #ddd; padding:0 0 2px 20px; font-family: 'Open Sans', sans-serif; font-size:22px; color:#73A9DF; }
-.top_cart .amount span { color:#000; }
-.top_cart .amount a { text-decoration:none; color:#73A9DF; }
-.top_cart .amount a span { color:#000 !important; }
 .icon_cart { position:absolute; left:0; top:0; margin:3px 0 0 10px; background:url(../images/icon_cart.png) no-repeat; width:64px; height:64px; }
 .wlinks_holder { float:right; padding:0 20px 0 0; }
 .header_menu { float:left; padding-left:14px; }
@@ -580,8 +586,8 @@ tr.summary-details-excluded { font-style:italic; }
 /* Sidebar =============================================================================== */
 .block { margin:0 0 18px; background:url(../images/block_tile.gif) no-repeat 0% 100%; }
 .block .block-title { background:url(../images/block_title.gif) no-repeat; padding:16px 0 11px 23px; }
-.block .block-title strong { font-family:'Bowlby One SC'; font-size:22px; font-weight:normal; color:#FD596C; line-height:19px; }
-/* .block .block-title strong { font-family:'Bowlby One SC'; font-size:22px; font-weight:normal; color:#FD596C; text-transform:uppercase; line-height:19px; } */
+.block .block-title strong { font-family:'bowlby_one_scregular'; font-size:22px; font-weight:normal; color:#FD596C; line-height:19px; }
+/* .block .block-title strong { font-family:'bowlby_one_scregular'; font-size:22px; font-weight:normal; color:#FD596C; text-transform:uppercase; line-height:19px; } */
 .block .block-title strong span {}
 .block .block-title a { text-decoration:none !important; }
 .block .block-subtitle {  }
@@ -615,9 +621,9 @@ tr.summary-details-excluded { font-style:italic; }
 /* Block: Layered Navigation */
 .block-layered-nav {}
 .block-layered-nav .block-title strong { color:#FE834C; }
-.block-layered-nav .block-subtitle { padding-bottom:3px; }
-.block-layered-nav dt { padding:0 0 1px 23px; }
-.block-layered-nav dd { padding:0 0 20px 23px; line-height:18px; }
+.block-layered-nav .block-subtitle { font-size: 14px; font-weight: bold; margin-bottom: 10px; }
+.block-layered-nav dt { padding:0 0 1px 5px; font-weight: bold; margin-bottom: 3px; }
+.block-layered-nav dd { line-height: 18px; margin-bottom: 10px; max-height: 90px; overflow: auto; padding: 0 0 0 7px; }
 .block-layered-nav dd.last { padding-bottom:0 !important; }
 .block-layered-nav dd a { color:#696969; text-decoration:none; }
 .block-layered-nav dd a:hover { text-decoration:underline; }
@@ -753,7 +759,7 @@ tr.summary-details-excluded { font-style:italic; }
 .products-grid .ratings .amount a { color:#868686; text-decoration:none; }
 .products-grid .ratings .amount a:hover { text-decoration:underline; }
 .products-grid .price-box { margin:0 0 13px 0; }
-.products-grid .price { font-family: 'Bowlby One SC'; font-size:18px; font-weight:normal !important; }
+.products-grid .price { font-family: 'bowlby_one_scregular'; font-size:18px; font-weight:normal !important; }
 .products-grid .availability { line-height:21px; }
 .products-grid .actions { margin-bottom:16px; }
 .products-grid .add-to-links { clear:both; }
@@ -783,7 +789,7 @@ tr.summary-details-excluded { font-style:italic; }
 .products-grid-new .product-name a { color:#454545; text-decoration:none; }
 .products-grid-new .product-name a:hover { text-decoration:underline; }
 .products-grid-new .price-box { margin:0 0 12px 0; }
-.products-grid-new .price { font-family: 'Bowlby One SC'; font-size:18px; font-weight:normal !important; }
+.products-grid-new .price { font-family: 'bowlby_one_scregular'; font-size:18px; font-weight:normal !important; }
 .products-grid-new .availability { line-height:21px; }
 .products-grid-new .actions { height:34px; }
 
@@ -819,7 +825,7 @@ tr.summary-details-excluded { font-style:italic; }
 .products-list .ratings .rating-links a:hover { text-decoration:underline; }
 .rev_link2 { color:#5E5E5E; }
 .products-list .price-box { margin:0 0 15px 0; }
-.products-list .price { font-family: 'Bowlby One SC'; font-size:18px; font-weight:normal; }
+.products-list .price { font-family: 'bowlby_one_scregular'; font-size:18px; font-weight:normal; }
 .products-list .availability { margin:3px 0 0; }
 .products-list .desc { clear:both; margin:0 0 12px; line-height:1.35; }
 .products-list .desc .link-learn { font-size:12px; color:#696969; }
@@ -978,7 +984,7 @@ tr.summary-details-excluded { font-style:italic; }
 .product-essential { margin-bottom:35px; }
 
 .product-collateral .box-collateral { margin:0 0 33px; }
-.product-collateral .box-collateral h2 { font-family:'Bowlby One SC'; font-size:22px; margin:0 0 15px; }
+.product-collateral .box-collateral h2 { font-family:'bowlby_one_scregular'; font-size:22px; margin:0 0 15px; }
 
 /* Product Images */
 .product-view .product-img-box { float:right; width:263px; }
@@ -992,7 +998,7 @@ tr.summary-details-excluded { font-style:italic; }
 .product-view .product-img-box .zoom #handle { position:absolute; left:0; top:-1px; width:33px; height:22px; background:url(../images/magnifier_handle.gif) 0 0 no-repeat;  }
 .product-view .product-img-box .zoom .btn-zoom-out { position:absolute; left:2px; top:0; }
 .product-view .product-img-box .zoom .btn-zoom-in { position:absolute; right:2px; top:0; }
-.product-view .product-img-box .more-views h2 { font-family:'Bowlby One SC'; font-size:22px; color:#89BF5A; padding:15px 0 16px 0; }
+.product-view .product-img-box .more-views h2 { font-family:'bowlby_one_scregular'; font-size:22px; color:#89BF5A; padding:15px 0 16px 0; }
 .product-view .product-img-box .more-views ul { margin-left:-20px }
 .product-view .product-img-box .more-views li { float:left; border:solid 1px #E9E9E9; margin:0 0 8px 20px ; }
 
@@ -1004,13 +1010,13 @@ tr.summary-details-excluded { font-style:italic; }
 .product-image-popup .image-label {}
 
 /* Product Shop */
-.product-view .product-shop { float:left; width:420px; }
-.product-view .product-shop .product-name h1 { font-family:'Bowlby One SC'; font-size:22px; font-weight:bold; padding:0 0 10px 0; color:#454545; }
+.product-view .product-shop { float:right; width:420px; margin-left: 18px; }
+.product-view .product-shop .product-name h1 { font-family:'bowlby_one_scregular'; font-size:22px; padding:0 0 10px 0; color:#454545; }
 .product-view .product-shop .ratings { margin:0 0 18px 0; }
 .product-view .product-shop .rating-links { padding:0 0 0 100px; font-size:12px; }
 .product-view .product-shop .no-rating { padding-bottom:13px; }
 .product-view .product-shop .price-box { float:left; margin:0 21px 0 0; }
-.product-view .product-shop .price { font-family:'Bowlby One SC'; font-size:22px; font-weight:normal !important; color:#89BF5A; }
+.product-view .product-shop .price { font-family:'bowlby_one_scregular'; font-size:22px; font-weight:normal !important; color:#89BF5A; }
 .product-view .product-shop .availability { float:left; font-size:12px; margin:7px 0 0 0; }
 .product-view .product-shop .availability span { font-weight:normal; }
 .product-view .product-shop .clear { height:11px !important; }
@@ -1024,7 +1030,7 @@ tr.summary-details-excluded { font-style:italic; }
 .product-view .product-shop .add-to-box .add-to-links li { display:inline; }
 .product-view .product-shop .add-to-box .add-to-links li .separator { display:inline; }
 .product-view .short-description { padding:20px 0 0 0; }
-.product-view .short-description h2 { font-family:'Bowlby One SC'; font-size:22px; color:#FD596C; padding:0 0 15px 0; }
+.product-view .short-description h2 { font-family:'bowlby_one_scregular'; font-size:22px; color:#FD596C; padding:0 0 15px 0; }
 .product-view .product-shop a.nobr { clear:both; display:block; }
 
 /* Product Options */
@@ -1164,7 +1170,7 @@ tr.summary-details-excluded { font-style:italic; }
 .cart .crosssell .product-name a { color:#696969; text-decoration:none; }
 .cart .crosssell .product-name a:hover { text-decoration:underline; }
 .cart .crosssell .price-box { margin-bottom:4px; }
-.cart .crosssell .price { font-family:'Bowlby One SC'; font-size:18px; font-weight:normal; color:#89BF5A; }
+.cart .crosssell .price { font-family:'bowlby_one_scregular'; font-size:18px; font-weight:normal; color:#89BF5A; }
 .cart .crosssell button { margin-bottom:8px; height:34px; }
 .cart .crosssell button span { background:#AF8DB9; }
 .cart .crosssell .add-to-links { line-height:16px }
@@ -1175,7 +1181,7 @@ tr.summary-details-excluded { font-style:italic; }
 .cart .shipping { border:solid 1px #E7E7E7; overflow:hidden; padding:15px 0 20px 19px; margin:0 0 20px 0; }
 
 .cart .discount h2,
-.cart .shipping h2 { font-family:'Bowlby One SC'; font-size:18px; font-weight:normal; padding:0 0 15px 0; }
+.cart .shipping h2 { font-family:'bowlby_one_scregular'; font-size:18px; font-weight:normal; padding:0 0 15px 0; }
 .cart .discount h2 { color:#79CEDA; }
 .cart .shipping h2 { color:#F9C81E; }
 
@@ -1277,6 +1283,8 @@ tr.summary-details-excluded { font-style:italic; }
 .checkout-agreements .agreement-content { border:1px solid #ddd; background-color:#f6f6f6; padding:5px; height:10em; overflow:auto; }
 .checkout-agreements .agree { padding:6px; }
 
+.checkout-agreements .agree label { font-weight: bold; margin-left: 5px; }
+
 /* Centinel */
 .centinel {}
 .centinel .authentication { border:1px solid #ddd; background:#fff; }
@@ -1308,7 +1316,7 @@ tr.summary-details-excluded { font-style:italic; }
 
 .opc .step-title { padding:12px 0 11px 18px; text-align:right; }
 .opc .step-title .number { float:left; border:solid 1px #EBEBEB; width:18px; height:18px; line-height:18px; font-size:13px; font-weight:bold; text-align:center; color:#606060; margin-right:10px; }
-.opc .step-title h2 { float:left; font-family:'Bowlby One SC'; font-size:18px; font-weight:normal; color:#606060; }
+.opc .step-title h2 { float:left; font-family:'bowlby_one_scregular'; font-size:18px; font-weight:normal; color:#606060; }
 .opc .step-title a { display:none; float:right; }
 
 .opc .allow .step-title { cursor:pointer; }
@@ -1474,7 +1482,7 @@ tr.summary-details-excluded { font-style:italic; }
 .footer_row { background:url(../images/copy.png) no-repeat; padding:10px 0 25px 40px; }
 .footer_block { background:url(../images/footer_block.jpg) no-repeat; overflow:hidden; padding:47px 50px 10px 39px; min-height:199px; }
 .footer_block .block-subscribe { float:right; }
-.footer_block .block-subscribe .block-title { font-family:'Bowlby One SC'; font-size:22px; color:#79CEDA; text-transform:uppercase; padding:0 0 13px 0; }
+.footer_block .block-subscribe .block-title { font-family:'bowlby_one_scregular'; font-size:22px; color:#79CEDA; text-transform:uppercase; padding:0 0 13px 0; }
 .footer_block .block-subscribe .input-box { float:left; width:194px; }
 .footer_block .block-subscribe .input-text { background:#fff; border:solid 1px #EBEBEB; width:168px; height:18px; padding:2px 8px; line-height:18px; font-family:'Open Sans', sans-serif; color:#C2C2C2; }
 .footer_block .block-subscribe .actions { float:left; padding:2px 0 0 0; }
@@ -1553,7 +1561,7 @@ tr.summary-details-excluded { font-style:italic; }
 .index_col2 { float:right; width:700px; }
 
 .block_brands { margin:0 0 29px 0; padding:0 4px; }
-.block_brands h2 { font-family:'Bowlby One SC'; font-size:22px; color:#AF8DBA; padding:0 0 13px 0; }
+.block_brands h2 { font-family:'bowlby_one_scregular'; font-size:22px; color:#AF8DBA; padding:0 0 13px 0; }
 .block_brands li { border-bottom:dotted 1px #9C9C9C; padding:5px 0 6px 0; font-family:'Open Sans', sans-serif; font-size:13px; }
 .block_brands li a { color:#888686; text-decoration:none; }
 .block_brands li a:hover { color:#3A3939; text-decoration:none; }
@@ -1589,7 +1597,7 @@ tr.summary-details-excluded { font-style:italic; }
 .banner3 { float:right; }
 
 .new_products { margin-bottom:-18px; }
-.new_products h2 { font-family:'Bowlby One SC'; font-size:33px; color:#454545; padding:0 0 16px 0; }
+.new_products h2 { font-family:'bowlby_one_scregular'; font-size:33px; color:#454545; padding:0 0 16px 0; }
 
 
 #checkout-step-login h3, #checkout-step-login h4, #checkout-step-login p { padding-bottom:13px; }
@@ -1646,16 +1654,51 @@ tr.summary-details-excluded { font-style:italic; }
 .map-popup-price { margin:5px 0 0; }
 .map-popup-text { clear:right; margin:0 10px; padding:10px 0; text-align:left; word-wrap:break-word; }
 .map-popup-only-text { border-top:1px solid #ddd; }
-/* =======================================================================================
+/* ======================================================================================= */
 
+.header-container {
+    height: 200px;
+}
 
+.header_top {
+    height: 110px;
+    position: relative;
+    text-align: right;
+}
+.header .logo {
+    margin: 0px 0 0 4px;
+    position: relative;
+    float: left;
+}
 
+.cart_area {
+    padding-right: 5px;
+}
 
+.header .logo img {
+    width: 250px;
+}
 
+.header_phone {
+    bottom: 0px;
+    position: absolute;
+    right: 230px;
+}
 
+.top_cart {
+    width: 156px;
+    height: 43px;
+    background: url('../images/cart_bg.png') no-repeat top left transparent;
+    float: right;
+}
 
-
-
-
-
-
+.top_cart a.cart_not_empty, .top_cart span.cart_empty {
+    display: block;
+    padding: 14px 20px 14px 0;
+}
+.top_cart a.cart_not_empty span, .top_cart span.cart_empty span {
+    display: block;
+    float: right;
+    text-align: center;
+    width: 21px;
+}
