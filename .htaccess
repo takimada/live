@@ -44,6 +44,9 @@ SetEnvIf Host www\.7x24petshop\.com MAGE_RUN_TYPE=website
 SetEnvIf Host takimada\.local MAGE_RUN_CODE=www_7x24petshop
 SetEnvIf Host takimada\.local MAGE_RUN_TYPE=website
 
+SetEnvIf Host takimada\.dev MAGE_RUN_CODE=www_7x24petshop
+SetEnvIf Host takimada\.dev MAGE_RUN_TYPE=website
+
 SetEnvIf Host ^7x24petshop\.com MAGE_RUN_CODE=www_7x24petshop
 SetEnvIf Host ^7x24petshop\.com MAGE_RUN_TYPE=website
 
@@ -157,7 +160,7 @@ SetEnvIf Host 444pati\.takimada\.net MAGE_RUN_TYPE=website
 ## you can put here your magento root folder
 ## path relative to web root
 
-    #RewriteBase /magento/
+    RewriteBase /
 
 ############################################
 ## uncomment next line to enable light API calls processing
