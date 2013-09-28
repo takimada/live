@@ -1,151 +1,150 @@
 <?php
 
-class Magestore_Bannerslider_Adminhtml_BannersliderController extends Mage_Adminhtml_Controller_Action
-{
+/**
+ * Magestore
+ * 
+ * NOTICE OF LICENSE
+ * 
+ * This source file is subject to the Magestore.com license that is
+ * available through the world-wide-web at this URL:
+ * http://www.magestore.com/license-agreement.html
+ * 
+ * DISCLAIMER
+ * 
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ * 
+ * @category 	Magestore
+ * @package 	Magestore_Bannerslider
+ * @copyright 	Copyright (c) 2012 Magestore (http://www.magestore.com/)
+ * @license 	http://www.magestore.com/license-agreement.html
+ */
 
-	protected function _initAction() {
-		$this->loadLayout()
-			->_setActiveMenu('bannerslider/items')
-			->_addBreadcrumb(Mage::helper('adminhtml')->__('Banners Manager'), Mage::helper('adminhtml')->__('Banner Manager'));
-		
-		return $this;
-	}   
- 
-	public function indexAction() {
-		$this->_title($this->__('Bannerslider'))
-			->_title($this->__('Manage banner'));
-		$this->_initAction()
-			->renderLayout();
-	}
+/**
+ * Bannerslider Adminhtml Controller
+ * 
+ * @category 	Magestore
+ * @package 	Magestore_Bannerslider
+ * @author  	Magestore Developer
+ */
+class Magestore_Bannerslider_Adminhtml_BannersliderController extends Mage_Adminhtml_Controller_Action {
 
-	public function editAction() {
-		$id     = $this->getRequest()->getParam('id');
-		$model  = Mage::getModel('bannerslider/bannerslider')->load($id);
-
-		if ($model->getId() || $id == 0) {
-			$data = Mage::getSingleton('adminhtml/session')->getFormData(true);
-			if (!empty($data)) {
-				$model->setData($data);
-			}
-
-			Mage::register('bannerslider_data', $model);
-			
-			$this->_title($this->__('Bannerslider'))
-				->_title($this->__('Manage banner'));
-			if ($model->getId()){
-				$this->_title($model->getTitle());
-			}else{
-				$this->_title($this->__('New Banner'));
-			}
-
-			$this->loadLayout();
-			$this->_setActiveMenu('bannerslider/items');
-
-			$this->_addBreadcrumb(Mage::helper('adminhtml')->__('Item Manager'), Mage::helper('adminhtml')->__('Item Manager'));
-			$this->_addBreadcrumb(Mage::helper('adminhtml')->__('Item News'), Mage::helper('adminhtml')->__('Item News'));
-
-			$this->getLayout()->getBlock('head')->setCanLoadExtJs(true);
-
-			$this->_addContent($this->getLayout()->createBlock('bannerslider/adminhtml_bannerslider_edit'))
-				->_addLeft($this->getLayout()->createBlock('bannerslider/adminhtml_bannerslider_edit_tabs'));
-
-			$this->renderLayout();
-		} else {
-			Mage::getSingleton('adminhtml/session')->addError(Mage::helper('bannerslider')->__('Item does not exist'));
-			$this->_redirect('*/*/');
-		}
-	}
- 
-	public function newAction() {
-		$this->_forward('edit');
-	}
-	
-	protected function _initItem(){
-		if (!Mage::registry('bannerslider_categories')){
-			if ($this->getRequest()->getParam('id')){
-				Mage::register('bannerslider_categories',
-					Mage::getModel('bannerslider/bannerslider')
-					->load($this->getRequest()->getParam('id'))->getCategories());
-			}
-		}
-	}
-	
-	public function categoriesAction(){
-		$this->_initItem();
-		$this->getResponse()->setBody(
-            $this->getLayout()->createBlock('bannerslider/adminhtml_bannerslider_edit_tab_categories')->toHtml()
-        );
-	}
-	public function categoriesJsonAction()
-    {
-		$this->_initItem();
-        $this->getResponse()->setBody(
-            $this->getLayout()->createBlock('bannerslider/adminhtml_bannerslider_edit_tab_categories')
-                ->getCategoryChildrenJson($this->getRequest()->getParam('category'))
-        );
+    /**
+     * init layout and set active for current menu
+     *
+     * @return Magestore_Bannerslider_Adminhtml_BannersliderController
+     */
+    protected function _initAction() {
+        $this->loadLayout()
+                ->_setActiveMenu('bannerslider/bannerslider')
+                ->_addBreadcrumb(Mage::helper('adminhtml')->__('Slider Manager'), Mage::helper('adminhtml')->__('Slider Manager'));
+        return $this;
     }
- 
-	public function saveAction() {
-		if ($data = $this->getRequest()->getPost()) {
-			if($data['filename']['delete']==1){
-				$data['filename']='';
-			}
-			elseif(is_array($data['filename'])){
-				$data['filename']=$data['filename']['value'];
-			}
-			
-			if(isset($_FILES['filename']['name']) && $_FILES['filename']['name'] != '') {
-				try {	
-					/* Starting upload */	
-					$uploader = new Varien_File_Uploader('filename');
-					
-					// Any extention would work
-	           		$uploader->setAllowedExtensions(array('jpg','jpeg','gif','png'));
-					$uploader->setAllowRenameFiles(false);
-					
-					// Set the file upload mode 
-					// false -> get the file directly in the specified folder
-					// true -> get the file in the product like folders 
-					//	(file.jpg will go in something like /media/f/i/file.jpg)
-					$uploader->setFilesDispersion(false);
-							
-					// We set media as the upload dir
-					$path = Mage::getBaseDir('media') . DS ;
-					$result = $uploader->save($path, $_FILES['filename']['name'] );
-					$data['filename'] = $result['file'];
-				} catch (Exception $e) {
-					$data['filename'] = $_FILES['filename']['name'];
-		        }
-			}
-	  			
-	  			
-			$model = Mage::getModel('bannerslider/bannerslider');		
-			$model->setData($data)
-				->setId($this->getRequest()->getParam('id'));
-			
-			try {
-				if ($model->getCreatedTime == NULL || $model->getUpdateTime() == NULL) {
-					$model->setCreatedTime(now())
-						->setUpdateTime(now());
-				} else {
-					$model->setUpdateTime(now());
-				}
-				
-				$model->setStores(implode(',',$data['stores']));
-				if (isset($data['category_ids'])){
-					$model->setCategories(implode(',',array_unique(explode(',',$data['category_ids']))));
-				}
-				
-				$model->save();
-				Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('bannerslider')->__('Item was successfully saved'));
-				Mage::getSingleton('adminhtml/session')->setFormData(false);
 
-				if ($this->getRequest()->getParam('back')) {
-					$this->_redirect('*/*/edit', array('id' => $model->getId()));
-					return;
-				}
-				$this->_redirect('*/*/');
-				return;
+    /**
+     * index action
+     */
+    public function indexAction() {
+        $this->_initAction()
+                ->renderLayout();
+    }
+
+    /**
+     * view and edit item action
+     */
+    public function editAction() {
+        $id = $this->getRequest()->getParam('id');
+        $model = Mage::getModel('bannerslider/bannerslider')->load($id);
+
+        if ($model->getId() || $id == 0) {
+            $data = Mage::getSingleton('adminhtml/session')->getFormData(true);
+            if (!empty($data))
+                $model->setData($data);
+
+            Mage::register('bannerslider_data', $model);
+
+            $this->loadLayout();
+            $this->_setActiveMenu('bannerslider/bannerslider');
+
+            $this->_addBreadcrumb(Mage::helper('adminhtml')->__('Slider Manager'), Mage::helper('adminhtml')->__('Slider Manager'));
+            $this->_addBreadcrumb(Mage::helper('adminhtml')->__('Item News'), Mage::helper('adminhtml')->__('Item News'));
+
+            $this->getLayout()->getBlock('head')->setCanLoadExtJs(true);
+            $this->_addContent($this->getLayout()->createBlock('bannerslider/adminhtml_bannerslider_edit'))
+                    ->_addLeft($this->getLayout()->createBlock('bannerslider/adminhtml_bannerslider_edit_tabs'));
+
+            $this->renderLayout();
+        } else {
+            Mage::getSingleton('adminhtml/session')->addError(Mage::helper('bannerslider')->__('Slider does not exist'));
+            $this->_redirect('*/*/');
+        }
+    }
+
+    public function newAction() {
+        $this->_forward('edit');
+    }
+
+    /**
+     * save item action
+     */
+    public function saveAction() {
+        if ($data = $this->getRequest()->getPost()) {
+
+            if ($data['style_slide'] == 1 || $data['style_slide'] == 3 ||
+                    $data['style_slide'] == 2 || $data['style_slide'] == 4) {
+                $data['animationB'] = $data['animationA'];
+                //die('1111');
+            }elseif($data['style_slide'] == 5){
+                $data['position'] = 'pop-up';
+            }elseif($data['style_slide'] == 6){
+                $data['position'] = 'note-allsite';
+            }
+                                    
+            //Zend_debug::dump($data);	
+            $model = Mage::getModel('bannerslider/bannerslider');
+            $model->setData($data)
+                    ->setId($this->getRequest()->getParam('id'));
+            //Zend_debug::dump($model->getData());die();
+            try {
+
+                $model->save();
+                if (isset($data['slider_banner'])) {
+                    $bannerIds = array();
+                    $bannerOrders = array();
+
+                    $test = Mage::helper('adminhtml/js')->decodeGridSerializedInput($data['slider_banner']);
+                    foreach ($test as $key => $value) {
+                        $bannerIds[] = $key;
+                        $bannerOrders[] = $value['order_banner_slider'];
+                    }
+
+                    $unSelecteds = Mage::getResourceModel('bannerslider/banner_collection')
+                            ->addFieldToFilter('bannerslider_id', $model->getId());
+                    if (count($bannerIds))
+                        $unSelecteds->addFieldToFilter('banner_id', array('nin' => $bannerIds));
+                    foreach ($unSelecteds as $banner) {
+                        $banner->setBannersliderId(0)
+                                ->setOrderBanner(0)->save();
+                    }
+                    $selectBanner = Mage::getResourceModel('bannerslider/banner_collection')
+                            ->addFieldToFilter('banner_id', array('in' => $bannerIds));
+                    //->addFieldToFilter('bannerslider_id', array('neq' => $model->getId()));					
+                    $i = -1;
+                    foreach ($selectBanner as $banner) {
+                        $banner->setBannersliderId($model->getId())
+                                ->setOrderBanner($bannerOrders[++$i])->save();
+                    }
+                    //Zend_debug::dump($selectBanner->getData());die();
+                }
+                Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('bannerslider')->__('Slider was successfully saved'));
+                Mage::getSingleton('adminhtml/session')->setFormData(false);
+
+                if ($this->getRequest()->getParam('back')) {
+                    $this->_redirect('*/*/edit', array('id' => $model->getId()));
+                    return;
+                }
+                $this->_redirect('*/*/');
+                return;
             } catch (Exception $e) {
                 Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
                 Mage::getSingleton('adminhtml/session')->setFormData($data);
@@ -153,66 +152,68 @@ class Magestore_Bannerslider_Adminhtml_BannersliderController extends Mage_Admin
                 return;
             }
         }
-        Mage::getSingleton('adminhtml/session')->addError(Mage::helper('bannerslider')->__('Unable to find item to save'));
+        Mage::getSingleton('adminhtml/session')->addError(Mage::helper('bannerslider')->__('Unable to find slider to save'));
         $this->_redirect('*/*/');
-	}
- 
-	public function deleteAction() {
-		if( $this->getRequest()->getParam('id') > 0 ) {
-			try {
-				$model = Mage::getModel('bannerslider/bannerslider');
-				 
-				$model->setId($this->getRequest()->getParam('id'))
-					->delete();
-					 
-				Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('adminhtml')->__('Item was successfully deleted'));
-				$this->_redirect('*/*/');
-			} catch (Exception $e) {
-				Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
-				$this->_redirect('*/*/edit', array('id' => $this->getRequest()->getParam('id')));
-			}
-		}
-		$this->_redirect('*/*/');
-	}
+    }
 
+    /**
+     * delete item action
+     */
+    public function deleteAction() {
+        if ($this->getRequest()->getParam('id') > 0) {
+            try {
+                $model = Mage::getModel('bannerslider/bannerslider');
+                $model->setId($this->getRequest()->getParam('id'))
+                        ->delete();
+                Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('adminhtml')->__('Slider was successfully deleted'));
+                $this->_redirect('*/*/');
+            } catch (Exception $e) {
+                Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
+                $this->_redirect('*/*/edit', array('id' => $this->getRequest()->getParam('id')));
+            }
+        }
+        $this->_redirect('*/*/');
+    }
+
+    /**
+     * mass delete item(s) action
+     */
     public function massDeleteAction() {
         $bannersliderIds = $this->getRequest()->getParam('bannerslider');
-        if(!is_array($bannersliderIds)) {
-			Mage::getSingleton('adminhtml/session')->addError(Mage::helper('adminhtml')->__('Please select item(s)'));
+        if (!is_array($bannersliderIds)) {
+            Mage::getSingleton('adminhtml/session')->addError(Mage::helper('adminhtml')->__('Please select item(s)'));
         } else {
             try {
                 foreach ($bannersliderIds as $bannersliderId) {
                     $bannerslider = Mage::getModel('bannerslider/bannerslider')->load($bannersliderId);
                     $bannerslider->delete();
                 }
-                Mage::getSingleton('adminhtml/session')->addSuccess(
-                    Mage::helper('adminhtml')->__(
-                        'Total of %d record(s) were successfully deleted', count($bannersliderIds)
-                    )
-                );
+                Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('adminhtml')->__('Total of %d record(s) were successfully deleted', count($bannersliderIds)));
             } catch (Exception $e) {
                 Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
             }
         }
         $this->_redirect('*/*/index');
     }
-	
-    public function massStatusAction()
-    {
+
+    /**
+     * mass change status for item(s) action
+     */
+    public function massStatusAction() {
         $bannersliderIds = $this->getRequest()->getParam('bannerslider');
-        if(!is_array($bannersliderIds)) {
+        if (!is_array($bannersliderIds)) {
             Mage::getSingleton('adminhtml/session')->addError($this->__('Please select item(s)'));
         } else {
             try {
                 foreach ($bannersliderIds as $bannersliderId) {
                     $bannerslider = Mage::getSingleton('bannerslider/bannerslider')
-                        ->load($bannersliderId)
-                        ->setStatus($this->getRequest()->getParam('status'))
-                        ->setIsMassupdate(true)
-                        ->save();
+                            ->load($bannersliderId)
+                            ->setStatus($this->getRequest()->getParam('status'))
+                            ->setIsMassupdate(true)
+                            ->save();
                 }
                 $this->_getSession()->addSuccess(
-                    $this->__('Total of %d record(s) were successfully updated', count($bannersliderIds))
+                        $this->__('Total of %d record(s) were successfully updated', count($bannersliderIds))
                 );
             } catch (Exception $e) {
                 $this->_getSession()->addError($e->getMessage());
@@ -220,38 +221,105 @@ class Magestore_Bannerslider_Adminhtml_BannersliderController extends Mage_Admin
         }
         $this->_redirect('*/*/index');
     }
-  
-    public function exportCsvAction()
-    {
-        $fileName   = 'bannerslider.csv';
-        $content    = $this->getLayout()->createBlock('bannerslider/adminhtml_bannerslider_grid')
-            ->getCsv();
 
-        $this->_sendUploadResponse($fileName, $content);
+    /**
+     * export grid item to CSV type
+     */
+    public function exportCsvAction() {
+        $fileName = 'bannerslider.csv';
+        $content = $this->getLayout()->createBlock('bannerslider/adminhtml_bannerslider_grid')->getCsv();
+        $this->_prepareDownloadResponse($fileName, $content);
     }
 
-    public function exportXmlAction()
-    {
-        $fileName   = 'bannerslider.xml';
-        $content    = $this->getLayout()->createBlock('bannerslider/adminhtml_bannerslider_grid')
-            ->getXml();
-
-        $this->_sendUploadResponse($fileName, $content);
+    /**
+     * export grid item to XML type
+     */
+    public function exportXmlAction() {
+        $fileName = 'bannerslider.xml';
+        $content = $this->getLayout()->createBlock('bannerslider/adminhtml_bannerslider_grid')->getXml();
+        $this->_prepareDownloadResponse($fileName, $content);
     }
 
-    protected function _sendUploadResponse($fileName, $content, $contentType='application/octet-stream')
-    {
-        $response = $this->getResponse();
-        $response->setHeader('HTTP/1.1 200 OK','');
-        $response->setHeader('Pragma', 'public', true);
-        $response->setHeader('Cache-Control', 'must-revalidate, post-check=0, pre-check=0', true);
-        $response->setHeader('Content-Disposition', 'attachment; filename='.$fileName);
-        $response->setHeader('Last-Modified', date('r'));
-        $response->setHeader('Accept-Ranges', 'bytes');
-        $response->setHeader('Content-Length', strlen($content));
-        $response->setHeader('Content-type', $contentType);
-        $response->setBody($content);
-        $response->sendResponse();
-        die;
+    protected function _isAllowed() {
+        return Mage::getSingleton('admin/session')->isAllowed('bannerslider');
     }
+
+    protected function customAction() {
+        $this->loadLayout();
+        $this->getLayout()->getBlock('slider.edit.tab.custom')
+                ->setCustom($this->getRequest()->getPost('banner', null));
+        $this->renderLayout();
+    }
+
+    public function customgridAction() {
+        $this->loadLayout();
+        $this->getLayout()->getBlock('slider.edit.tab.custom')
+                ->setCustom($this->getRequest()->getPost('banner', null));
+        $this->renderLayout();
+    }
+
+    public function chooserMainCategoriesAction() {
+        $request = $this->getRequest();
+        $ids = $request->getParam('selected', array());
+
+        if (is_array($ids)) {
+            foreach ($ids as $key => &$id) {
+                $id = (int) $id;
+                if ($id <= 0) {
+                    unset($ids[$key]);
+                }
+            }
+
+            $ids = array_unique($ids);
+        } else {
+            $ids = array();
+        }
+
+        $block = $this->getLayout()->createBlock('bannerslider/adminhtml_bannerslider_edit_tab_content_categories', 'content_category', array('js_form_object' => $request->getParam('form')))
+                ->setCategoryIds($ids)
+        ;
+
+        if ($block) {
+            $this->getResponse()->setBody($block->toHtml());
+        }
+    }
+
+    public function categoriesJsonAction() {
+        if ($categoryId = (int) $this->getRequest()->getPost('id')) {
+            $this->getRequest()->setParam('id', $categoryId);
+
+            if (!$category = $this->_initCategory()) {
+                return;
+            }
+            $this->getResponse()->setBody(
+                    $this->getLayout()->createBlock('adminhtml/catalog_category_tree')
+                            ->getTreeJson($category)
+            );
+        }
+    }
+
+    protected function _initCategory() {
+        $categoryId = (int) $this->getRequest()->getParam('id', false);
+        $storeId = (int) $this->getRequest()->getParam('store');
+
+        $category = Mage::getModel('catalog/category');
+        $category->setStoreId($storeId);
+
+        if ($categoryId) {
+            $category->load($categoryId);
+            if ($storeId) {
+                $rootId = Mage::app()->getStore($storeId)->getRootCategoryId();
+                if (!in_array($rootId, $category->getPathIds())) {
+                    $this->_redirect('*/*/', array('_current' => true, 'id' => null));
+                    return false;
+                }
+            }
+        }
+
+        Mage::register('category', $category);
+        Mage::register('current_category', $category);
+
+        return $category;
+    }
+
 }
