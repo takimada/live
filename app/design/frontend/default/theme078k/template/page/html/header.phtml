@@ -46,7 +46,6 @@
                     <ul class="links">
                         <?php if (Mage::getSingleton('customer/session')->isLoggedIn()) : ?>
                             <li class="first"><a title="<?php echo $this->__('My Account')?>" href="<?php echo $this->getUrl('customer/account') ?>"><?php echo $this->__('My Account')?></a></li>
-                            <li class="first"><a title="<?php echo $this->__('My Wishlist')?>" href="<?php echo $this->getUrl('wishlist') ?>"><?php echo $this->__('My Wishlist')?></a></li>
                             <li class="last"><a title="<?php echo $this->__('Log Out')?>" href="<?php echo $this->getUrl('customer/account/logout') ?>"><?php echo $this->__('Log Out')?></a></li>
                         <?php else: ?>
                             <li class="first"><a title="<?php echo $this->__('Log In')?>" href="<?php echo $this->getUrl('customer/account/login') ?>"><?php echo $this->__('Log In')?></a></li>
