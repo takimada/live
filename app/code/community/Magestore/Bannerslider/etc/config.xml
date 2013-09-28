@@ -1,8 +1,29 @@
 <?xml version="1.0"?>
+<!--
+/**
+ * Magestore
+ * 
+ * NOTICE OF LICENSE
+ * 
+ * This source file is subject to the Magestore.com license that is
+ * available through the world-wide-web at this URL:
+ * http://www.magestore.com/license-agreement.html
+ * 
+ * DISCLAIMER
+ * 
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ * 
+ * @category 	Magestore
+ * @package 	Magestore_Bannerslider
+ * @copyright 	Copyright (c) 2012 Magestore (http://www.magestore.com/)
+ * @license 	http://www.magestore.com/license-agreement.html
+ */
+-->
 <config>
     <modules>
         <Magestore_Bannerslider>
-            <version>2.0.0</version>
+            <version>3.0.0</version>
         </Magestore_Bannerslider>
     </modules>
     <frontend>
@@ -22,27 +43,44 @@
                 </bannerslider>
             </updates>
         </layout>
+        <translate>
+            <modules>
+                <Magestore_Bannerslider>
+                    <files>
+                        <default>Magestore_Bannerslider.csv</default>
+                    </files>
+                </Magestore_Bannerslider>
+            </modules>
+        </translate>
     </frontend>
     <admin>
         <routers>
-			<bannerslider>
-				<use>admin</use>
-				<args>
-					<module>Magestore_Bannerslider</module>
-					<frontName>bannerslider</frontName>
-				</args>
-			</bannerslider>
+            <bannerslideradmin>
+                <use>admin</use>
+                <args>
+                    <module>Magestore_Bannerslider</module>
+                    <frontName>bannerslideradmin</frontName>
+                </args>
+            </bannerslideradmin>
         </routers>
     </admin>
     <adminhtml>
-		
-		<layout>
-			<updates>
-				<bannerslider>
-					<file>bannerslider.xml</file>
-				</bannerslider>
-			</updates>
-		</layout>
+        <layout>
+            <updates>
+                <bannerslider>
+                    <file>bannerslider.xml</file>
+                </bannerslider>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <Magestore_Bannerslider>
+                    <files>
+                        <default>Magestore_Bannerslider.csv</default>
+                    </files>
+                </Magestore_Bannerslider>
+            </modules>
+        </translate>
     </adminhtml>   
     <global>
         <models>
@@ -54,8 +92,17 @@
                 <class>Magestore_Bannerslider_Model_Mysql4</class>
                 <entities>
                     <bannerslider>
-                        <table>bannerslider</table>
+                        <table>bannerslider_slider</table>
                     </bannerslider>
+                    <banner>
+                        <table>bannerslider_banner</table>
+                    </banner>
+                    <value>
+                        <table>bannerslider_value</table>
+                    </value>
+                    <report>
+                        <table>bannerslider_report</table>
+                    </report>
                 </entities>
             </bannerslider_mysql4>
         </models>
@@ -89,16 +136,22 @@
                 <class>Magestore_Bannerslider_Helper</class>
             </bannerslider>
         </helpers>
+        <!-- <events>
+             			<controller_action_predispatch>
+                    				<observers>
+                           					<bannerslider_observers>
+                                  						<class>bannerslider/observer</class>
+                                  						<method>controllerActionPredispatch</method>
+                           					</bannerslider_observers>
+                    				</observers>
+             			</controller_action_predispatch>
+      		</events> -->
     </global>
-		<default>
-			<bannerslider>
-				<settings>
-					<time_delay>6</time_delay>
-					<show_description>1</show_description>
-					<list_style>1</list_style>
-					<image_width>450</image_width>
-					<image_height>250</image_height>
-				</settings>
-			</bannerslider>
-		</default>
+    <default>
+        <bannerslider>
+            <general>
+                <enable>1</enable>
+            </general>
+        </bannerslider>
+    </default>
 </config>
