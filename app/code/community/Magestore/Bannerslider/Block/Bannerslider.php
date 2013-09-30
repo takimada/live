@@ -1,62 +1,57 @@
 <?php
-class Magestore_BannerSlider_Block_BannerSlider extends Mage_Core_Block_Template
-{
-	private $_display = '0';
-	
-	public function _prepareLayout()	{
-		return parent::_prepareLayout();
-	}
+
+/**
+ * Magestore
+ * 
+ * NOTICE OF LICENSE
+ * 
+ * This source file is subject to the Magestore.com license that is
+ * available through the world-wide-web at this URL:
+ * http://www.magestore.com/license-agreement.html
+ * 
+ * DISCLAIMER
+ * 
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ * 
+ * @category 	Magestore
+ * @package 	Magestore_Bannerslider
+ * @copyright 	Copyright (c) 2012 Magestore (http://www.magestore.com/)
+ * @license 	http://www.magestore.com/license-agreement.html
+ */
+
+/**
+ * Bannerslider Block
+ * 
+ * @category 	Magestore
+ * @package 	Magestore_Bannerslider
+ * @author  	Magestore Developer
+ */
+class Magestore_Bannerslider_Block_Bannerslider extends Mage_Core_Block_Template {
+
+    protected function _toHtml() {         
+                if(!Mage::getStoreConfig('bannerslider/general/enable')){	
+                    return '';
+                }
+                //die('11111111');
+        $collection = null;
+        $banners = array();        
+        $collection = Mage::getModel('bannerslider/bannerslider')->getCollection()
+                ->addFieldToFilter('status', 0)
+                ->addFieldToFilter('position', array(
+            'in' => array($this->getBlockPosition(), $this->getCateBlockPosition(), $this->getPopupPosition(), $this->getBlocknotePosition()),
+                ));
+        foreach ($collection as $item) {
+            $block = $this->getLayout()->createBlock('bannerslider/default')
+                            ->setTemplate('bannerslider/bannerslider.phtml')->setSliderData($item);
+            $banners[] = $block->renderView();
+        }
+        return implode('', $banners);
+    }
+
+    public function getIsHomePage() {
+        return $this->getUrl('') == $this->getUrl('*/*/*', array('_current' => true, '_use_rewrite' => true));
+    }
     
-	public function getBannerSlider() { 
-		if (!$this->hasData('bannerslider')) {
-			$this->setData('bannerslider', Mage::registry('bannerslider'));
-		}
-		return $this->getData('bannerslider');			
-	}
-	
-	public function setDisplay($display){
-		$this->_display = $display;
-	}
-	
-	public function getBannerCollection() {
-		$collection = Mage::getModel('bannerslider/bannerslider')->getCollection()
-			->addFieldToFilter('status',1)
-			->addFieldToFilter('is_home',$this->_display);
-		if ($this->_display == Magestore_Bannerslider_Helper_Data::DISP_CATEGORY){
-			$current_category = Mage::registry('current_category')->getId();
-			$collection->addFieldToFilter('categories',array('finset' => $current_category));
-		}
-		
-		$current_store = Mage::app()->getStore()->getId();
-		$banners = array();
-		foreach ($collection as $banner) {
-			$stores = explode(',',$banner->getStores());
-			if (in_array(0,$stores) || in_array($current_store,$stores))
-			//if ($banner->getStatus())
-				$banners[] = $banner;
-		}
-		return $banners;
-	}
-	
-	public function getDelayTime() {
-		$delay = (int) Mage::getStoreConfig('bannerslider/settings/time_delay');
-		$delay = $delay * 1000;
-		return $delay;
-	}
-	
-	public function isShowDescription(){
-		return (int)Mage::getStoreConfig('bannerslider/settings/show_description');
-	}
-	
-	public function getListStyle(){
-		return (int)Mage::getStoreConfig('bannerslider/settings/list_style');
-	}
-	
-	public function getImageWidth() {
-		return (int)Mage::getStoreConfig('bannerslider/settings/image_width');
-	}
-	
-	public function getImageHeight() {
-		return (int)Mage::getStoreConfig('bannerslider/settings/image_height');
-	}
+
 }
