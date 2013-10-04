@@ -7,12 +7,6 @@
         <remove name="right.reports.product.compared"/>
     </default>
 
-    <catalog_product_view>
-        <reference name="right">
-            <block type="core/template" template="catalog/product/view/right.phtml" />
-        </reference>
-    </catalog_product_view>
-
 	<checkout_cart_index>
 		<remove name="checkout.cart.shipping" />
 	</checkout_cart_index>
