@@ -314,7 +314,9 @@ class Mana_Filters_Model_Filter_Price
 
         $value = $this->getMSelectedValues();
         if (!empty($value)) {
-            list($index, $range) = explode(',', $value[0]);
+            if(isset($value[0])) {
+                list($index, $range) = explode(',', $value[0]);
+            }
         }
 
         if (!$range) {
