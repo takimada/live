@@ -1,0 +1,62 @@
+<?php
+$_shippingInfo = $this->getTrackingInfo();
+
+$_order = array_keys($_shippingInfo);
+$_order = $_order[0];
+
+$_shippingInfo = $_shippingInfo[$_order][0];
+
+$_shippingConf = Mage::helper('kargolar')->getTrackConf($_shippingInfo['title']);
+
+$params = explode('?', $_shippingConf['url']);
+$url = $params[0];
+
+if (!empty($params[1]))
+    $params = $params[1];
+else
+    $params = '';
+
+if (!empty($_shippingConf['queryString']))
+    $params .= '&' . $_shippingConf['queryString'];
+
+$params = str_replace('{T_CODE}', $_shippingInfo['number'], $params);
+parse_str($params, $params);
+?>
+
+<form style="display:none;" id="track-form" action="<?php echo $url ?>" method="<?php echo $_shippingConf['requestMethod'] ?>">
+    <?php
+    if (!empty($params)) {
+        foreach ($params as $key => $value) {
+            ?>
+            <input type="hidden" name="<?php echo $key ?>" value="<?php echo $value ?>" />
+            <?php
+        }
+    }
+    ?>
+</form>
+
+<script type="text/javascript">
+    function submit_track_form() {
+        document.getElementById("track-form").submit();
+    }
+    <?php if ($_shippingConf['popupApi'] != 'popupWithAlert') { ?>
+        submit_track_form();
+    <?php } ?>
+</script>
+
+<?php if ($_shippingConf['popupApi'] == 'popupWithAlert') { ?>
+
+    <div class="page-title title-buttons">
+        <h1><?php echo $this->__('Tracking Code'); ?> : <?php echo $_shippingInfo['number'] . ' (' . $_shippingInfo['title'] . ')' ?></h1>
+    </div>
+
+    <p>
+        <?php echo Mage::helper('kargolar')->__('Please copy the tracking code and click continue button.') ?><br /><br />
+        <?php echo Mage::helper('kargolar')->__('Tracking Code') ?> : <input style="text-align: center;" type="text" readonly="readonly" value="<?php echo $_shippingInfo['number'] ?>" /><br />
+    </p>
+
+    <br />
+
+    <button type="button" title="<?php echo Mage::helper('kargolar')->__('Continue') ?>" class="button" onclick="submit_track_form();"><span><span><?php echo Mage::helper('kargolar')->__('Continue') ?></span></span></button>
+
+<?php } ?>
