@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<layout version="0.1.0">
+    <sales_order_view translate="label">
+        <reference name="sales.order.info.buttons">
+            <action method="setTemplate"><template>mageist_kargolar/order/view/buttons.phtml</template></action> 
+        </reference>
+    </sales_order_view>
+    <sales_order_invoice translate="label">
+        <reference name="sales.order.info.buttons">
+            <action method="setTemplate"><template>mageist_kargolar/order/view/buttons.phtml</template></action> 
+        </reference>
+    </sales_order_invoice>
+    <sales_order_shipment translate="label">
+        <reference name="sales.order.info.buttons">
+            <action method="setTemplate"><template>mageist_kargolar/order/view/buttons.phtml</template></action> 
+        </reference>
+    </sales_order_shipment>
+    <shipping_tracking_popup translate="label">
+        <reference name="content">
+            <remove name="shipping.tracking.popup" />
+            <block type="shipping/tracking_popup" name="kargolar.tracking.popup" template="mageist_kargolar/tracking/popup.phtml" />
+        </reference>
+    </shipping_tracking_popup>
+</layout>

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Mageist_Kargolar>
+            <active>true</active>
+            <codePool>community</codePool>
+        </Mageist_Kargolar>
+    </modules>
+</config>
