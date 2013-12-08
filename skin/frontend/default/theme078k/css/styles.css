@@ -1702,3 +1702,7 @@ tr.summary-details-excluded { font-style:italic; }
     text-align: center;
     width: 21px;
 }
+
+.cms-page-view .std {
+    font-family: Arial,Helvetica,sans-serif !important;
+}
