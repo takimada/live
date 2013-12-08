@@ -1657,11 +1657,11 @@ tr.summary-details-excluded { font-style:italic; }
 /* ======================================================================================= */
 
 .header-container {
-    height: 200px;
+    height: 214px;
 }
 
 .header_top {
-    height: 110px;
+    height: 124px;
     position: relative;
     text-align: right;
 }

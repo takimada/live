@@ -76,12 +76,12 @@ Default layout, loads most of the pages
                     <label>Page Header</label>
                     <action method="setElementClass"><value>top-container</value></action>
                 </block>
-																<block type="cms/block" name="header_info">
-																			<action method="setBlockId"><block_id>header_info</block_id></action>																	
-																</block>
-																<block type="cms/block" name="header_links">
-																			<action method="setBlockId"><block_id>header_links</block_id></action>																	
-																</block>
+                <block type="cms/block" name="header_info">
+                            <action method="setBlockId"><block_id>header_info</block_id></action>
+                </block>
+                <block type="cms/block" name="header_links">
+                            <action method="setBlockId"><block_id>header_links</block_id></action>
+                </block>
             </block>
 
             <block type="page/html_breadcrumbs" name="breadcrumbs" as="breadcrumbs"/>
