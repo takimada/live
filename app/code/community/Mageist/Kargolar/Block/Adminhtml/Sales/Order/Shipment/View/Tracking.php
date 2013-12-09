@@ -16,4 +16,18 @@ class Mageist_Kargolar_Block_Adminhtml_Sales_Order_Shipment_View_Tracking extend
         return $carriers;
     }
 
+    public function getCarrierTitle($code)
+    {
+
+        $kargoConf = unserialize(Mage::getStoreConfig('kargolar/kargolar_group/kargo_track', Mage::app()->getStore()));
+
+        foreach($kargoConf as $kc) {
+            if($kc['carrier'] == $code) {
+                return $code;
+            }
+        }
+
+        return parent::getCarrierTitle($code);
+    }
+
 }
