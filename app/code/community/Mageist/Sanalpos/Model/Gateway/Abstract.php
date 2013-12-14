@@ -360,7 +360,7 @@ abstract class Mageist_Sanalpos_Model_Gateway_Abstract extends Varien_Object {
         
         //TODO: Can the order state change ?
         $order->setState($this->getFinalState(), true, $stateMessage);
-        $order->sendNewOrderEmail();
+        //$order->sendNewOrderEmail();
         $order->setEmailSent(true);
         
         $order->save();

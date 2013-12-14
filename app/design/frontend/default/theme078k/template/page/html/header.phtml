@@ -56,12 +56,14 @@
                     <?php //echo $this->getChildHtml('topLinks') ?>
                 </div>
             </div>
-            <div class="header_phone">
-                <img alt="" src="<?php echo $this->getUrl('media') ?>wysiwyg/phone.png" />
+            <div class="sheader_area clearfix">
+                <?php echo $this->getChildHtml('header_links') ?>
+                <div class="header_phone">
+                    <img alt="" src="<?php echo $this->getUrl('media') ?>wysiwyg/phone.png" />
+                </div>
+                <?php echo $this->getChildHtml('topSearch') ?>
             </div>
-            <?php echo $this->getChildHtml('topSearch') ?>
         </div>
-
         <?php echo $this->getChildHtml('topMenu') ?>
     </div>
 </div>
