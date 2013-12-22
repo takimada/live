@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<config>
+     <enterprise>
+            <admingws>
+                <collection_load_before>
+                    <avail__rules_collection>addStoreFilter</avail__rules_collection>
+                </collection_load_before>
+            </admingws>
+      </enterprise>
+    <menu> 
+        <catalog>
+            <children>             
+                <aw_avail_rules translate="title" module="avail">
+                    <title>Custom Stock Display</title>
+                    <action>avail_admin/adminhtml_rules/</action>
+                    <sort_order>60</sort_order>
+                </aw_avail_rules>
+             </children>
+        </catalog>
+    </menu>
+    
+    <acl>
+        <resources>
+            <all>
+                <title>Allow Everything</title>
+            </all>
+            <admin>
+                <children>
+                    <catalog>
+                        <children>
+                            <aw_avail_rules translate="title" module="avail">
+				                <title>Custom Stock Display</title>
+				                <action>avail_admin/adminhtml_rules/</action>
+				                <sort_order>60</sort_order>
+                    		</aw_avail_rules>
+                        </children>
+                    </catalog>                   		 
+                </children>
+            </admin>
+        </resources>
+    </acl>     
+</config>

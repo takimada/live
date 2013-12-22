@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">   
+    <avail_admin_adminhtml_rules_index>
+        <reference name="content">
+            <block type="avail/adminhtml_rules" name="avail_rules" />
+        </reference>
+    </avail_admin_adminhtml_rules_index>
+</layout>
