@@ -84,6 +84,7 @@
 					<?php echo $this->__('Your Testimonial'); ?>
 					<em>*</em>
 				</label>
+				<br/>
 				<div class="std-input-box">
 					<textarea name="testimonial" id="testimonial" type="text" class="required-entry" style="width: 400px; height: 150px"></textarea>
 				</div>
@@ -96,7 +97,7 @@
 		<div class="buttons-set">
 			<p class="required"><?php echo $this->__('* Required Fields'); ?></p>
 			<button type="submit" title="<?php echo $this->__('Submit'); ?>" class="button"><span><span><?php echo $this->__('Submit Testimonial'); ?></span></span></button>
-			<p class="back-link"><a href="<?php echo $this->getBack(); ?>"><small><<</small>Back</a></p>
+			<p class="back-link"><a href="<?php echo $this->getBack(); ?>"><small><<</small><?php echo $this->__('Back'); ?></a></p>
 		</div>
 	</form>
 	<script type="text/javascript">

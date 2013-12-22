@@ -56,6 +56,15 @@
                 </testimonial>
             </updates>
         </layout>
+        <translate>
+            <modules>
+                <testimonial>
+                    <files>
+                        <default>Magebuzz_Testimonial.csv</default>
+                    </files>
+                </testimonial>
+            </modules>
+        </translate>
     </frontend>
     <admin>
         <routers>
