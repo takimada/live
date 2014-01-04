@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <PRODUCT_TYPE_configurable>
+        <reference name="head">
+            <action method="addJs">
+                <script>aw_avail/mock.js</script>
+            </action>
+        </reference>
+        <reference name="product.info.options.wrapper">
+            <block type="avail/options" name="product.info.options.configurable" as="options_configurable" before="-" template="catalog/product/view/type/options/configurable.phtml"/>
+        </reference>
+        <reference name = "before_body_end">
+            <block type = "avail/options" name = "awavail_options" template = "aw_avail/options.phtml"/>
+        </reference>
+    </PRODUCT_TYPE_configurable>
+</layout>

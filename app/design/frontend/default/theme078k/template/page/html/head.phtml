@@ -54,11 +54,8 @@
 <?php echo $this->helper('core/js')->getTranslatorScript() ?>
 <?php echo $this->getIncludes() ?>
 <?php /* <script type="text/javascript" src="<?php echo $this->getSkinUrl('') ?>js/jquery-1.5.1.js"></script> */ ?>
+
 <script type="text/javascript" charset="utf-8">
 var j = jQuery.noConflict();
-jQuery(function() {
-    jQuery('body').nocop({prot: true});
-});
 </script>
 <script type="text/javascript" src="<?php echo $this->getSkinUrl('') ?>js/jquery.nivo.slider.js"></script>
-<script type="text/javascript" src="<?php echo $this->getSkinUrl('') ?>js/jquery.nocop.js"></script>

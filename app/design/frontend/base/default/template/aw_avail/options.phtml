@@ -1,0 +1,122 @@
+<?php
+/**
+ * aheadWorks Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://ecommerce.aheadworks.com/AW-LICENSE.txt
+ *
+ * =================================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * =================================================================
+ * This software is designed to work with Magento community edition and
+ * its use on an edition other than specified is prohibited. aheadWorks does not
+ * provide extension support in case of incorrect edition use.
+ * =================================================================
+ *
+ * @category   AW
+ * @package    AW_Avail
+ * @version    1.2.2
+ * @copyright  Copyright (c) 2010-2012 aheadWorks Co. (http://www.aheadworks.com)
+ * @license    http://ecommerce.aheadworks.com/AW-LICENSE.txt
+ */
+?><?php if ($this->getProduct()->getData('aw_avail_disable')) return; ?>
+<div id="aw_avail" class="avoptions">
+    <script type="text/javascript">
+        function refreshPrice(){
+            try{
+                spConfig.reloadOldPrice();
+                setTimeout('refreshPrice()',1);
+                $('old-price-'+spConfig.config.productId+'_clone').update($('old-price-'+spConfig.config.productId).innerHTML);
+            }catch(e){}
+        }
+        spConfig.fillSelect = function (element) {
+            var attributeId = element.id.replace(/[a-z]*/, '');
+            var options = this.getAttributeOptions(attributeId);
+            this.clearSelect(element);
+            element.options[0] = new Option(this.config.chooseText, '');
+            var prevConfig = false;
+            if (element.prevSetting) {
+                prevConfig = element.prevSetting.options[element.prevSetting.selectedIndex];
+            }
+            if (options) {
+                var index = 1;
+                for (var i = 0; i < options.length; i++) {
+                    var allowedProducts = [];
+                    if (prevConfig) {
+                        for (var j = 0; j < options[i].products.length; j++) {
+                            if (prevConfig.config.allowedProducts
+                                && prevConfig.config.allowedProducts.indexOf(options[i].products[j]) > -1) {
+                                allowedProducts.push(options[i].products[j]);
+                            }
+                        }
+                    } else {
+                        allowedProducts = options[i].products.clone();
+                    }
+                    if (allowedProducts.size() > 0) {
+                        options[i].allowedProducts = allowedProducts;
+                        var instock = ' <?php echo $this->__('Out of stock') ?>';
+                        for (var j = 0; j < options[i].stock.length; j++) {
+                            if (options[i].stock[j] > 0) {
+                                instock = ' <?php echo $this->__('In stock') ?>';
+                            }
+                        }
+                        element.options[index] = new Option(this.getOptionLabel(options[i], options[i].price) + instock, options[i].id);
+                        element.options[index].config = options[i];
+                        index++;
+                    }
+                }
+            }
+        };
+
+        spConfig.reloadOptionLabels = function (element) {
+            var selectedPrice;
+            if (element.options[element.selectedIndex].config) {
+                selectedPrice = parseFloat(element.options[element.selectedIndex].config.price)
+            }
+            else {
+                selectedPrice = 0;
+            }
+            for (var i = 0; i < element.options.length; i++) {
+                if (element.options[i].config) {
+
+                    var instock = ' <?php echo $this->__('Out of stock') ?>';
+                    for (var j = 0; j < element.options[i].config.stock.length; j++) {
+                        if (element.options[i].config.stock[j] > 0) {
+                            instock = ' <?php echo $this->__('In stock') ?>';
+                        }
+                    }
+
+                    element.options[i].text = this.getOptionLabel(element.options[i].config, element.options[i].config.price - selectedPrice) + instock;
+                }
+            }
+            //AJAX REQUEST to controller if selected element have only 1 assocated product
+            if (element.options[element.selectedIndex].value != '') {
+                if (element.options[element.selectedIndex].config.allowedProducts.length == 1) {
+                    var product_id = element.options[element.selectedIndex].config.allowedProducts.toString();
+                    awAvailTransport = new AwavRegistry(product_id, '<?php echo $this->getControllerUrl() ?>');
+                    awAvailTransport.callController();
+                }
+            }
+            else {
+                var product_id = spConfig.config.productId;
+                awAvailTransport = new AwavRegistry(product_id, '<?php echo $this->getControllerUrl() ?>');
+                awAvailTransport.callController();
+            }
+        };
+        try {
+            spConfig.settings.forEach(function (val) {
+                spConfig.reloadOptionLabels(val)
+            });
+        } catch (e) {        }
+        refreshPrice();
+    </script>
+</div>
+<div id = "aw_avail_loader" class="aw-avail-loader" style="display: none;">
+    <p class="availability">
+        <img src = "<?php echo $this->getSkinUrl() ?>aw_avail/images/al.gif" alt="<?php echo $this->__('Please, wait...') ?>" title="<?php echo $this->__('Please, wait...') ?>"/>
+    </p>
+</div>

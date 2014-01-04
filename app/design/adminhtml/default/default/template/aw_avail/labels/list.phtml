@@ -1,0 +1,143 @@
+<?php
+/**
+ * aheadWorks Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://ecommerce.aheadworks.com/AW-LICENSE.txt
+ *
+ * =================================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * =================================================================
+ * This software is designed to work with Magento community edition and
+ * its use on an edition other than specified is prohibited. aheadWorks does not
+ * provide extension support in case of incorrect edition use.
+ * =================================================================
+ *
+ * @category   AW
+ * @package    AW_Avail
+ * @version    1.2.2
+ * @copyright  Copyright (c) 2010-2012 aheadWorks Co. (http://www.aheadworks.com)
+ * @license    http://ecommerce.aheadworks.com/AW-LICENSE.txt
+ */
+?><div class="entry-edit-head">
+<h4 class="icon-head head-edit-form fieldset-legend"><?php echo Mage::helper('avail')->__('Labels') ?></h4>
+</div>
+
+<div id="labels_container">
+    <?php foreach($this->getLabels() as $key => $value): ?>
+        <div class="fieldset">
+            <table cellspacing="0" class="form-list">
+
+                <?php if($this->isDefaultLabel($key)): ?>
+                    <tr>
+                        <td class="label" colspan="2" border ="1">
+                            <strong>
+                                <?php if($key == $this->getDefaultKey()) { echo $this->__('By default'); } ?>
+
+                                <?php if($key == $this->getOutOfStockKey()) { echo $this->__('Out of stock'); } ?>
+                            </strong>
+                        </td>
+                    </tr>
+                <?php else: ?>
+                    <tr>
+                        <td class="label">
+                            <label><?php echo $this->__('Qty:'); ?></label>
+                        </td>
+                        <td class="value">
+                          <?php echo $this->getInputElementByType('text',$key, array('rewriteName'=>'qty','style'=>'width:30px','after_element_html'=>$this->__(' or less'))); ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+                <tr>
+                    <td class="label">
+                        <label for="label_<?php echo $key; ?>"><?php echo Mage::helper('avail')->__('Text:') ?></label>
+                    </td>
+                    <td class="value">
+                        <?php echo $this->getInputElementByType('text',$key); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">
+                        <label for="answer_votes_"><?php echo Mage::helper('avail')->__('Image:') ?></label>
+                    </td>
+                    <td class ="value">
+                        <?php echo $this->getInputElementByType('image', $key); ?>
+
+                        <?php if(!$this->isDefaultLabel($key)): ?>
+                            <p class="a-left" style="margin:7px 0 0;"><?php echo $this->getDeleteButtonHtml() ?></p>
+                        <?php endif; ?>
+                    </td>
+                 </tr>
+            </table>
+        </div>
+    <?php endforeach; ?>
+  <input type = "hidden" id = "aw_avail_deleted_elemes" name = "aw_avail_deleted_elemes" value = "" />
+</div>
+<p class="a-right" style="margin:7px 0 0;"><?php echo $this->getAddButtonHtml(); ?></p>
+<script type="text/javascript">
+//<![CDATA[
+   var lastId = <?php echo $this->getLastIndexKey(); ?>;
+    var answer = function() {
+        return {
+            del : function(obj) {    
+                if( confirm('<?php echo $this->__('Are you sure you want to delete it?') ?>') ) {
+                     var inputs = obj.up('p').adjacent('input');
+                     inputs.each(function(el) {                         
+                         if(el.type == 'hidden') {                         
+                            if(el.value != '') {                                
+                                var patt = /\/.+\/(.+)$/i;                
+                                var imgName = patt.exec(el.value);                                
+                                if(imgName[1]) {                                    
+                                    $('aw_avail_deleted_elemes').value = $F('aw_avail_deleted_elemes') + '-' + encode_base64(imgName[1]) + '|'; 
+                                }                                
+                            }               
+                         }                         
+                     });                                      
+                    fieldSet = obj.up('div.fieldset');
+                    fieldSet.remove();
+                }
+            },
+            add : function(obj) {
+                var newElement = document.createElement('div');
+                newElement.innerHTML = this.getTemplate();
+                $('labels_container').appendChild(newElement);
+            },
+            getTemplate : function() {
+                var id = this.createId();
+                var str =  '<div class="fieldset">'
+                    + '<table cellspacing="0" class="form-list">'
+                    + '<tr>'
+                    +    '<td class="label"><label><?php echo $this->__('Qty:') ?></label><\/td>'
+                    +    '<td class="value">'
+                    +        '<?php echo trim($this->getInputElementByType('text','{{id}}', array('rewriteName'=>'qty','style'=>'width:30px','class'=>'validate-number required-entry','mock'=>true))); ?>'
+                    +    ' <?php echo $this->__("or less"); ?><\/td>'
+                    + '<\/tr>'
+                    + '<tr>'
+                    +    '<td class="label"><label><?php echo $this->__('Text:') ?></label><\/td>'
+                    +    '<td class="value"> <?php echo trim($this->getInputElementByType('text','{{id}}',array('mock'=>true))); ?><\/td>'
+                    + '<\/tr>'
+                    + '<tr>'
+                    +    '<td class="label"><label><?php echo $this->__('Image:') ?></label><\/td>'
+                    +    '<td class="value"><?php echo trim($this->getInputElementByType('image','{{id}}',array('mock'=>true))); ?>'
+                    +        '<p class="a-left" style="margin:7px 0 0;"><?php echo $this->getDeleteButtonHtml() ?></p>'
+                    + '<\/td>'
+                    + '<\/tr>'
+                    + '<\/table>'
+                    + '<\/div>'
+                ;
+               return str.replace(/{{id}}/ig,id);
+            },
+            createId : function () {
+                return ++lastId;
+            }
+        }
+    }();
+//]]>
+</script>
+<style>
+    TD.value {width:auto!important;}
+</style>
