@@ -18,7 +18,7 @@
 	<?php if ($testimonial->getSize()): ?>
 		<?php $i==0; foreach ($testimonial as $obj):?>
 			<?php if($obj->getStatus()==1): ?>
-			<div class="customer-testimonials-content<?php if($i==0):?> first<?php endif;?><?php if($i==(count($testimonial)-1)):?> last<?php endif;?>" name="<?php echo $obj->getName(); ?>" id="<?php echo $obj->getName(); ?>">
+			<div class="customer-testimonials-content<?php if($i==0):?> first<?php endif;?><?php if($i==(count($testimonial)-1)):?> last<?php endif;?> clearer" name="<?php echo $obj->getName(); ?>" id="<?php echo $obj->getName(); ?>">
 				<div class="testimonial-content">
                     <div class="testimonial-content-avatar">
                         <?php
