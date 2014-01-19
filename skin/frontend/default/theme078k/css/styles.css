@@ -499,7 +499,9 @@ tr.summary-details-excluded { font-style:italic; }
 .header_info span { padding-left:12px; }
 .icon_cart { position:absolute; left:0; top:0; margin:3px 0 0 10px; background:url(../images/icon_cart.png) no-repeat; width:64px; height:64px; }
 .wlinks_holder { float:right; padding:0 20px 0 0; }
-.header_menu { float:left; padding-left:14px; }
+.header_menu {    float: right;
+    padding-right: 218px;
+    padding-top: 3px;}
 .header_menu li { float:left; margin:0 2px 0 0; }
 .header_menu li a { float:left; background:url(../images/header_links.png) no-repeat; height:43px; padding-left:24px; font-family: 'Open Sans'; font-size:15px; color:#666; text-decoration:none; }
 .header_menu li a span { float:left; background:url(../images/header_links.png) no-repeat 100% 0%; height:33px; padding:10px 24px 0 0; }
@@ -1693,9 +1695,8 @@ tr.summary-details-excluded { font-style:italic; }
 }
 
 .header_phone {
-    bottom: 0px;
-    position: absolute;
-    right: 230px;
+    float: right;
+    margin-right: 11px;
 }
 
 .top_cart {
