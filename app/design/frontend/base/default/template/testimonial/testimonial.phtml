@@ -33,7 +33,10 @@
 				<div class="testimonial-source">
 					<span class="testimonial-author"><?php echo $obj->getName(); ?></span>
 					<span class="testimonial-date">
-						<?php echo date('F d, Y', Mage::getModel('core/date')->gmtTimestamp($obj->getCreatedTime())); ?>
+						<?php
+						$date = new Zend_Date($obj->getCreatedTime(), null, Mage::app()->getLocale()->getLocaleCode());
+						echo $date->get(Zend_Date::DATE_LONG);
+						?>
 					</span>
 				</div>
 			</div>

@@ -1503,9 +1503,10 @@ tr.summary-details-excluded { font-style:italic; }
 
 .fcolsocial { float: left; width: 50px;}
 .fcolsocial li { margin-bottom: 12px;}
-.fcolsocial li a{text-indent: -9999px; display: block; width: 24px; height: 24px; background: url(../images/fsocial.gif); no-repeat top left transparent;}
+.fcolsocial li a{text-indent: -9999px; display: block; width: 24px; height: 24px; background: url(../images/fsocial.gif) no-repeat top left transparent;}
 .fcolsocial li.facebook a {}
 .fcolsocial li.twitter a{background-position: left -36px;}
+.fcolsocial li.google a{background-position: left -66px;}
 
 /* ======================================================================================= */
 
