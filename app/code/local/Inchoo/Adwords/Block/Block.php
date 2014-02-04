@@ -8,25 +8,25 @@
 class Inchoo_Adwords_Block_Block extends Mage_Core_Block_Abstract
 {
 
-	public function __construct()
+    public function __construct()
     {
-    	parent::__construct();
-    	$this->setGoogleConversionId(Mage::getStoreConfig('adwordsmodule/inchoad/google_conversion_id'));
-    	$this->setGoogleConversionLanguage(Mage::getStoreConfig('adwordsmodule/inchoad/google_conversion_language'));
-    	$this->setGoogleConversionFormat(Mage::getStoreConfig('adwordsmodule/inchoad/google_conversion_format'));
-    	$this->setGoogleConversionColor(Mage::getStoreConfig('adwordsmodule/inchoad/google_conversion_color'));
-    	$this->setGoogleConversionLabel(Mage::getStoreConfig('adwordsmodule/inchoad/google_conversion_label'));
+        parent::__construct();
+        $this->setGoogleConversionId(Mage::getStoreConfig('adwordsmodule/inchoad/google_conversion_id'));
+        $this->setGoogleConversionLanguage(Mage::getStoreConfig('adwordsmodule/inchoad/google_conversion_language'));
+        $this->setGoogleConversionFormat(Mage::getStoreConfig('adwordsmodule/inchoad/google_conversion_format'));
+        $this->setGoogleConversionColor(Mage::getStoreConfig('adwordsmodule/inchoad/google_conversion_color'));
+        $this->setGoogleConversionLabel(Mage::getStoreConfig('adwordsmodule/inchoad/google_conversion_label'));
     }
-	
-	
-	protected function _toHtml()
-   {
-   	$html = "";
-   	
-   	if(Mage::helper('inchoo_adwords')->isTrackingAllowed()){
-   		
-   	$this->setAmount(Mage::helper('inchoo_adwords')->getOrderTotal());
-   	$html .= '
+
+
+    protected function _toHtml()
+    {
+        $html = "";
+
+        if(Mage::helper('inchoo_adwords')->isTrackingAllowed()){
+
+            $this->setAmount(Mage::helper('inchoo_adwords')->getOrderTotal());
+            $html .= '
    	<!-- Google Code for Purchase Conversion Page -->
 	<script type="text/javascript">
 	/* <![CDATA[ */
@@ -48,8 +48,8 @@ class Inchoo_Adwords_Block_Block extends Mage_Core_Block_Abstract
 	<img height="1" width="1" style="border-style:none;" alt="" src="http://www.googleadservices.com/pagead/conversion/'.$this->getGoogleConversionId().'/?value='.$this->getAmount().'&amp;label='.$this->getGoogleConversionLabel().'&amp;guid=ON&amp;script=0"/>
 	</div>
 	</noscript>';
-   	}
-   	
-   	return $html;
-   }
+        }
+
+        return $html;
+    }
 }

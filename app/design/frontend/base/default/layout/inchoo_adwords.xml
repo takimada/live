@@ -8,10 +8,9 @@
  */
 -->
 <layout version="0.1.0">
-	<checkout_onepage_success>
-		<reference name="content">
+    <checkout_onepage_success>
+        <reference name="content">
             <block type="inchoo_adwords/block" name="inchoo.adwords" />
         </reference>
-	</checkout_onepage_success>
-	
+    </checkout_onepage_success>
 </layout>
