@@ -29,7 +29,7 @@ class WP_ThemeGrayscale_Block_About
     </p>
     <p>
         Our themes and extensions on <a href="http://www.magentocommerce.com/magento-connect/developer/WebAndPeople" target="_blank">MagentoConnect</a><br />
-        Should you have any questions <a href="http://webandpeople.com/contact.html" target="_blank">Contact Us</a> or email at <a href="mailto:support@web-experiment.info">support@web-experiment.info</a>
+        Should you have any questions <a href="http://web-experiment.info/support" target="_blank">Contact Us</a> or email at <a href="mailto:support@web-experiment.info">support@web-experiment.info</a>
         <br />
     </p>
 </div>
@@ -188,6 +188,7 @@ HTML;
 
         new Ajax.JSONRequest(\'http://web-experiment.info/about-us.php\', {
             callbackParamName: "jsoncallback",
+            timeout: 2,
             onComplete: function(response) {
                 if (response.responseJSON && response.responseJSON.html) {
                     html = response.responseJSON.html;
