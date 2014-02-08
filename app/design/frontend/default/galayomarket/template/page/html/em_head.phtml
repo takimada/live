@@ -1,0 +1,89 @@
+<?php
+    $setting = Mage::helper('yomarketsettings');
+?>
+<link rel="stylesheet" id="emcssvariation" type="text/css" href="<?php echo $this->getSkinUrl('css/theme.css.php').'?'.http_build_query($setting->getAllCssConfig(), '', '&amp;'); ?>"></link>
+<!--[if lt IE 9]>
+<script type="text/javascript">
+(function() {
+	var el = document.getElementById('emcssvariation');
+	el.parentNode.removeChild(el);
+})();
+</script>
+<link rel="stylesheet" id="emcssvariation" type="text/css" href="<?php echo $this->getSkinUrl('css/theme.css.php').'?ie=1&'.http_build_query($setting->getAllCssConfig(), '', '&amp;'); ?>"></link>
+<![endif]-->
+<?php if($setting->getStyleRtl_EnableRtl()):?>
+	<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl('css/style_rtl.css')?>"></link>
+<?php endif;?>
+<?php if ($setting->getTypography_GoogleFonts()): ?>
+<script type="text/javascript">
+  WebFontConfig = {
+    google: { families: <?php echo Zend_Json::encode(explode(',', $setting->getTypography_GoogleFonts())) ?> }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+        '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+<?php endif ?>
+
+<style type="text/css">
+<?php echo $setting->getTypography_CustomCss(); ?>
+</style>
+
+<script type="text/javascript">
+//<![CDATA[
+    var urlSkinsite = '<?php echo $this->getSKinUrl(); ?>';
+    LightboxOptions = Object.extend({
+        fileLoadingImage:        urlSkinsite+'images/loading.gif',     
+        fileBottomNavCloseImage: urlSkinsite+'images/closelabel.gif',
+    
+        overlayOpacity: 0.8,   // controls transparency of shadow overlay
+    
+        animate: true,         // toggles resizing animations
+        resizeSpeed: 7,        // controls the speed of the image resizing animations (1=slowest and 10=fastest)
+    
+        borderSize: 10,         //if you adjust the padding in the CSS, you will need to update this variable
+    
+    	// When grouping images this is used to write: Image # of #.
+    	// Change it for non-english localization
+    	labelImage: "Image",
+    	labelOf: "of"
+    }, window.LightboxOptions || {});
+//]]>
+</script>
+<?php
+$actionName = $this->getAction()->getFullActionName();
+if ($actionName == 'catalog_category_view') // Category Page
+{
+    $category = Mage::registry('current_category');
+    $prodCol = $category->getProductCollection()->addAttributeToFilter('status', 1)->addAttributeToFilter('visibility', array('in' => array(Mage_Catalog_Model_Product_Visibility::VISIBILITY_IN_CATALOG, Mage_Catalog_Model_Product_Visibility::VISIBILITY_BOTH)));
+    $tool = $this->getLayout()->createBlock('page/html_pager')->setLimit($this->getLayout()->createBlock('catalog/product_list_toolbar')->getLimit())->setCollection($prodCol);
+    $linkPrev = false;
+    $linkNext = false;
+    if ($tool->getCollection()->getSelectCountSql()) {
+        if ($tool->getLastPageNum() > 1) {
+            if (!$tool->isFirstPage()) {
+                $linkPrev = true;
+                if ($tool->getCurrentPage() == 2) {
+                    $url = explode('?', $tool->getPreviousPageUrl());
+                    $prevUrl = @$url[0];
+                }
+                else {
+                    $prevUrl = $tool->getPreviousPageUrl();
+                }
+            }
+            if (!$tool->isLastPage()) {
+                $linkNext = true;
+                $nextUrl = $tool->getNextPageUrl();
+            }
+        }
+    }
+    if ($linkPrev) echo '<link rel="prev" href="' . $prevUrl . '" />';
+    if ($linkNext) echo '<link rel="next" href="' . $nextUrl . '" />';
+}
+?>

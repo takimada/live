@@ -1,0 +1,8 @@
+.csslider .viewport{overflow:hidden}
+.csslider li.itemslider {float:left;}
+.csslider a.next,.csslider a.prev{
+	position: absolute;
+    top: 0;
+}
+.csslider a.prev{left:0}
+.csslider a.next{right:0}

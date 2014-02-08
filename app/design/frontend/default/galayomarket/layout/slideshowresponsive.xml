@@ -1,0 +1,10 @@
+<layout version="0.1.0">
+	<default>
+		<reference name="head">
+			<action method="addCss"><name>slideshowresponsive/css/nivo.css</name></action>
+			<action method="addJs"><script>em/jquery-1.8.3.min.js</script></action>
+			<action method="addItem"><type>skin_js</type><name>slideshowresponsive/js/jquery.nivo.slider.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/jquery.touchwipe.1.1.1.js</name></action>
+		</reference>
+	</default>
+</layout>

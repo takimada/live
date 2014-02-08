@@ -1,0 +1,137 @@
+.top-header{background:#fff; border-bottom:1px solid #d3d4d3;box-shadow:0px 0px 6px #CFCFCE}
+.grid_19 .em_nav, .grid_19 .nav-container, .em-area02 .em_nav, .em-area02 .nav-container{background:url(../images/bkg-menu.jpg) 0 bottom repeat}
+.em-catalog-navigation.horizontal > li, .hnav .menu-item-depth-0{background:none}
+.em_nav, .nav-container, .menu-wrapper{border:2px solid #653513}
+.em_nav .vnav > li.menu-item-parent:hover > a.arrow span, .em_nav .vnav > li.parent:hover > a.arrow span{background:url(../images/btn-icon.png) 12px 3px no-repeat}
+.em_nav .vnav, .menu-left{border:2px solid #653513; border-top:none}
+.em_nav .hnav, .nav-container #nav{background:none}
+.em_nav .vnav .icon-menu > a{background:url(../images/bkg-icon-menu.png) 9px -177px no-repeat}
+.em_nav .vnav .icon-menu:hover > a{background:url(../images/bkg-icon-menu.png) 9px 10px no-repeat}
+.em_nav .em-catalog-navigation li.parent:hover > a.arrow span{background:url(../images/btn-icon.png) 12px 4px no-repeat}
+.header-container .form-search{border:3px solid #6dd7d8}
+.header-container .form-search .input-search button.button{background:url(../images/bkg-search.png) 0 0 no-repeat}
+.header-container .top-cart{background:#fc3e3e}
+.header-container .top-cart-inner{border:none; height:36px;background:none;}
+.header-container .top-cart .top-cart-inner a.top-link-cart{color:#fff; background:url(../images/bkg-icon-cart.png) 24px 0 no-repeat}
+.header-container .top-cart span.option-cart{background:url(../images/bkg-cart.png) 0 0 no-repeat}
+
+/*widgets hot product*/
+.em-area03 .hot-product{border-color:#e51a1a; padding-top:8px}
+.hot-product .widget-title h3{color:#fc3e3e; background-image:url(../images/bkg-hotproduct.png); padding-bottom:12px;}
+.hot-product .widget-title{padding-bottom:10px;}
+.em-area03 .controls a{background:url(../images/button-slider.png) 0 0 no-repeat; top:-24px;}
+.em-area03 .controls .next{background-position:-82px -30px}
+.em-area03 .controls .prev{background-position:-60px -30px; }
+/*widgets hot product*/
+.em-widget-featured-products-grid .widget-title, .page-title, .cart .data-table th,.opc li.active .step-title,.opc li:hover .step-title, .step-title, .cart .cart-collaterals .crosssell h2, .box-head {background:#6dd7d8; color:#037374}
+.em-widget-featured-products-grid .widget-title h3{color:#037374; background:none;}
+.em-area05 .controls a{background:url(../images/button-slider.png) 0 0 no-repeat; height:10px; width:17px; top:-20px;}
+.em-area05 .controls .next{background-position:-22px 0px}
+.em-area05 .controls .prev{background-position:0px 0px; right:40px}
+.em-area05 .controls .next:hover{background-position:-22px -12px; opacity:100}
+.em-area05 .controls .prev:hover{background-position:0px -12px; opacity:100}
+
+
+/*tab*/
+.ui-tabs .ui-tabs-nav li a:hover, .ui-tabs .ui-tabs-nav li.ui-tabs-selected a{background:url(../images/bkg-menu.jpg) 0 bottom repeat; border:none;color:/*BEGIN:negative_color*/#ffffff/*END:negative_color*/;}
+.ui-tabs .ui-tabs-nav li a{border:none;transition:none; text-transform:uppercase}
+
+/*block home*/
+.em-area07 .controls a{background:url(../images/button-slider.png) 0 0 no-repeat; height:10px; width:17px; top:-18px;}
+.em-area07 .controls .next{background-position:-84px 0px; right:-10px}
+.em-area07 .controls .prev{background-position:-58px 0px}
+.em-area07 .grid_9 .controls a.prev{right:25px;}
+.em-area07 .grid_9 .controls a{top:-18px}
+.em-area07 .vertical .controls a{width:10px; height:17px; }
+.em-area07 .vertical .controls .next{background-position:-20px -60px;top:-25px;}
+.em-area07 .vertical .controls .prev{background-position:0px -35px; right:5px;top:-25px;}
+
+/*slider footer*/
+.em-footerbrand .controls a{background:url(../images/button-slider.png) 0 0 no-repeat; height:10px; width:17px; }
+.em-footerbrand .em-area08 .next{background-position:-84px 0px;}
+.em-footerbrand .controls .prev{background-position:-58px 0px}
+.em-footerbrand .em-area08 .box{border-top:none; border-left:none; border-right:none; box-shadow:none}
+
+/*block-subscribe*/
+.block-subscribe{background:url(../images/bkg-newletter.png) 0 0 repeat; padding:10px!important}
+.block-subscribe .block-content{border:1px solid #fff; padding:12px 20px}
+.form-subscribe-header label{font: 400 20px/1.35 'Oleo Script', Arial; color:#037374; text-transform:lowercase; padding-bottom:8px;}
+.block-subscribe .input-box{border:none!important;}
+.block-subscribe input.input-text{height:20px;border:none;}
+.block-subscribe .input-act .actions{top:0; right:-1px}
+.block-subscribe button.button span span{padding:8px 15px;}
+.adapt-1 .block-subscribe input.input-text{width:97%}
+
+/*footer*/
+.em-area10{background:url(../images/bkg-footer1.png) 0 0 repeat;border:none; margin-bottom:0; padding-bottom:10px;}
+.em-footerend.container_24 .grid_24{background:url(../images/bkg-footer2.png) 0 bottom repeat;}
+.em-area10 .grid_6 p.h5{background:none;color:/*BEGIN:negative_color*/#ffffff/*END:negative_color*/; font-size:115%; padding-top:20px}
+.em-area10 .grid_6 li a{color:#9b806d; background:url(../images/btn-footer.png) 0 center no-repeat}
+.em-area10 .grid_6 li a:hover{background:url(../images/btn-icon.png) 0 center no-repeat}
+.em-area11 p.h5{margin-left:31px;color:/*BEGIN:negative_color*/#ffffff/*END:negative_color*/; }
+.em-area11{padding-top:20px}
+.em-area11 .icon{float:none;width:30px; height:24px;background:url(../images/icon-share.png) 0 0 no-repeat}
+.em-area11 .icon.facebook{background-position:0 0}
+.em-area11 .icon.twitter{background-position:-35px 0px}
+.em-area11 .icon.vimeo{background-position:-70px 0}
+.em-area11 .icon.feed{background-position:-107px 0px}
+.em-area11 .omega p{margin-right:31px}
+.em-area11 .omega p.h5{}
+.em-area11 .custom-logo.followus{margin-right:31px;}
+.footer ul li a,.footer,.footer a,.em-area10{color:#9b806d}
+.footer ul li a:hover,.footer a:hover{color:/*BEGIN:secondary2_color*/#0182c4/*END:secondary2_color*/; text-decoration:none}
+
+
+/*product label*/
+.productlabels_icons{width:67px;position: static; margin:0;}
+.productlabels_icons .label {position:absolute}
+.productlabels_icons .label.tl {top:0; left:0}
+.productlabels_icons .label.tr {top:0; right:0}
+.productlabels_icons .label.bl {bottom:0; left:0}
+.productlabels_icons .label.br {bottom:0; right:0}
+.productlabels_icons .new,.productlabels_icons .sale,.productlabels_icons .hot,.productlabels_icons .bestseller { width:67px; height:67px; background:url(../images/product-label-bakery.png) 0 0 no-repeat; padding:0;}
+.productlabels_icons .new{background-position: 0 -233px!important}
+.productlabels_icons .bestseller{background-position: 0px 0px!important}
+.productlabels_icons .hot{background-position:0px -117px!important}
+/*.products-list .productlabels_icons{ left:10px; top:10px; right:auto;}*/
+/*product list custom*/
+
+
+/*crosssell*/
+.cart .crosssell .controls a{background:url(../images/button-slider.png) 0 0 no-repeat; height:10px; width:17px; top:14px;
+ -moz-transition: background-position 300ms ease; -webkit-transition: background-position 300ms ease; -o-transition: background-position 300ms ease; transition: background-position 300ms ease;}
+.cart .crosssell .controls .next{background-position:-22px 0px}
+.cart .crosssell .controls .prev{background-position:0px 0px; right:40px}
+.cart .crosssell .controls .next:hover{background-position:-22px -12px; opacity:100}
+.cart .crosssell .controls .prev:hover{background-position:0px -12px; opacity:100}
+
+/*checkout*/
+.opc,.opc li.active .step-title,.opc li .step-title{border:none}
+.opc li .step-title{background:#eeeeee}
+.opc .step{border:1px solid /*BEGIN:line_color*/#d4d4d4/*END:line_color*/; border-top:none;margin-bottom:10px}
+.opc li.section{margin-bottom:2px}
+.opc li .step-title h2{color:#5d5d5d}
+.opc li.active .step-title h2,.opc li:hover .step-title h2{color:#037374}
+#checkout-step-shipping_method dl dt{padding-top:1px;}
+
+
+/*my account*/
+.box-head a{background:#1cafb0; font-size:100%; color:#fff; text-transform:uppercase; border:none; text-decoration:none; font-weight:bold; }
+.box-head a:hover{color:#e8ad79;}
+.customer-address-index .title-buttons h1, .my-wishlist .title-buttons h1{background:none}
+
+
+.page-title h1, .page-title h2,.opc-col .step-title h2,.my-account .page-title h2, .box-head h2{color:#037374; background:none}
+
+.view-mode .grid, .view-mode .list{background:url("../images/grid-list.png") no-repeat scroll 0 0 transparent; border:none; height:30px; width:30px; margin-top:-4px;}
+.view-mode .list{background-position:-28px 9px}
+.view-mode .grid{background-position:8px -29px}
+.view-mode .grid:hover, .view-mode strong.grid{background-position:9px 9px; background-color:#6dd7d8; border-radius:100%;border:none; }
+.view-mode .list:hover, .view-mode strong.list{background-position:-28px -29px;background-color:#6dd7d8; border-radius:100%;border:none;}
+
+.price{font:400 14px/1.35 'Oleo Script', Arial; font-weight:normal!important}
+.viewmore{color:#fc3e3e;font:400 14px/1.35 'Oleo Script', Arial; background-position:right 8px}
+
+.breadcrumbs li{background:url(../images/breadcrumbs.png) 0 3px no-repeat; text-transform:uppercase; padding:0 7px 0 23px}
+.breadcrumbs li strong{color:#fc3e3e}
+

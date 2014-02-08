@@ -1,0 +1,5 @@
+.yomarket_typography_page_bg_image img { width:30px; height:30px; border:2px solid #ffffff }
+.yomarket_typography_page_bg_image:hover img,
+.yomarket_typography_page_bg_image.selected img { border:2px solid #000000 }
+
+.color_pattern { display:inline-block; width:10px; height:10px; vertical-align:text-bottom; border:1px solid #333; }
