@@ -40,11 +40,11 @@ class Inchoo_Adwords_Block_Block extends Mage_Core_Block_Abstract
                 }
                 /* ]]> */
                 </script>
-                <script type="text/javascript" src="http://www.googleadservices.com/pagead/conversion.js">
+                <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
                 </script>
                 <noscript>
                 <div style="display:inline;">
-                <img height="1" width="1" style="border-style:none;" alt="" src="http://www.googleadservices.com/pagead/conversion/'.$this->getGoogleConversionId().'/?value='.$this->getAmount().'&amp;label='.$this->getGoogleConversionLabel().'&amp;guid=ON&amp;script=0"/>
+                <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/'.$this->getGoogleConversionId().'/?value='.$this->getAmount().'&amp;label='.$this->getGoogleConversionLabel().'&amp;guid=ON&amp;script=0"/>
                 </div>
                 </noscript>'
             ;
