@@ -25,10 +25,10 @@
 
 @font-face {
     font-family: 'bowlby_one_scregular';
-    src: url('../fonts/bowlbyonesc-regular-webfont.eot');
-    src: url('../fonts/bowlbyonesc-regular-webfont.eot?#iefix') format('embedded-opentype'),
-    url('../fonts/bowlbyonesc-regular-webfont.woff') format('woff'),
-    url('../fonts/bowlbyonesc-regular-webfont.ttf') format('truetype');
+    src: url('../fonts/MuseoSans-300.eot');
+    src: url('../fonts/MuseoSans-300.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/MuseoSans-300.woff') format('woff'),
+    url('../fonts/MuseoSans-300.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 
@@ -524,7 +524,7 @@ tr.summary-details-excluded { font-style:italic; }
 /* 1st Level */
 #nav>li { float:left; background:url(../images/nav_sp.gif) no-repeat 100% 5px; padding:0 10px 0 0; margin:0 10px 0 0; }
 #nav>li.last { background:none !important; padding:0 !important; margin:0 !important; }
-#nav>li>a { float:left; padding:3px 10px; font-family: 'Open Sans', sans-serif; font-size:22px; font-weight:800; text-transform:uppercase; }
+#nav>li>a { float:left; padding:3px 10px; font-family: 'bowlby_one_scregular','Open Sans', sans-serif; font-size:22px; font-weight:300; text-transform:uppercase; }
 #nav>li>a:hover { color:#fff; }
 #nav>li.over>a,
 #nav>li.active>a { color:#fff; }
@@ -1019,11 +1019,11 @@ tr.summary-details-excluded { font-style:italic; }
 .product-view .product-shop .no-rating { padding-bottom:13px; }
 .product-view .product-shop .price-box { float:left; margin:0 21px 0 0; }
 .product-view .product-shop .price { font-family:'bowlby_one_scregular'; font-size:22px; font-weight:normal !important; color:#89BF5A; }
-.product-view .product-shop .availability { float:left; font-size:12px; margin:7px 0 0 0; }
+.product-view .product-shop .availability { font-size:12px; margin:7px 0 0 0; }
 .product-view .product-shop .availability span { font-weight:normal; }
 .product-view .product-shop .clear { height:11px !important; }
 .product-view .product-shop .add-to-box .clearer { clear:both; height:22px; font-size:0%; }
-.product-view .product-shop .add-to-cart label { margin:7px 7px 0 0; }
+.product-view .product-shop .add-to-cart label { margin:9px 7px 0 0; }
 .product-view .product-shop .add-to-cart .qty { margin:5px 0 0 0; width:31px !important; height:18px; line-height:18px; background:#fff; border:solid 1px #E2DED0; font-size:12px; color:#666; -moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px; }
 .product-view .product-shop .add-to-cart button.button { margin-left:20px; }
 .product-view .product-shop .add-to-cart button.button span { background:#AF8DB9; }
