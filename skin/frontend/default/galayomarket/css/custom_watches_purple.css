@@ -1,0 +1,73 @@
+/*menu*/
+.em_nav .hnav, .nav-container #nav{background:none;}
+.em-catalog-navigation.horizontal > li, .hnav .menu-item-depth-0{background:none}
+.em-catalog-navigation.horizontal > li, .hnav .menu-item-depth-0{background:url(../images/watches_purple/line.png) right center no-repeat}
+.em_nav .vnav > li.menu-item-parent:hover > a.arrow span, .em_nav .vnav > li.parent:hover > a.arrow span{background:url(../images/watches_purple/btn-icon.png) 12px 3px no-repeat}
+.em_nav .em-catalog-navigation li.parent:hover > a.arrow span{background:url(../images/watches_purple/btn-icon.png) 12px 4px no-repeat}
+
+
+/*cart*/
+.header-container .top-cart{background:#2c2c2c;}
+.header-container .top-cart-inner{border:none; height:36px;background:none;}
+.header-container .top-cart .top-cart-inner a.top-link-cart{color:#fff; background:url(../images/bkg-icon-cart.png) 24px 0 no-repeat;}
+.header-container .top-cart span.option-cart{background:url(../images/watches_darkblue/bkg-cart.png) center center no-repeat; right:3px}
+.header-container .form-search{}
+
+
+/*hot product*/
+.em-area03 .hot-product{border-color:/*BEGIN:negative_bgcolor*/#f34b26/*END:negative_bgcolor*/;; }
+
+
+
+
+.cms-area-07 .grid_5.alpha  .product-name a{font:600 14px/1.35 helvetica,arial,sans-serif ; color:#3a3a3a; text-transform:uppercase }
+.cms-area-07 .grid_5.alpha .viewmore{background:url(../images/watches_purple/viewmore.png) right 5px no-repeat}
+.em-area07 .grid_5 .controls a.prev{right:10px}
+.em-area07 .grid_5 .controls a.next{right:-10px}
+
+
+
+/*tab*/
+.ui-tabs .ui-tabs-nav li.ui-tabs-selected a{ }
+.ui-tabs .ui-tabs-nav li a:hover, .ui-tabs .ui-tabs-nav li.ui-tabs-selected a{ background: #414fcc; border:1px solid #414fcc;box-shadow:0 -2px 2px rgba(0, 0, 0, 0.2) inset, 0 1px 1px #3f53d1 inset;color:/*BEGIN:negative_color*/#ffffff/*END:negative_color*/;}
+
+
+/*block-subscribe*/
+.block-subscribe{background:#c50205; padding:30px 25px 27px!important}
+.block-subscribe .input-box{border-color:#c10002!important}
+.block-subscribe .input-act .actions{}
+
+
+.block .block-title strong span, .widget-title h3, .widget-title h2, .block_title h3,.em-widget-featured-products-grid .widget-title h3{background-image:none}
+/*footer*/
+
+.em-area10{border-top-color:#727272;}
+/*.em-area10 .grid_6 li a{color:#acc2f1; background:url(../images/instrument_black/btn-icon.png) 0 center no-repeat}*/
+.em-area10 .grid_6 li a:hover{background:url(../images/watches_purple/btn-icon.png) 0 center no-repeat;}
+/*.em-area11 .icon{float:none;background:url(../images/furniture_blue/icon-share.png) 0 0 no-repeat}
+.em-area11 .icon.facebook{background-position:0 0}
+.em-area11 .icon.twitter{background-position:-37px 0px}
+.em-area11 .icon.vimeo{background-position:-74px 0}
+.em-area11 .icon.feed{background-position:-112px 0px}*/
+/*
+.footer ul li a{background:url(../images/instrument_black/line-footer.png) right center no-repeat}
+.em-area11{ border-bottom:1px solid #0c2b6f;}	
+.custom-logo.paymentmethods{background:url(../images/instrument_black/icon-payment.png) 0 center no-repeat}*/
+
+
+/*product label*/
+.productlabels_icons .new,.productlabels_icons .sale,.productlabels_icons .hot,.productlabels_icons .bestseller {background-image:url(../images/watches_purple/product-label.png);}
+
+/*slideshow*/
+.nivo-caption p{color:#fff!important}
+.nivo-caption a:hover{opacity: 0.8;
+-moz-opacity:0.8;
+-webkit-opacity: 0.8;
+-webkit-transition: opacity 0.2s linear;
+-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+filter: alpha(opacity=80);}
+
+
+
+
+

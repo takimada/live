@@ -1,9 +1,8 @@
-pp/etc/local.xml
+app/etc/local.xml
 media/*
 downloader/pearlib/cache/*
 downloader/pearlib/download/*
 app/etc/use_cache.ser
-local.xml
 var/cache/*
 var/session/*
 var/log/*

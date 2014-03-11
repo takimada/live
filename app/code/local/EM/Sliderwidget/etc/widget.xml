@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * @category    EM
+ * @package     EM_Sliderwidget
+ */
+-->
+<widgets>
+    <sliderwidget type="sliderwidget/slide" translate="name description" module="sliderwidget" template="em_sliderwidget/slide.phtml">
+        <name>EM Slider Widget</name>
+        <description>Add a slider</description>
+		<widget_filters>sliderwidget</widget_filters>
+        <parameters>
+			<instance>
+				<label>Select Widget Instance</label>
+                <visible>1</visible>
+                <description>Widget instance selected is shown on the content of slider widget</description>
+                <type>select</type>
+				<required>0</required>
+				<source_model>sliderwidget/widgetinstance</source_model>
+                <sort_order>5</sort_order>
+			</instance>
+			<static_block>
+				<label>Select Static Block</label>
+                <visible>1</visible>
+                <description>Select static block</description>
+                <type>select</type>
+				<source_model>sliderwidget/staticblock</source_model>
+                <sort_order>10</sort_order>
+			</static_block>
+			<direction>
+                <label>Sliding direction</label>
+                <visible>1</visible>
+                <description>Specifies wether the slider appears in horizontal or vertical orientation. Changes the carousel from a left/right style to a up/down style slider.</description>
+                <type>select</type>
+				<source_model>sliderwidget/direction</source_model>
+                <sort_order>15</sort_order>
+            </direction>
+			<container>
+				<label>jQuery selector of slider container</label>
+				<description>It should be UL/OL element, its child UL/OL will be considered as slider container</description>
+                <visible>1</visible>
+                <type>text</type>
+				<required>1</required>
+				<sort_order>20</sort_order>
+			</container>
+			<css_class>
+				<label>Custom CSS class</label>
+                <visible>1</visible>
+                <description>Enter your custom css class for container slider.</description>
+                <type>text</type>
+				<sort_order>35</sort_order>
+			</css_class>
+			<items_per_slide>
+				<label>Number of items per slide</label>
+                <visible>1</visible>
+                <description>Number of carousel items that should move on animation. If empty or 0, slider will move all visible items.</description>
+                <type>text</type>
+				<sort_order>40</sort_order>
+			</items_per_slide>
+			<delay translate="label description">
+				<label>Delay time for slide(ms)</label>
+                <visible>1</visible>
+                <description>if delay time greater than 0, slider will auto play and stop if other case.</description>
+                <type>text</type>
+				<sort_order>50</sort_order>
+			</delay>
+        </parameters>
+    </sliderwidget>
+</widgets>

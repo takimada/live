@@ -1,0 +1,580 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Magento
+ *
+ *  
+ *
+ * @package     EM_Slideshowresponsive
+ * @copyright   Copyright (c) 2009 Quick Solution LT
+ * 
+ */
+-->
+<widgets>
+    <slideshowresponsive type="slideshowresponsive/create" translate="name description" module="slideshowresponsive">
+        <name>Create Slideshow Responsive</name>
+        <description>create a slideshow</description>
+        <parameters>
+            <!-- image 1 -->
+			<text1>
+				<label>Text for slide 1</label>
+                <visible>1</visible>
+                <required>0</required>
+                <type>textslideshowrespon</type>
+			</text1>
+            <thumbsimage1>
+                <label>Image Thumbnails for slide 1</label>
+                <visible>1</visible>
+                <required>0</required>
+                <type>label</type>
+				<helper_block>
+                    <type>slideshowresponsive/chooser</type>
+                    <data>
+                        <button translate="open">
+                            <open>Select Image Thumbnails...</open>
+                        </button>
+                    </data>
+                </helper_block>
+            </thumbsimage1>
+			<url1>
+				<label>Url for image 1</label>
+				<visible>1</visible>
+                <required>0</required>
+                <type>textslideshowrespon</type>
+			</url1>
+            <image1>
+                <label>Image for slide 1</label>
+                <visible>1</visible>
+                <required>0</required>
+                <type>label</type>
+				<helper_block>
+                    <type>slideshowresponsive/chooser</type>
+                    <data>
+                        <button translate="open">
+                            <open>Select Image...</open>
+                        </button>
+                    </data>
+                </helper_block>
+            </image1>
+			
+            <!-- image 2 -->
+			<text2>
+				<label>Text for slide 2</label>
+                <visible>1</visible>
+                <required>0</required>
+                <type>textslideshowrespon</type>
+			</text2>
+            <thumbsimage2>
+                <label>Image Thumbnails for slide 2</label>
+                <visible>1</visible>
+                <required>0</required>
+                <type>label</type>
+				<helper_block>
+                    <type>slideshowresponsive/chooser</type>
+                    <data>
+                        <button translate="open">
+                            <open>Select Image Thumbnails...</open>
+                        </button>
+                    </data>
+                </helper_block>
+            </thumbsimage2>
+			<url2>
+				<label>Url for image 2</label>
+				<visible>1</visible>
+                <required>0</required>
+                <type>textslideshowrespon</type>
+			</url2>
+            <image2>
+                <label>Image for slide 2</label>
+                <visible>1</visible>
+                <required>0</required>
+                <type>label</type>
+				<helper_block>
+                    <type>slideshowresponsive/chooser</type>
+                    <data>
+                        <button translate="open">
+                            <open>Select Image...</open>
+                        </button>
+                    </data>
+                </helper_block>
+            </image2>
+			
+            <!-- image 3 -->
+			<text3>
+				<label>Text for slide 3</label>
+                <visible>1</visible>
+                <required>0</required>
+                <type>textslideshowrespon</type>
+			</text3>
+            <thumbsimage3>
+                <label>Image Thumbnails for slide 3</label>
+                <visible>1</visible>
+                <required>0</required>
+                <type>label</type>
+				<helper_block>
+                    <type>slideshowresponsive/chooser</type>
+                    <data>
+                        <button translate="open">
+                            <open>Select Image Thumbnails...</open>
+                        </button>
+                    </data>
+                </helper_block>
+            </thumbsimage3>
+			<url3>
+				<label>Url for image 3</label>
+				<visible>1</visible>
+                <required>0</required>
+                <type>textslideshowrespon</type>
+			</url3>
+			<image3>
+                <label>Image for slide 3</label>
+                <visible>1</visible>
+                <required>0</required>
+                <type>label</type>
+				<helper_block>
+                    <type>slideshowresponsive/chooser</type>
+                    <data>
+                        <button translate="open">
+                            <open>Select Image...</open>
+                        </button>
+                    </data>
+                </helper_block>
+            </image3>
+			
+            <!-- image 4 -->
+			<text4>
+				<label>Text for slide 4</label>
+                <visible>1</visible>
+                <required>0</required>
+                <type>textslideshowrespon</type>
+			</text4>
+            <thumbsimage4>
+                <label>Image Thumbnails for slide 4</label>
+                <visible>1</visible>
+                <required>0</required>
+                <type>label</type>
+				<helper_block>
+                    <type>slideshowresponsive/chooser</type>
+                    <data>
+                        <button translate="open">
+                            <open>Select Image Thumbnails...</open>
+                        </button>
+                    </data>
+                </helper_block>
+            </thumbsimage4>
+			<url4>
+				<label>Url for image 4</label>
+				<visible>1</visible>
+                <required>0</required>
+                <type>textslideshowrespon</type>
+			</url4>
+			<image4>
+                <label>Image for slide 4</label>
+                <visible>1</visible>
+                <required>0</required>
+                <type>label</type>
+				<helper_block>
+                    <type>slideshowresponsive/chooser</type>
+                    <data>
+                        <button translate="open">
+                            <open>Select Image...</open>
+                        </button>
+                    </data>
+                </helper_block>
+            </image4>
+			
+            <!-- image 5 -->
+			<text5>
+				<label>Text for slide 5</label>
+                <visible>1</visible>
+                <required>0</required>
+                <type>textslideshowrespon</type>
+			</text5>
+            <thumbsimage5>
+                <label>Image Thumbnails for slide 5</label>
+                <visible>1</visible>
+                <required>0</required>
+                <type>label</type>
+				<helper_block>
+                    <type>slideshowresponsive/chooser</type>
+                    <data>
+                        <button translate="open">
+                            <open>Select Image Thumbnails...</open>
+                        </button>
+                    </data>
+                </helper_block>
+            </thumbsimage5>
+			<url5>
+				<label>Url for image 5</label>
+				<visible>1</visible>
+                <required>0</required>
+                <type>textslideshowrespon</type>
+			</url5>
+			<image5>
+                <label>Image for slide 5</label>
+                <visible>1</visible>
+                <required>0</required>
+                <type>label</type>
+				<helper_block>
+                    <type>slideshowresponsive/chooser</type>
+                    <data>
+                        <button translate="open">
+                            <open>Select Image...</open>
+                        </button>
+                    </data>
+                </helper_block>
+            </image5>
+			
+            <!-- image 6 -->
+			<text6>
+				<label>Text for slide 6</label>
+                <visible>1</visible>
+                <required>0</required>
+                <type>textslideshowrespon</type>
+			</text6>
+            <thumbsimage6>
+                <label>Image Thumbnails for slide 6</label>
+                <visible>1</visible>
+                <required>0</required>
+                <type>label</type>
+				<helper_block>
+                    <type>slideshowresponsive/chooser</type>
+                    <data>
+                        <button translate="open">
+                            <open>Select Image Thumbnails...</open>
+                        </button>
+                    </data>
+                </helper_block>
+            </thumbsimage6>
+			<url6>
+				<label>Url for image 6</label>
+				<visible>1</visible>
+                <required>0</required>
+                <type>textslideshowrespon</type>
+			</url6>
+			<image6>
+                <label>Image for slide 6</label>
+                <visible>1</visible>
+                <required>0</required>
+                <type>label</type>
+				<helper_block>
+                    <type>slideshowresponsive/chooser</type>
+                    <data>
+                        <button translate="open">
+                            <open>Select Image...</open>
+                        </button>
+                    </data>
+                </helper_block>
+            </image6>
+			
+            <!-- image 7 -->
+			<text7>
+				<label>Text for slide 7</label>
+                <visible>1</visible>
+                <required>0</required>
+                <type>textslideshowrespon</type>
+			</text7>
+            <thumbsimage7>
+                <label>Image Thumbnails for slide 7</label>
+                <visible>1</visible>
+                <required>0</required>
+                <type>label</type>
+				<helper_block>
+                    <type>slideshowresponsive/chooser</type>
+                    <data>
+                        <button translate="open">
+                            <open>Select Image Thumbnails...</open>
+                        </button>
+                    </data>
+                </helper_block>
+            </thumbsimage7>
+			<url7>
+				<label>Url for image 7</label>
+				<visible>1</visible>
+                <required>0</required>
+                <type>textslideshowrespon</type>
+			</url7>
+			<image7>
+                <label>Image for slide 7</label>
+                <visible>1</visible>
+                <required>0</required>
+                <type>label</type>
+				<helper_block>
+                    <type>slideshowresponsive/chooser</type>
+                    <data>
+                        <button translate="open">
+                            <open>Select Image...</open>
+                        </button>
+                    </data>
+                </helper_block>
+            </image7>
+			
+            <!-- image 8 -->
+			<text8>
+				<label>Text for slide 8</label>
+                <visible>1</visible>
+                <required>0</required>
+                <type>textslideshowrespon</type>
+			</text8>
+            <thumbsimage8>
+                <label>Image Thumbnails for slide 8</label>
+                <visible>1</visible>
+                <required>0</required>
+                <type>label</type>
+				<helper_block>
+                    <type>slideshowresponsive/chooser</type>
+                    <data>
+                        <button translate="open">
+                            <open>Select Image Thumbnails...</open>
+                        </button>
+                    </data>
+                </helper_block>
+            </thumbsimage8>
+			<url8>
+				<label>Url for image 8</label>
+				<visible>1</visible>
+                <required>0</required>
+                <type>textslideshowrespon</type>
+			</url8>
+			<image8>
+                <label>Image for slide 8</label>
+                <visible>1</visible>
+                <required>0</required>
+                <type>label</type>
+				<helper_block>
+                    <type>slideshowresponsive/chooser</type>
+                    <data>
+                        <button translate="open">
+                            <open>Select Image...</open>
+                        </button>
+                    </data>
+                </helper_block>
+            </image8>
+			
+            <!-- image 9 -->
+			<text9>
+				<label>Text for slide 9</label>
+                <visible>1</visible>
+                <required>0</required>
+                <type>textslideshowrespon</type>
+			</text9>
+            <thumbsimage9>
+                <label>Image Thumbnails for slide 9</label>
+                <visible>1</visible>
+                <required>0</required>
+                <type>label</type>
+				<helper_block>
+                    <type>slideshowresponsive/chooser</type>
+                    <data>
+                        <button translate="open">
+                            <open>Select Image Thumbnails...</open>
+                        </button>
+                    </data>
+                </helper_block>
+            </thumbsimage9>
+			<url9>
+				<label>Url for image 9</label>
+				<visible>1</visible>
+                <required>0</required>
+                <type>textslideshowrespon</type>
+			</url9>
+			<image9>
+                <label>Image for slide 9</label>
+                <visible>1</visible>
+                <required>0</required>
+                <type>label</type>
+				<helper_block>
+                    <type>slideshowresponsive/chooser</type>
+                    <data>
+                        <button translate="open">
+                            <open>Select Image...</open>
+                        </button>
+                    </data>
+                </helper_block>
+            </image9>
+
+            <effect>
+                <label>Display effect</label>
+				<description>To specify effect.</description>
+                <visible>1</visible>
+                <required>0</required>
+                <type>select</type>
+				<values>
+                    <random translate="label">
+                        <value>random</value>
+                        <label>Random</label>
+                    </random>
+                    <fold translate="label">
+                        <value>fold</value>
+                        <label>Fold</label>
+                    </fold>
+                    <fade translate="label">
+                        <value>fade</value>
+                        <label>Fade</label>
+                    </fade>
+                    <slicedown translate="label">
+                        <value>sliceDown</value>
+                        <label>SliceDown</label>
+                    </slicedown>
+                </values>
+            </effect>
+            <slices>
+                <label>Slices</label>
+				<description>For slice animations</description>
+                <visible>1</visible>
+                <required>0</required>
+                <type>text</type>
+				<value>15</value>
+            </slices>
+            <boxcols>
+                <label>BoxCols</label>
+				<description>For box animations</description>
+                <visible>1</visible>
+                <required>0</required>
+                <type>text</type>
+				<value>8</value>
+            </boxcols>
+	        <boxrows>
+                <label>BoxRows</label>
+				<description>For box animations</description>
+                <visible>1</visible>
+                <required>0</required>
+                <type>text</type>
+				<value>4</value>
+            </boxrows>
+	       
+			<animspeed>
+                <label>AnimSpeed</label>
+				<description>Slide transition speed</description>
+                <visible>1</visible>
+                <required>0</required>
+                <type>text</type>
+				<value>500</value>
+            </animspeed>
+            	       
+	       <pausetime>
+                <label>PauseTime</label>
+				<description>How long each slide will show</description>
+                <visible>1</visible>
+                <required>0</required>
+                <type>text</type>
+				<value>5000</value>
+            </pausetime>
+	       
+	       <startslide>
+                <label>startSlide</label>
+				<description>Set starting Slide (0 index)</description>
+                <visible>1</visible>
+                <required>0</required>
+                <type>text</type>
+				<value>0</value>
+            </startslide>
+	       
+	       	<directionnav>
+				<label>DirectionNav</label>
+				<description>Next and Prev navigation</description>
+                <visible>1</visible>
+                <required>0</required>
+                <type>select</type>
+				<values>
+                    <yes translate="label">
+                        <value>true</value>
+                        <label>Yes</label>
+                    </yes>
+                    <no translate="label">
+                        <value>false</value>
+                        <label>No</label>
+                    </no>
+                </values>
+			</directionnav>
+            
+			<controlnav>
+				<label>controlNav</label>
+				<description>Control Navigation: 1,2,3...</description>
+                <visible>1</visible>
+                <required>0</required>
+                <type>select</type>
+				<values>
+                    <yes translate="label">
+                        <value>true</value>
+                        <label>Yes</label>
+                    </yes>
+                    <no translate="label">
+                        <value>false</value>
+                        <label>No</label>
+                    </no>
+                </values>
+			</controlnav>
+            
+            <controlnavthumbs>
+				<label>controlNavThumbs</label>
+				<description>Control Navigation Thumbs: image thumbnails 1, image thumbnails 2,image thumbnails 3...</description>
+                <visible>1</visible>
+                <required>0</required>
+                <type>select</type>
+				<values>
+                    <yes translate="label">
+                        <value>true</value>
+                        <label>Yes</label>
+                    </yes>
+                    <no translate="label">
+                        <value>false</value>
+                        <label>No</label>
+                    </no>
+                </values>
+			</controlnavthumbs>
+	        
+	        <pauseonhover>
+				<label>pauseOnHover</label>
+				<description>Stop animation while hovering</description>
+                <visible>1</visible>
+                <required>0</required>
+                <type>select</type>
+				<values>
+                    <yes translate="label">
+                        <value>true</value>
+                        <label>Yes</label>
+                    </yes>
+                    <no translate="label">
+                        <value>false</value>
+                        <label>No</label>
+                    </no>
+                </values>
+			</pauseonhover>
+	       
+	       	<prevtext>
+                <label>PrevText</label>
+				<description>Prev directionNav text</description>
+                <visible>1</visible>
+                <required>0</required>
+                <type>text</type>
+				<value>Prev</value>
+            </prevtext>
+	        <nexttext>
+                <label>nextText</label>
+				<description>Next directionNav text</description>
+                <visible>1</visible>
+                <required>0</required>
+                <type>text</type>
+				<value>Next</value>
+            </nexttext>
+	       	<randomstart>
+				<label>randomStart</label>
+				<description>Start on a random slide</description>
+                <visible>1</visible>
+                <required>0</required>
+                <type>select</type>
+				<values>
+                    <yes translate="label">
+                        <value>true</value>
+                        <label>Yes</label>
+                    </yes>
+                    <no translate="label">
+                        <value>false</value>
+                        <label>No</label>
+                    </no>
+                </values>
+			</randomstart>
+        </parameters>
+    </slideshowresponsive>
+</widgets>

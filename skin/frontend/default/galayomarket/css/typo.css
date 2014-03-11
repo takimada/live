@@ -1,0 +1,35 @@
+font:/*BEGIN:general_font*/12px/1.35 Arial, Helvetica, sans-serif/*END:general_font*/;
+font:/*BEGIN:h1_font*/normal 14px/1.35 helvetica,arial,sans-serif/*END:h1_font*/; 
+font:/*BEGIN:h2_font*/normal 14px/1.35 helvetica,arial,sans-serif/*END:h2_font*/;
+font:/*BEGIN:h3_font*/normal 13px/1.35 helvetica,arial,sans-serif/*END:h3_font*/;
+font:/*BEGIN:h4_font*/normal 13px/1.35 helvetica,arial,sans-serif/*END:h4_font*/;
+font:/*BEGIN:h5_font*/normal 13px/1.35 helvetica,arial,sans-serif/*END:h5_font*/; 
+
+color:/*BEGIN:secondary_color*/#ed2f15/*END:secondary_color*/;/*cam*/
+color:/*BEGIN:secondary2_color*/#0182c4/*END:secondary2_color*/; /*blue*/
+color:/*BEGIN:general_color*/#676767/*END:general_color*/; /*xam*/
+color:/*BEGIN:primary_color*/#3a3a3a/*END:primary_color*/; /*den*/
+color:/*BEGIN:negative_color*/#ffffff/*END:negative_color*/; 
+color:/*BEGIN:negative2_color*/#951b08/*END:negative2_color*/; /*do menu*/
+
+background-color:/*BEGIN:primary_bgcolor*/#ffffff/*END:primary_bgcolor*/;
+background:/*BEGIN:secondary_bgcolor*/#ebebeb/*END:secondary_bgcolor*/;
+background:/*BEGIN:secondary2_bgcolor*/#f8f8f8/*END:secondary2_bgcolor*/; xam nhat
+background:/*BEGIN:negative_bgcolor*/#f34b26/*END:negative_bgcolor*/; cam
+
+border-top:1px solid /*BEGIN:line_color*/#d4d4d4/*END:line_color*/;
+border-top:3px solid /*BEGIN:secondary_bgcolor*/#000000/*END:secondary_bgcolor*/;
+
+box-shadow:/*BEGIN:box_shadow*/none/*END:box_shadow*/; 
+border-radius:/*BEGIN:rounded_corner*/0/*END:rounded_corner*/;
+
+/*BEGIN:button1*/background:#232323; border:1px solid #232323; color:#ffffff; /*END:button1*/
+/*BEGIN:button2*/background:#fcfcfc; border:1px solid #fcfcfc; color:#6d6d6d;/*END:button2*/
+/*BEGIN:button3*/background:#07a3fc; border:1px solid #07a3fc; color:#ffffff;/*END:button3*/
+
+5d5b5b == 878686
+
+
+ default button color: #4b4b4b
+    button 2: background:#fcfcfc; border:1px solid #fcfcfc; color:#6d6d6d
+    button 3: background:#07a3fc; border:1px solid #07a3fc; color:#ffffff; font-size:13px;
