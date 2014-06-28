@@ -14,6 +14,7 @@ var/import/*
 var/package/tmp/*
 var/tmp/*
 var/sphinx
+var/backups/*
 downloader/.cache/*
 downloader/cache.cfg
 downloader/connect.cfg

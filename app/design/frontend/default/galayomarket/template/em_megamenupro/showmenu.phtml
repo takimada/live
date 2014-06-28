@@ -10,7 +10,7 @@
 <div class="em_nav">
     <div> 
     <?php if($data['type'] == 1): ?>
-        <div class="shopby-title" id="displayText"><a href="#">SHOP BY DEPARTMENT</a><span class="option">nav</span></div>
+        <div class="shopby-title" id="displayText"><a href="#">SHOP BuY DEPARTMENT</a><span class="option">nav</span></div>
     <?php endif; ?>
 	<ul <?php if($data['type'] == 1 && !Mage::getBlockSingleton('page/html_header')->getIsHomePage()): ?>style="display: none;"<?php endif; ?> id="<?php if($data['type'] == 1) echo 'em-vnav';else echo 'em-hnav'; ?>" class="<?php if($data['type'] == 1) echo 'vnav';else echo 'hnav'; ?>">
 	<?php $close_tags = array() ?>
