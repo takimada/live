@@ -10,9 +10,11 @@
 /**
  * INSERT HERE: what is this model for 
  * @author Mana Team
+ * @method string getType()
  */
 class Mana_Filters_Model_Filter2 extends Mana_Db_Model_Object {
     protected $_eventPrefix = 'mana_filter';
+    protected $_entity = 'mana_filters/filter2';
 
     /**
      * Invoked during model creation process, this method associates this model with resource and resource
@@ -55,7 +57,46 @@ class Mana_Filters_Model_Filter2 extends Mana_Db_Model_Object {
 			$result->addError($t->__('Please fill in %s field', $t->__('Position')));
 		}
 	}
+
+	public function validateDetails() {
+        if ($edit = $this->getValueData()) {
+            foreach ($edit['saved'] as $id => $editId) {
+                if ($id > 0) {
+                    $editModel = Mage::helper('mana_admin')->loadModel('mana_filters/filter2_value', $editId);
+                    $editModel->validate();
+                }
+                else {
+                    // inserts
+                    throw new Exception('Not implemented!');
+                }
+            }
+        }
+	}
+
     public function getCode() {
         return isset($this->_data['code']) ? $this->_data['code'] : null;
     }
+
+    /**
+     * Init indexing process after category data commit
+     *
+     * @return Mage_Catalog_Model_Category
+     */
+    public function afterCommitCallback() {
+        parent::afterCommitCallback();
+        if (!Mage::registry('m_prevent_indexing_on_save')) {
+            $this->getIndexerSingleton()->processEntityAction($this, $this->_entity, Mage_Index_Model_Event::TYPE_SAVE);
+        }
+
+        return $this;
+    }
+
+    #region Dependencies
+    /**
+     * @return Mage_Index_Model_Indexer
+     */
+    public function getIndexerSingleton() {
+        return Mage::getSingleton('index/indexer');
+    }
+    #endregion
 }

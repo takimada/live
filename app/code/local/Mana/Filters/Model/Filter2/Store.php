@@ -13,6 +13,8 @@
  */
 class Mana_Filters_Model_Filter2_Store extends Mana_Filters_Model_Filter2 {
     protected $_eventPrefix = 'mana_filter_store';
+    protected $_entity = 'mana_filters/filter2_store';
+
     /**
      * Invoked during model creation process, this method associates this model with resource and resource
      * collection classes
@@ -30,7 +32,8 @@ class Mana_Filters_Model_Filter2_Store extends Mana_Filters_Model_Filter2 {
         $result = $this->getData($field);
         $store = Mage::app()->getStore();
         if ($result == '$0') {
-            return $store->getCurrentCurrency()->formatPrecision(0, 0, array(), false, false);
+            return str_replace('.00', '', str_replace(',00', '',
+                $store->getCurrentCurrency()->formatPrecision(0, 0, array(), false, false)));
         }
         else {
             return $result;

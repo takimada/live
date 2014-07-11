@@ -9,6 +9,8 @@
  * Model type for holding information in memory about possible or applied filter which is based on an attribute
  * @author Mana Team
  * Injected instead of standard catalog/layer_filter_attribute in Mana_Filters_Block_Filter_Attribute constructor.
+ *
+ * @method Mana_Filters_Model_Filter2_Store getFilterOptions()
  */
 class Mana_Filters_Model_Filter_Attribute
     extends Mage_Catalog_Model_Layer_Filter_Attribute
@@ -64,6 +66,11 @@ class Mana_Filters_Model_Filter_Attribute
         $key = $this->getLayer()->getStateKey() . '_' . $this->_requestVar;
         $data = $this->getLayer()->getAggregator()->getCacheData($key);
 
+        if ($data === null && $this->itemHelper()->isEnabled() &&
+            $this->_getIsFilterable() == self::OPTIONS_ONLY_WITH_RESULTS)
+        {
+            $data = $query->getFilterCounts($this->getFilterOptions()->getCode());
+        }
         if ($data === null) {
             $options = $attribute->getFrontend()->getSelectOptions();
             $optionsCount = $query->getFilterCounts($this->getFilterOptions()->getCode());
@@ -98,20 +105,22 @@ class Mana_Filters_Model_Filter_Attribute
                     }
                 }
             }
-
-            $tags = array(
-                Mage_Eav_Model_Entity_Attribute::CACHE_TAG . ':' . $attribute->getId()
-            );
-
-            $tags = $this->getLayer()->getStateTags($tags);
-            if ($sortMethod = $this->getFilterOptions()->getSortMethod()) {
-                foreach ($data as $position => &$item) {
-                    $item['position'] = $position;
-                }
-                usort($data, array(Mage::getSingleton('mana_filters/sort'), $sortMethod));
-            }
-            $this->getLayer()->getAggregator()->saveCacheData($data, $key, $tags);
         }
+
+
+        $tags = array(
+            Mage_Eav_Model_Entity_Attribute::CACHE_TAG . ':' . $attribute->getId()
+        );
+
+        $tags = $this->getLayer()->getStateTags($tags);
+
+        $sortMethod = $this->getFilterOptions()->getSortMethod() ? $this->getFilterOptions()->getSortMethod() : 'byPosition';
+        foreach (array_keys($data) as $position => $key) {
+            $data[$key]['position'] = $position;
+        }
+        usort($data, array(Mage::getSingleton('mana_filters/sort'), $sortMethod));
+
+        $this->getLayer()->getAggregator()->saveCacheData($data, $key, $tags);
 
         return $data;
     }
@@ -178,7 +187,13 @@ class Mana_Filters_Model_Filter_Attribute
      */
     public function countOnCollection($collection)
     {
-        return $this->_getResource()->countOnCollection($collection, $this);
+        return $this->itemHelper()->isEnabled() && $this->_getIsFilterable() == self::OPTIONS_ONLY_WITH_RESULTS
+            ? $this->itemHelper()->countItems($this, $collection)
+            : $this->_getResource()->countOnCollection($collection, $this);
+    }
+
+    public function optimizedCountOnCollection($collection, $attributeIds) {
+        return $this->_getResource()->optimizedCountOnCollection($collection, $this, $attributeIds);
     }
 
     public function getRangeOnCollection($collection)
@@ -208,7 +223,7 @@ class Mana_Filters_Model_Filter_Attribute
      */
     public function isFilterAppliedWhenCounting($modelToBeApplied)
     {
-        return $modelToBeApplied != $this;
+        return $modelToBeApplied != $this || $this->getFilterOptions()->getData('operation');
     }
 
 
@@ -242,9 +257,10 @@ class Mana_Filters_Model_Filter_Attribute
         $data = $this->_getItemsData();
         $items = array();
         foreach ($data as $itemData) {
-            $items[] = $this->_createItemEx($itemData);
+            $items[$itemData['value']] = $this->_createItemEx($itemData);
         }
         $items = $ext->processFilterItems($this, $items);
+        $this->itemHelper()->registerItems($this, $items);
         $this->_items = $items;
 
         return $this;
@@ -284,6 +300,10 @@ class Mana_Filters_Model_Filter_Attribute
     public function getRemoveUrl()
     {
         $query = array($this->getRequestVar() => $this->getResetValue());
+        if ($this->coreHelper()->isManadevDependentFilterInstalled()) {
+            $query = $this->dependentHelper()->removeDependentFiltersFromUrl($query, $this->getRequestVar());
+        }
+
         $params = array('_secure' => Mage::app()->getFrontController()->getRequest()->isSecure());
         $params['_current'] = true;
         $params['_use_rewrite'] = true;
@@ -317,6 +337,29 @@ class Mana_Filters_Model_Filter_Attribute
         );
 
         return $values ? array_filter(explode('_', $values)) : array();
+    }
+    #endregion
+    #region Dependencies
+
+    /**
+     * @return Mana_Core_Helper_Data
+     */
+    public function coreHelper() {
+        return Mage::helper('mana_core');
+    }
+
+    /**
+     * @return ManaPro_FilterDependent_Helper_Data
+     */
+    public function dependentHelper() {
+        return Mage::helper('manapro_filterdependent');
+    }
+
+    /**
+     * @return Mana_Filters_Helper_Item
+     */
+    public function itemHelper() {
+        return Mage::helper('mana_filters/item');
     }
     #endregion
 }

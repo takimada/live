@@ -53,6 +53,7 @@ class Mana_Filters_Resource_Filter2_Store extends Mana_Filters_Resource_Filter2 
                 'global.sort_method AS sort_method',
                 'global.operation AS operation',
                 'global.is_reverse AS is_reverse',
+                'global.disable_no_result_options AS disable_no_result_options',
             ));
 		if ($options['trackKeys']) {
 			if (($keys = $options['targets'][$globalEntityName]->getSavedKeys()) && count($keys)) {
@@ -107,6 +108,9 @@ class Mana_Filters_Resource_Filter2_Store extends Mana_Filters_Resource_Filter2 
         if (!Mage::helper('mana_db')->hasOverriddenValue($object, $values, Mana_Filters_Resource_Filter2::DM_IS_REVERSE)) {
             $object->setIsReverse($values['is_reverse']);
         }
+        if (!Mage::helper('mana_db')->hasOverriddenValue($object, $values, Mana_Filters_Resource_Filter2::DM_DISABLE_NO_RESULT_OPTIONS)) {
+            $object->setDisableNoResultOptions($values['disable_no_result_options']);
+        }
     }
 	/**
 	 * Enter description here ...
@@ -137,6 +141,7 @@ class Mana_Filters_Resource_Filter2_Store extends Mana_Filters_Resource_Filter2 
                 'global.sort_method AS sort_method',
                 'global.operation AS operation',
                 'global.is_reverse AS is_reverse',
+                'global.disable_no_result_options AS disable_no_result_options',
             ));
 		if ($options['trackKeys']) {
 			if (($keys = $options['targets'][$globalEntityName]->getSavedKeys()) && count($keys)) {
@@ -170,6 +175,7 @@ class Mana_Filters_Resource_Filter2_Store extends Mana_Filters_Resource_Filter2 
         $object->setSortMethod($values['sort_method']);
         $object->setOperation($values['operation']);
         $object->setIsReverse($values['is_reverse']);
+        $object->setDisableNoResultOptions($values['disable_no_result_options']);
     }
 	/**
 	 * Enter description here ...
@@ -206,5 +212,48 @@ class Mana_Filters_Resource_Filter2_Store extends Mana_Filters_Resource_Filter2 
 			$select->columns("global.type AS type");
 			$result->addColumn('type');
 		}
+
+        if ($this->coreHelper()->isManadevDependentFilterInstalled()) {
+            $this->getDependentFilterVirtualColumnsResource()->addToModel($this, $select, $result, $columns, $globalEntityName);
+        }
 	}
+    /**
+     * @param Mana_Filters_Model_Filter2_Store $filter
+     * @return bool|int
+     */
+    public function getAttributeId($filter) {
+        $db = $this->_getReadAdapter();
+
+        return $db->fetchOne($db->select()
+            ->from(array('a' => $this->getTable('eav/attribute')), 'attribute_id')
+            ->joinInner(array('f' => $this->getTable('mana_filters/filter2')), "a.attribute_code = f.code", null)
+            ->joinInner(
+                array('t' => $this->getTable('eav/entity_type')),
+                "`t`.`entity_type_id` = `a`.`entity_type_id` AND `t`.`entity_type_code` = 'catalog_product'",
+                null
+            )
+            ->joinInner(
+                array('ca' => $this->getTable('catalog/eav_attribute')),
+                "`ca`.`attribute_id` = `a`.`attribute_id`",
+                null
+            )
+            ->where('f.id = ?', $filter->getGlobalId()));
+    }
+
+    #region Dependencies
+
+    /**
+     * @return Mana_Core_Helper_Data
+     */
+    public function coreHelper() {
+        return Mage::helper('mana_core');
+    }
+
+    /**
+     * @return ManaPro_FilterDependent_Resource_VirtualColumns
+     */
+    public function getDependentFilterVirtualColumnsResource() {
+        return Mage::getResourceSingleton('manapro_filterdependent/virtualColumns');
+    }
+    #endregion
 }

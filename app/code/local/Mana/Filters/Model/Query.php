@@ -36,6 +36,7 @@ class Mana_Filters_Model_Query extends Varien_Object
         return $this;
     }
     protected function _init() {
+        //Mage::log('---', Zend_Log::DEBUG, 'performance.log');
         $this->_productCollection = $this->getLayer()->getProductCollection();
         $this->_productCollectionPrototype = clone $this->_productCollection;
         $this->_selectPrototype = clone $this->_productCollection->getSelect();
@@ -62,6 +63,11 @@ class Mana_Filters_Model_Query extends Varien_Object
         $isApplied = $model->isApplied();
         $this->_filters[$code] = array('model' => $model, 'isApplied' => $isApplied, 'isApplyProcessed' => false);
     }
+
+    public function getFilters() {
+        return $this->_filters;
+    }
+
     public function apply() {
         foreach ($this->_filters as $code => $filter) {
             if (!$filter['isApplyProcessed']) {
@@ -85,6 +91,7 @@ class Mana_Filters_Model_Query extends Varien_Object
         }
         return $this;
     }
+
     protected function _apply() {
     }
 
@@ -152,6 +159,7 @@ class Mana_Filters_Model_Query extends Varien_Object
                 $mainSelect = clone $this->_productCollection->getSelect();
 
                 $collection = $this->createProductCollection();
+                //$sql = $collection->getSelect()->__toString();
                 foreach ($this->_filters as $filter) {
                     /* @var $filterModel Mana_Filters_Interface_Filter */
                     $filterModel = $filter['model'];
@@ -160,6 +168,7 @@ class Mana_Filters_Model_Query extends Varien_Object
                         $filterModel->applyToCollection($collection);
                     }
                 }
+
                 $counts = $currentFilterModel->countOnCollection($collection);
                 $currentFilter['processedCounts'] = $currentFilterModel->processCounts($counts);
 
@@ -171,4 +180,15 @@ class Mana_Filters_Model_Query extends Varien_Object
         }
         return $currentFilter['processedCounts'];
     }
+
+    #region Dependencies
+
+    /**
+     * @return Mana_Filters_Helper_Data
+     */
+    public function filtersHelper() {
+        return Mage::helper('mana_filters');
+    }
+
+    #endregion
 }

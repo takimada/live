@@ -1026,14 +1026,19 @@
 			var result = str;
 
 			// Unescape hash
-			var tmp;
-			while ( true ) {
-				tmp = window.unescape(result); 
+			var tmp, success = false;
+			for (var i = 0; i < 3; i++) {
+				tmp = window.unescape(encodeURIComponent(result));
 				if ( tmp === result ) {
+				    success = true;
 					break;
 				}
 				result = tmp;
 			}
+
+            if (!success) {
+                throw 'History.unescapeString(): unable to unescape ' + str;
+            }
 
 			// Return result
 			return result;
@@ -1626,7 +1631,8 @@
 				var currentHash	= History.getHash();
 				if ( currentHash ) {
 					// Expand Hash
-					var currentState = History.extractState(currentHash||document.location.href,true);
+					// MANAdev fix for compatibility with prettyPhoto.js
+					var currentState = false;//History.extractState(currentHash||document.location.href,true);
 					if ( currentState ) {
 						// We were able to parse it, it must be a State!
 						// Let's forward to replaceState

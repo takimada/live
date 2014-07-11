@@ -1,3 +1,4 @@
+.idea
 app/etc/local.xml
 media/*
 downloader/pearlib/cache/*
