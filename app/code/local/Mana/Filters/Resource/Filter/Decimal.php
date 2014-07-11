@@ -37,11 +37,12 @@ class Mana_Filters_Resource_Filter_Decimal extends Mage_Catalog_Model_Resource_E
 
         $adapter = $this->_getReadAdapter();
 
-        $countExpr = new Zend_Db_Expr("COUNT(*)");
+        $countExpr = new Zend_Db_Expr("COUNT(DISTINCT e.entity_id)");
         $rangeExpr = new Zend_Db_Expr("FLOOR(decimal_index.value / {$model->getRange()}) + 1");
 
         $select->columns(array('range' => $rangeExpr, 'count' => $countExpr));
         $select->group('range');
+        //$sql = $select->__toString();
 
         return $adapter->fetchPairs($select);
     }
@@ -53,6 +54,35 @@ class Mana_Filters_Resource_Filter_Decimal extends Mage_Catalog_Model_Resource_E
      * @return Mana_Filters_Resource_Filter_Decimal
      */
     public function applyToCollection($collection, $model, $value) {
+        $condition = '';
+        foreach ($value as $selection) {
+            if (strpos($selection, ',') !== false) {
+                list($index, $range) = explode(',', $selection);
+                $range = $this->getRange($index, $range);
+                if ($condition != '') $condition .= ' OR ';
+                $condition .= $this->_getApplyCondition($model, $range);
+            }
+        }
+
+        if ($condition) {
+            $this->_applyJoin($model, $collection);
+            $collection->getSelect()
+                ->distinct()
+                ->where($condition);
+        }
+
+        return $this;
+    }
+
+    protected function _getApplyCondition($model, $range) {
+        $tableAlias = $model->getAttributeModel()->getAttributeCode() . '_idx';
+
+        return '((' . "{$tableAlias}.value" . ' >= ' . $range['from'] . ') ' .
+            'AND (' . "{$tableAlias}.value" . ($this->isUpperBoundInclusive() ? ' <= ' : ' < ') . $range['to'] . '))';
+
+    }
+
+    protected function _applyJoin($model, $collection) {
         $attribute  = $model->getAttributeModel();
         $connection = $this->_getReadAdapter();
         $tableAlias = $attribute->getAttributeCode() . '_idx';
@@ -67,24 +97,7 @@ class Mana_Filters_Resource_Filter_Decimal extends Mage_Catalog_Model_Resource_E
             join(' AND ', $conditions),
             array()
         );
-
-		// MANA BEGIN: modify select formation to include multiple price ranges
-        $condition = '';
-        foreach ($value as $selection) {
-        	list($index, $range) = explode(',', $selection);
-        	$range = $this->getRange($index, $range);
-        	if ($condition != '') $condition .= ' OR ';
-        	$condition .= '(('."{$tableAlias}.value" . ' >= '. $range['from'].') '.
-        		'AND ('."{$tableAlias}.value" . ($this->isUpperBoundInclusive() ? ' <= ' : ' < '). $range['to'].'))';
-        }
-        $collection->getSelect()
-            ->distinct()
-        	->where($condition);
-        // MANA END
-
-        return $this;
     }
-
 
     public function isUpperBoundInclusive() {
         return false;
@@ -122,7 +135,7 @@ class Mana_Filters_Resource_Filter_Decimal extends Mage_Catalog_Model_Resource_E
      */
     public function getMinMaxForCollection($filter, $collection)
     {
-        $select     = $this->_getSelect($filter, $collection);
+        $select     = $this->_getSelectForCollection($filter, $collection);
         $connection = $this->_getReadAdapter();
 
         $table = 'decimal_index';

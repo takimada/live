@@ -30,8 +30,8 @@ class Mana_Filters_Model_Filter_Decimal
             return $result->getLabel();
         } else {
             $store = Mage::app()->getStore();
-            $fromPrice = $store->formatPrice($range['from']);
-            $toPrice = $store->formatPrice($range['to']);
+            $fromPrice = $store->formatPrice($range['from'], false);
+            $toPrice = $store->formatPrice($range['to'], false);
 
             return Mage::helper('catalog')->__('%s - %s', $fromPrice, $toPrice);
         }
@@ -55,8 +55,10 @@ class Mana_Filters_Model_Filter_Decimal
         if ($this->_getIsFilterable() == 2) {
             $nonEmptyRanges = $dbRanges;
             $dbRanges = array();
-            for ($i = 1; ($i + 1) * $range > $this->getMinValue() && ($i - 1) * $range < $this->getMaxValue(); $i++) {
-                $dbRanges[$i]  = isset($nonEmptyRanges[$i]) ? $nonEmptyRanges[$i] : 0;
+            $from = (int)floor($this->getMinValue() / $range);
+            $to = (int)floor($this->getMaxValue() / $range);
+            for ($i = $from; $i <= $to; $i++) {
+                $dbRanges[$i] = isset($nonEmptyRanges[$i]) ? $nonEmptyRanges[$i] : 0;
             }
         }
         $data = array();
@@ -249,6 +251,10 @@ class Mana_Filters_Model_Filter_Decimal
     public function getRemoveUrl()
     {
         $query = array($this->getRequestVar() => $this->getResetValue());
+        if ($this->coreHelper()->isManadevDependentFilterInstalled()) {
+            $query = $this->dependentHelper()->removeDependentFiltersFromUrl($query, $this->getRequestVar());
+        }
+
         $params = array('_secure' => Mage::app()->getFrontController()->getRequest()->isSecure());
         $params['_current'] = true;
         $params['_use_rewrite'] = true;
@@ -305,7 +311,7 @@ class Mana_Filters_Model_Filter_Decimal
         $range = $this->getData('range');
 
         $value = $this->getMSelectedValues();
-        if (!empty($value)) {
+        if (!empty($value) && strpos($value[0], ',') !== false) {
             list($index, $range) = explode(',', $value[0]);
         }
 
@@ -354,22 +360,31 @@ class Mana_Filters_Model_Filter_Decimal
     protected $_isMinMaxCalculated = false;
     protected $_minMax;
 
+    public function getDecimalMinMax() {
+        /* @var $query Mana_Filters_Model_Query */
+        $query = $this->getQuery();
+        $queryResult = $query->getFilterRange($this->getFilterOptions()->getCode());
+        $minMax = $queryResult;
+        if (!$minMax['min'] && !($minMax['max']) && $this->_getIsFilterable() == 2) {
+            $rootCategory = Mage::getModel('catalog/category')
+                ->setStoreId(Mage::app()->getStore()->getId())
+                ->load(Mage::app()->getStore()->getRootCategoryId());
+            $currentCategory = $this->getLayer()->getCurrentCategory();
+            $this->getLayer()->setCurrentCategory($rootCategory);
+            $queryResult = $query->getFilterRange($this->getFilterOptions()->getCode(), false,
+                $this->getLayer()->getProductCollection(), false);
+            $this->getLayer()->setCurrentCategory($currentCategory);
+            $minMax = $queryResult;
+            $minMax['hasNoResults'] = true;
+        }
+        return $minMax;
+    }
+
     protected function _calculateMinMax() {
         if (!$this->_isMinMaxCalculated) {
-            /* @var $query Mana_Filters_Model_Query */
-            $query = $this->getQuery();
-            $queryResult = $query->getFilterRange($this->getFilterOptions()->getCode());
-            $this->_minMax = $queryResult;
-            if (!$this->_minMax['min'] && !($this->_minMax['max']) && $this->_getIsFilterable() == 2) {
-                $rootCategory = Mage::getModel('catalog/category')
-                    ->setStoreId(Mage::app()->getStore()->getId())
-                    ->load(Mage::app()->getStore()->getRootCategoryId());
-                $currentCategory = $this->getLayer()->getCurrentCategory();
-                $this->getLayer()->setCurrentCategory($rootCategory);
-                $queryResult = $query->getFilterRange($this->getFilterOptions()->getCode(), false,
-                    $this->getLayer()->getProductCollection(), false);
-                $this->getLayer()->setCurrentCategory($currentCategory);
-                $this->_minMax = $queryResult;
+            $this->_minMax = $this->getDecimalMinMax();
+            if (!empty($this->_minMax['hasNoResults'])) {
+                unset($this->_minMax['hasNoResults']);
                 $this->_hasNoResults = true;
             }
             $this->_isMinMaxCalculated = true;
@@ -392,9 +407,11 @@ class Mana_Filters_Model_Filter_Decimal
      * Returns all values currently selected for this filter
      */
     public function getMSelectedValues() {
-        $values = Mage::helper('mana_core')->sanitizeRequestNumberParam($this->_requestVar,
-                array(array('sep' => '_', 'as_string' => true), array('sep' => ',', 'as_string' => true)));
-        return $values ? array_filter(explode('_', $values)) : array();
+        $values = Mage::helper('mana_core')->sanitizeRequestNumberParam($this->_requestVar, array(
+            array('sep' => '_', 'as_string' => true),
+            array('sep' => ',', 'as_string' => true)
+        ));
+        return $values ? explode('_', $values) : array();
     }
 
     /**
@@ -416,17 +433,19 @@ class Mana_Filters_Model_Filter_Decimal
     public function addToState()
     {
         foreach ($this->getMSelectedValues() as $selection) {
-            list($index, $range) = explode(',', $selection);
-            $this->getLayer()->getState()->addFilter(
-                $this->_createItemEx(
-                    array(
-                        'label' => $this->_renderItemLabel($range, $index),
-                        'value' => $selection,
-                        'm_selected' => true,
-                        'm_show_selected' => $this->getFilterOptions()->getIsReverse(),
+            if (strpos($selection, ',') !== false) {
+                list($index, $range) = explode(',', $selection);
+                $this->getLayer()->getState()->addFilter(
+                    $this->_createItemEx(
+                        array(
+                            'label' => $this->_renderItemLabel($range, $index),
+                            'value' => $selection,
+                            'm_selected' => true,
+                            'm_show_selected' => $this->getFilterOptions()->getIsReverse(),
+                        )
                     )
-                )
-            );
+                );
+            }
         }
     }
 
@@ -434,5 +453,22 @@ class Mana_Filters_Model_Filter_Decimal
     public function isUpperBoundInclusive() {
         return $this->_getResource()->isUpperBoundInclusive();
     }
+    #endregion
+    #region Dependencies
+
+    /**
+     * @return Mana_Core_Helper_Data
+     */
+    public function coreHelper() {
+        return Mage::helper('mana_core');
+    }
+
+    /**
+     * @return ManaPro_FilterDependent_Helper_Data
+     */
+    public function dependentHelper() {
+        return Mage::helper('manapro_filterdependent');
+    }
+
     #endregion
 }

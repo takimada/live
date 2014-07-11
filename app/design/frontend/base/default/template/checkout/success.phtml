@@ -20,32 +20,10 @@
  *
  * @category    design
  * @package     base_default
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 ?>
-<?php
-$lastOrderId = Mage::getSingleton('checkout/session')->getLastOrderId();
-$order = Mage::getSingleton('sales/order');
-$order->load($lastOrderId);
-$_totalData =$order->getData();
-$_sub = $_totalData['subtotal'];//USD ==> global_currency_code,base_currency_code order_currency_code
-$_totalData['base_grand_total'];
-?>
-<script type="text/javascript">
-    var fb_param = {};
-    fb_param.pixel_id = '6007920698717';
-    fb_param.value = '<?php echo $_totalData["base_grand_total"]?>';
-    fb_param.currency = 'TRY';
-    (function(){
-        var fpw = document.createElement('script');
-        fpw.async = true;
-        fpw.src = '//connect.facebook.net/en_US/fp.js';
-        var ref = document.getElementsByTagName('script')[0];
-        ref.parentNode.insertBefore(fpw, ref);
-    })();
-</script>
-<noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/offsite_event.php?id=6007920698717&amp;value=<?php echo $_totalData['base_grand_total']?>&amp;currency=TRY" /></noscript>
 <div class="page-title">
     <h1><?php echo $this->__('Your order has been received.') ?></h1>
 </div>

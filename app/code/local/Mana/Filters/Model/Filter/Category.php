@@ -9,6 +9,7 @@
  * Model type for holding information in memory about possible or applied category filter
  * @author Mana Team
  * Injected instead of standard catalog/layer_filter_attribute in Mana_Filters_Block_Filter_Category constructor.
+ * @method Mana_Filters_Model_Filter2_Store getFilterOptions()
  */
 class Mana_Filters_Model_Filter_Category
     extends Mage_Catalog_Model_Layer_Filter_Category
@@ -58,7 +59,8 @@ class Mana_Filters_Model_Filter_Category
     {
         $data = array();
         foreach ($categories as $category) {
-        	if ($category->getIsActive() && $category->getProductCount()) {
+        	if ($category->getIsActive() &&
+                ($this->filterHelper()->isFilterEnabled($this->getFilterOptions()) == 2 || $category->getProductCount())) {
             	$data[] = array(
                 	'label' => Mage::helper('core')->htmlEscape($category->getName()),
                     'value' => $category->getId(),
@@ -278,6 +280,10 @@ class Mana_Filters_Model_Filter_Category
     public function getRemoveUrl()
     {
         $query = array($this->getRequestVar() => $this->getResetValue());
+        if ($this->coreHelper()->isManadevDependentFilterInstalled()) {
+            $query = $this->dependentHelper()->removeDependentFiltersFromUrl($query, $this->getRequestVar());
+        }
+
         $params = array('_secure' => Mage::app()->getFrontController()->getRequest()->isSecure());
         $params['_current'] = true;
         $params['_use_rewrite'] = true;
@@ -314,4 +320,44 @@ class Mana_Filters_Model_Filter_Category
     }
     #endregion
 
+    public function getResetValue() {
+        if ($this->_appliedCategory) {
+            /**
+             * Revert path ids
+             */
+            $pathIds = array_reverse($this->_appliedCategory->getPathIds());
+            $curCategoryId = $this->getLayer()->getCurrentCategory()->getId();
+
+            if ($pathIds[0] != $curCategoryId && in_array($curCategoryId, $pathIds) && isset($pathIds[1]) && $pathIds[1] != $curCategoryId) {
+                return $pathIds[1];
+            }
+        }
+
+        return null;
+    }
+
+    #region Dependencies
+
+    /**
+     * @return Mana_Filters_Helper_Data
+     */
+    public function filterHelper() {
+        return Mage::helper('mana_filters');
+    }
+
+    /**
+     * @return Mana_Core_Helper_Data
+     */
+    public function coreHelper() {
+        return Mage::helper('mana_core');
+    }
+
+    /**
+     * @return ManaPro_FilterDependent_Helper_Data
+     */
+    public function dependentHelper() {
+        return Mage::helper('manapro_filterdependent');
+    }
+
+    #endregion
 }
