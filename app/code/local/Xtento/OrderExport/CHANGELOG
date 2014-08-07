@@ -277,3 +277,6 @@ Xtento_OrderExport
 
 ===== 1.5.1 =====
  * Various bugfixes and code optimization in license code
+
+===== 1.5.2 =====
+ * Fixed a bug that could lead to the profile being reset to the state when the export was stated. This could be problematic if changes had been made in the meantime.

@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Product:       Xtento_OrderExport (1.5.1)
+ * Product:       Xtento_OrderExport (1.5.2)
  * ID:            eU7gEH+h/ha3m78KAXkNw7kVeZg5IvKmLAK5E8BVIb8=
- * Packaged:      2014-07-30T12:47:10+00:00
- * Last Modified: 2014-07-23T19:56:29+02:00
+ * Packaged:      2014-08-07T08:25:21+00:00
+ * Last Modified: 2014-08-05T18:30:25+02:00
  * File:          app/code/local/Xtento/OrderExport/Model/Export.php
  * Copyright:     Copyright (c) 2014 XTENTO GmbH & Co. KG <info@xtento.com> / All rights reserved.
  */
@@ -535,7 +535,7 @@ class Xtento_OrderExport_Model_Export extends Mage_Core_Model_Abstract
 
     private function _saveLog()
     {
-        $this->getProfile()->setLastExecution(now())->save();
+        $this->_saveLastExecutionNow();
         if (is_array($this->getFiles())) {
             $this->getLogEntry()->setFiles(implode("|", $this->getFiles()));
         }
@@ -544,6 +544,17 @@ class Xtento_OrderExport_Model_Export extends Mage_Core_Model_Abstract
         $this->getLogEntry()->save();
         $this->_errorEmailNotification();
         #Mage::unregister('export_log');
+    }
+
+    private function _saveLastExecutionNow()
+    {
+        $write = Mage::getSingleton('core/resource')->getConnection('core_write');
+        $write->update(
+            $this->getProfile()->_getResource()->getMainTable(),
+            array('last_execution' => now()),
+            array("`{$this->getProfile()->_getResource()->getIdFieldName()}` = {$this->getProfile()->getId()}")
+        );
+        $write->commit();
     }
 
     private function _errorEmailNotification()
