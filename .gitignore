@@ -25,3 +25,4 @@ development/db/*.sql
 development/db/*.sql.*
 sitemap.xml
 magmi/*
+var/*.zip
