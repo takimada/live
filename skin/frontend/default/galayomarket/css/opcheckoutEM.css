@@ -1,0 +1,318 @@
+/**
+ * OneStepCheckout by EMThemes
+ *
+ * Based on Magento 1.7.0.0 source code
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 EMThemes. (http://www.emthemes.com)
+ * @license     Commercial License. Granted for authorized users only.
+ */
+.opc-1sc:after {
+	content: '.';
+	display: block;
+	clear: both;
+	visibility: hidden;
+	height: 0;
+	overflow: hidden;
+	zoom: 1
+}
+
+.opc-col1,.opc-col2,.opc-col3 {
+	width: 363px;
+	float: left;
+	margin-right: 45px
+}
+.opc-col3 {margin-right:0; width:363px}
+
+.opc-col1 {
+	margin-left: 0;
+}
+
+.opc-col .section:last-child {
+	border-bottom: 0
+}
+
+.opc-col .form-list .field {
+	width: 100%!important
+}
+
+.opc-col .form-list .input-box {
+	width: 100%!important
+}
+
+.opc-col .form-list input.input-text {
+	width: 95%!important;
+}
+.opc-col .sp-methods .form-list select {margin-bottom:0}
+.opc-col .form-list select {
+	width: 98%!important;
+	margin-bottom:7px;
+}
+
+.opc-col .form-list li.wide .input-box {
+	width: 100%!important
+}
+
+.opc-col .form-list li.wide input.input-text {
+	width: 95%!important
+}
+.opc-col #opc-payment .sp-methods{float:none}
+.opc-col .form-list li.wide select {
+	width: 98.1%!important
+}
+
+.opc-col .discount {
+	margin-top: 32px
+}
+
+#opc-review .buttons-set {
+	padding: 0;
+	border: 0;
+	margin: 1em 0 0
+}
+
+/* hide checkbox "Use Billing Address" */
+#opc-shipping .control {
+	display: none !important
+}
+
+/* hide all continue buttons except review's */
+.opc-col .buttons-set {
+	display: none !important
+}
+
+#opc-review .buttons-set {
+	display: block !important;
+	width:100%;
+}
+
+#opc-login-popup {
+	position: fixed;
+	width: 300px;
+	margin: 0 auto;
+	z-index: 9999;
+	background: #fff;
+	padding:10px 20px
+}
+
+#opc-login-popup-overlay {
+	display: block;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	z-index: 9998;
+	background: #000;
+	opacity: .7;
+	filter:alpha(opacity=70);
+	-moz-opacity:0.7;
+	-khtml-opacity: 0.7;
+	opacity: 0.7; 
+}
+
+#opc-login-popup .close-btn {
+	background: url(../images/btn_popup-close.png) no-repeat;
+	width: 38px;
+	height: 38px;
+	position: absolute;;
+	top: -16px;
+	right: -16px;
+	text-indent: -99999px
+}
+
+#opc-login-popup .form-list .input-box {
+	width: 100%
+}
+
+#opc-login-popup .form-list input.input-text {
+	width: 95%;
+}
+
+.content-onestep {
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	padding: 23px 26px 8px;
+	margin: 4px 0 27px;
+	display:inline-block;
+}
+
+.page-title {
+	margin: 0;
+}
+
+
+
+.page-title p {
+	font-size: 100%;
+	font-weight: bold;
+	color: #7e7e7e;
+	margin: 0 0 6px;
+}
+#opc-login-popup .validation-advice{text-align:left}
+.opc-1sc #opc-login {margin-bottom:19px;border-bottom:none;}
+.opc-col .form-list li.control input.radio,.opc-col .form-list li.control input.checkbox{float:left; margin-top:1px}
+#opc-login #checkout-step-login p{margin-bottom:0px}
+#opc-login #checkout-step-login p a {
+	font-size: 80%;
+	font-weight: bold;
+	text-transform: uppercase;
+	color: #e20625;
+}
+.one-step-checkout{border:1px solid #101010; padding:12px 20px 14px; margin-top:5px;
+display:inline-block; margin-bottom:31px;}
+.checkout-onepage-index .one-step-checkout .page-title{margin-bottom:13px;}
+.one-step-checkout .page-title p{font-weight:normal; font-size:90%; margin-bottom:2px;margin-top:5px;}
+.opc-col .step-title {font-weight:bold}
+.opc-col #opc-review .step-title {margin-bottom:0px; border-bottom:none}
+.opc-col .step-title-right {
+	background: url("../images/tittle-right.png") repeat-x scroll right top
+		transparent;
+	display: block;
+	padding: 0px 22px 0px 7px;
+	height:32px;
+	line-height:31px;
+}
+
+.opc-col .step-title-bottom {
+	background: url("../images/tittle-bottom.png") no-repeat scroll center
+		bottom transparent;
+	color: #FFFFFF;
+	display: block;
+	font-size: 160%;
+	font-weight: normal;
+	padding: 0 0 8px;
+}
+
+
+
+
+
+.opc-col .form-list li#register-customer-password{float:left}
+
+.opc-col #opc-billing .form-list ul li.control {
+	float: left;width:100%;margin:15px 0;
+}
+
+
+.opc-col .form-list li.control{margin-top:6px;}
+
+.opc-col #opc-shipping_method p {
+	font-size: 90%
+}
+
+.opc-col .section {
+	padding: 0 0 30px;
+	display:inline-block; 
+	width:100%;
+}
+.opc-col .sp-methods dt{margin-top:0}
+.opc-col #opc-payment .sp-methods .form-list{padding-left:0}
+
+.opc-col .step #co-shipping-form {float:left; width:100%;}
+
+.opc-col .v-fix {
+	width: 50%;
+}
+
+.opc-col .v-fix select {
+	width: 95% !important;
+}
+
+.opc-col dt label {
+	font-size: 90%;
+	-webkit-text-size-adjust:100%
+}
+
+.opc-col #checkout-shipping-method-load .sp-methods {
+	margin: 0;
+	padding-bottom:8px;
+}
+.opc-col #checkout-shipping-method-load {display:inline-block; width:100%}
+
+.opc-col .discount .input-box input {
+	width: 95%;
+}
+
+.opc-col .discount button.button {
+	margin-top: 16px
+}
+
+.opc-col .discount label {
+	margin: 0 0 6px;
+	display:inline-block;
+}
+
+.opc-col #opc-review .buttons-set p.f-left {
+	float: left !important; width:100%;
+}
+.opc-col #opc-review .buttons-set .please-wait{float:left;clear:both}
+
+.opc-col #opc-review .buttons-set button.button {
+	float: left; clear:both
+}
+
+.opc-1sc p.required {
+	display: inline-block;
+	float: right;
+	width:100%;
+	text-align:right;
+}
+
+
+
+#opc-login-popup h3 {
+	font-size: 160%;
+	font-weight: normal;
+	color: #3b3b3b;
+	margin-bottom: 5px;
+}
+#opc-login-popup .form-list label.required{padding:5px 0}
+
+#opc-login-popup .buttons-set button.button {
+	margin-right: 15px;
+	clear:both;
+}
+
+#opc-login-popup .buttons-set{line-height:1.4;}
+#opc-login-popup .buttons-set p.required{margin-bottom:0;margin-top:3px; float:left;padding:0;}
+#opc-login-popup .buttons-set a {
+	margin-bottom: 10px;
+	line-height:1.4;
+	color: #888888;
+	font-size: 90%;
+	clear:both;
+	text-align:left;
+}
+.opc-col .data-table tfoot td,.opc-col .data-table tfoot tr.last td .price,
+.opc-col .data-table tfoot strong,.opc-col .data-table tfoot tr.last td{font-size:100%;}
+.opc-col #checkout-review-table.data-table tfoot td{padding-top:5px;}
+.opc-col .form-list li.wide{margin: 0 0 5px;}
+.opc-col .form-list fieldset li.wide{margin: 0;}
+.opc-col .form-list fieldset li.wide_first {
+	margin: 0 0 8px;
+}
+.opc-col .form-list .select-billing, .opc-col .form-list .select-shipping{margin-top:0;}
+.opc-col .form-list li.fields{width:100%;}
+.opc-col .data-table thead th{white-space:normal;}
+.opc-col .data-table thead th:first-child{padding-left:0}
+.opc-col .data-table thead th.subtotal{text-align:right !important; }
+.opc-col .data-table tbody th{white-space:normal;padding:12px 10px}
+/*.opc-col #opc-review #checkout-review-table tfoot tr td .price{
+    display: inline-block;
+    width: 85px;
+    word-wrap: break-word;
+	white-space:normal !important;}
+.opc-col #opc-review #checkout-review-table tbody tr td .price{    display: inline-block;
+    width: 65px;
+    word-wrap: break-word;
+	white-space:normal !important;}*/
+
+.opc-col .gift-messages-form .item .details{float:left; clear:both; margin-left:0; margin-top:10px; width:100%}
+.opc-col .gift-messages-form .item .details .product-name{margin:0 0 2px}
+.opc-col .gift-messages-form .item .details .form-list li.wide textarea{width:95%}
+.opc-col .gift-messages-form .item .details .form-list li.wide .input-box{width:100%}
+.opc-col .gift-messages-form .item .details .form-list .field{width:100%}
+.opc-col .gift-messages-form .item .details .form-list .input-box{width:100%}
+.opc-col .gift-messages-form .item .details .form-list input.input-text{width:95%}

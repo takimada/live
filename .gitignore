@@ -1,9 +1,8 @@
-pp/etc/local.xml
+app/etc/local.xml
 media/*
 downloader/pearlib/cache/*
 downloader/pearlib/download/*
 app/etc/use_cache.ser
-local.xml
 var/cache/*
 var/session/*
 var/log/*
@@ -15,6 +14,7 @@ var/import/*
 var/package/tmp/*
 var/tmp/*
 var/sphinx
+var/backups/*
 downloader/.cache/*
 downloader/cache.cfg
 downloader/connect.cfg
@@ -24,3 +24,5 @@ errors/local.xml
 development/db/*.sql
 development/db/*.sql.*
 sitemap.xml
+magmi/*
+var/*.zip

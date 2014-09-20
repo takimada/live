@@ -2,7 +2,7 @@
 <config>
     <modules>
         <WP_ThemeGrayscale>
-            <version>1.4.0</version>
+            <version>1.4.1</version>
         </WP_ThemeGrayscale>
     </modules>
     <global>
@@ -40,7 +40,7 @@
     <default>
         <theme_grayscale>
             <general>
-                <version>1.4.0</version>
+                <version>1.4.1</version>
             </general>
         </theme_grayscale>
     </default>

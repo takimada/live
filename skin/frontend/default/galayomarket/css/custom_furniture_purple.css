@@ -1,0 +1,75 @@
+/*menu*/
+.em_nav .hnav, .nav-container #nav{background:none;}
+.em-catalog-navigation.horizontal > li, .hnav .menu-item-depth-0{background:url(../images/furniture_purple/line.png) right center no-repeat}
+.em_nav .vnav > li.menu-item-parent:hover > a.arrow span, .em_nav .vnav > li.parent:hover > a.arrow span{background:url(../images/furniture_purple/btn-icon.png) 12px 3px no-repeat}
+.em_nav .em-catalog-navigation li.parent:hover > a.arrow span{background:url(../images/furniture_purple/btn-icon.png) 12px 4px no-repeat}
+.em_nav .vnav, .menu-left{border:2px solid /*BEGIN:negative_bgcolor*/#f34b26/*END:negative_bgcolor*/; border-top:none}
+
+/*cart*/
+.header-container .top-cart{background:#2b2b2c;border-radius:/*BEGIN:rounded_corner*/3px/*END:rounded_corner*/; -webkit-border-radius:/*BEGIN:rounded_corner*/3px/*END:rounded_corner*/; -moz-border-radius:/*BEGIN:rounded_corner*/3px/*END:rounded_corner*/ ;}
+.header-container .top-cart-inner{border:none; height:36px;background:none;}
+.header-container .top-cart .top-cart-inner a.top-link-cart{color:#fff; background:url(../images/bkg-icon-cart.png) 24px 0 no-repeat}
+.header-container .top-cart span.option-cart{background:url(../images/furniture_blue/bkg-cart.png) 0 0 no-repeat; right:0}
+
+/*hot product*/
+.em-area03 .hot-product{padding-top:0; border:1px solid /*BEGIN:line_color*/#d4d4d4/*END:line_color*/; text-align:left;border-radius:/*BEGIN:rounded_corner*/2px/*END:rounded_corner*/; -webkit-border-radius:/*BEGIN:rounded_corner*/2px/*END:rounded_corner*/; -moz-border-radius:/*BEGIN:rounded_corner*/2px/*END:rounded_corner*/ ;box-shadow:/*BEGIN:box_shadow*/0px 1px 2px #dddddd/*END:box_shadow*/; overflow:hidden; background-color:/*BEGIN:primary_bgcolor*/#ffffff/*END:primary_bgcolor*/;}
+.hot-product .widget-title{background:#f4f4f4; padding:9px 10px 8px; border-bottom:1px solid /*BEGIN:line_color*/#d4d4d4/*END:line_color*/; margin-bottom:14px;}
+.hot-product .widget-title h3{background:none; padding:0; color:#696969}
+.em-area03 .products-grid li.itemslider .product-image{margin-top:5px;}
+.em-area03 .controls a{top:29px; background:transparent url(../sliderwidget/icon_slider.png) no-repeat 0 0; width:8px; height:12px;}
+.em-area03 .controls .next{right:10px}
+.em-area03 .controls a{top:-37px}
+.em-area03  .controls .prev{left:auto; right:30px}
+.em-area03 .controls .prev{background-position:-46px 0}
+.em-area03 .controls .next{background-position:0px 0}
+
+.cms-area-07 .grid_5.alpha  .product-name a{font:600 15px/1.35 Roboto, helvetica,arial,sans-serif ; color:#a71c9e;text-transform:uppercase; }
+.cms-area-07 .grid_5.alpha .viewmore{font:600 12px/1.35 Roboto, helvetica,arial,sans-serif ; color:#a71c9e;text-transform:uppercase; background:none; padding:0}
+
+.em-area07 .grid_5 .controls a.prev{right:10px}
+.em-area07 .grid_5 .controls a.next{right:-10px}
+
+
+
+.block .block-title strong span, .widget-title h3, .widget-title h2, .block_title h3,.em-widget-featured-products-grid .widget-title h3{background-image:none}
+
+/*tab*/
+.ui-tabs .ui-tabs-nav li.ui-tabs-selected a{ }
+.ui-tabs .ui-tabs-nav li a:hover, .ui-tabs .ui-tabs-nav li.ui-tabs-selected a{box-shadow:0 -2px 2px rgba(0, 0, 0, 0.2) inset, 0 1px 1px #e536da inset; background: /*BEGIN:negative_bgcolor*/#f34b26/*END:negative_bgcolor*/; border:1px solid #8c0e84;color:/*BEGIN:negative_color*/#ffffff/*END:negative_color*/;}
+
+/*block-subscribe*/
+.block-subscribe{background-color:#a71c9e}
+.block-subscribe .input-box{border-color:#750464!important}
+.block-subscribe .actions button.button{border-color:#0f0f0f; background-color:#0f0f0f}
+
+/*footer*/
+.em-area10{background: #290026;border:none; border-bottom:1px solid #120011; margin-bottom:0; padding-bottom:10px;}
+.em-footerend.container_24 .grid_24{background:#290026; padding:15px 0}
+.em-area10 .grid_6 p.h5{background:none;color:#e7e7e7; font-size:120%; padding-top:20px}
+.footer ul li a,.footer,.footer a,.em-area10{color:#e7e7e7}
+.em-area10 .grid_6 li a:hover{ background:url(../images/furniture_purple/btn-icon.png) 0 center no-repeat}
+.em-area10 .grid_6 li a{background:url(../images/furniture_blue/icon-white.png) 0 center no-repeat; color:#e7e7e7;}
+.em-area11 .icon{float:none;background:url(../images/furniture_purple/icon-share.png) 0 0 no-repeat}
+.em-area11 .icon.facebook{background-position:0 0}
+.em-area11 .icon.twitter{background-position:-37px 0px}
+.em-area11 .icon.vimeo{background-position:-74px 0}
+.em-area11 .icon.feed{background-position:-112px 0px}
+.em-area11 p.h5{margin-left:31px;color:/*BEGIN:negative_color*/#ffffff/*END:negative_color*/; }
+.em-area11 .omega p{margin-right:31px}
+/*.footer ul li a{background:url(../images/furniture_blue/line-footer.png) right center no-repeat}*/
+.em-area11{ border-bottom:1px solid #120011;}	
+.custom-logo.paymentmethods{background:url(../images/furniture_purple/icon-payment.png) 0 center no-repeat}
+
+
+/*product label*/
+.productlabels_icons{width:67px;position: static; margin:0;}
+.productlabels_icons .label {position:absolute}
+.productlabels_icons .label.tl {top:0; left:0}
+.productlabels_icons .label.tr {top:0; right:0}
+.productlabels_icons .label.bl {bottom:0; left:0}
+.productlabels_icons .label.br {bottom:0; right:0}
+.productlabels_icons .new,.productlabels_icons .sale,.productlabels_icons .hot,.productlabels_icons .bestseller { width:67px; height:67px; background:url(../images/furniture_blue/product-label.png) 0 0 no-repeat; padding:0;}
+.productlabels_icons .new{background-position: 0 -67px!important}
+.productlabels_icons .bestseller{background-position: 0px -134px!important}
+.productlabels_icons .hot{background-position:0px 0px!important}
+

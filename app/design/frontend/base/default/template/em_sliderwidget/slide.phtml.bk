@@ -1,0 +1,38 @@
+<div id="<?php echo $this->getIdJs();?>" class="<?php echo $this->getData('direction')?> carousel flexslider<?php if($cssClass = $this->getData('css_class')):?> <?php echo $cssClass;?><?php endif;?>">	
+	<?php echo $this->getContent();?>
+</div>
+<script type="text/javascript">
+//<![CDATA[
+jQuery(window).load(function(){
+	if(jQuery('<?php echo $this->getSelector()?>').length){
+		<?php if($this->getData('direction') == 'vertical'):?>
+		var height = 0;
+		jQuery('<?php echo $this->getSelector().' > li.itemslider'?>').each(function(){
+			if(height < jQuery(this).height())
+				height = jQuery(this).height();
+		});
+		jQuery('<?php echo $this->getSelector().' > li.itemslider'?>').height(height);
+		<?php else:?>
+		var width = jQuery('<?php echo $this->getSelector()?> > li.itemslider').outerWidth(true);
+        var margin = parseInt(jQuery('<?php echo $this->getSelector()?> > li.itemslider').css('margin-right'), 0) + parseInt(jQuery('<?php echo $this->getSelector()?> > li.itemslider').css('margin-left'), 0);
+		<?php endif;?>
+		jQuery('<?php echo $this->getSelector()?>').addClass('slides');
+		jQuery('#<?php echo $this->getIdJs();?>').flexslider({
+			animation: "slide",
+            selector: ".slides > li.itemslider",
+			animationLoop: true,
+			direction: '<?php echo $this->getData('direction')?>',
+			<?php if($this->getData('direction') != 'vertical'):?>
+			itemWidth: width,
+            //itemMargin: margin,   
+			<?php endif;?>
+			mousewheel:false,
+			keyboard:false,
+			slideshow:<?php echo ($this->getData('auto_sliding')) ? $this->getData('auto_sliding') : 0;?>,
+			move:<?php echo $this->getData('items_per_slide') ? $this->getData('items_per_slide',0) : 0;?>
+		});
+	}
+  
+});
+//]]>
+</script>
