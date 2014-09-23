@@ -1,5 +1,6 @@
 pp/etc/local.xml
 media/*
+magmi
 downloader/pearlib/cache/*
 downloader/pearlib/download/*
 app/etc/use_cache.ser
@@ -15,6 +16,8 @@ var/import/*
 var/package/tmp/*
 var/tmp/*
 var/sphinx
+var/backups
+var/*.zip
 downloader/.cache/*
 downloader/cache.cfg
 downloader/connect.cfg
