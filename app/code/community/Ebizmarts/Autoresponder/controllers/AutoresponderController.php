@@ -1,11 +1,13 @@
 <?php
+
 /**
- * Author : Ebizmarts <info@ebizmarts.com>
- * Date   : 6/25/13
- * Time   : 3:22 PM
- * File   : AutoresponderController.php
- * Module : Ebizmarts_Magemonkey
+ *
+ * @category   Ebizmarts
+ * @package    Ebizmarts_Autoresponder
+ * @author     Ebizmarts Team <info@ebizmarts.com>
+ * @license    http://opensource.org/licenses/osl-3.0.php
  */
+
 class Ebizmarts_Autoresponder_AutoresponderController extends Mage_Core_Controller_Front_Action
 {
     public function indexAction()
@@ -77,5 +79,43 @@ class Ebizmarts_Autoresponder_AutoresponderController extends Mage_Core_Controll
             $customerData = Mage::getSingleton('customer/session')->getCustomer();
             return $customerData->getId();
         }
+    }
+    public function getVisitedProductsConfigAction()
+    {
+        $params = $this->getRequest()->getParams();
+        $storeId = Mage::app()->getStore()->getStoreId();
+        if(Mage::getStoreConfig(Ebizmarts_Autoresponder_Model_Config::VISITED_ACTIVE,$storeId)&&Mage::getSingleton('customer/session')->isLoggedIn()) {
+            if(isset($params['product_id'])) {
+                $product = Mage::getModel('catalog/product')->load($params['product_id']);
+                $mark = $product->getAttributeText('ebizmarts_mark_visited');
+                if($mark == 'Yes') {
+                    $resp['time'] = Mage::getStoreConfig(Ebizmarts_Autoresponder_Model_Config::VISITED_TIME,$storeId);
+                }
+                else {
+                    $resp['time'] = -1;
+                }
+            }
+        }
+        else {
+            $resp['time'] = -1;
+        }
+        $this->getResponse()->setHeader('Content-type', 'application/json');
+        $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($resp));
+        return;
+    }
+    public function markVisitedProductsAction()
+    {
+        $params = $this->getRequest()->getParams();
+        if(!isset($params['product_id'])||!Mage::getSingleton('customer/session')->isLoggedIn()) {
+            return;
+        }
+        $storeId = Mage::app()->getStore()->getStoreId();
+        $customerId = Mage::getSingleton('customer/session')->getCustomer()->getId();
+        $visited = Mage::getModel('ebizmarts_autoresponder/visited')->loadByCustomerProduct($customerId,$params['product_id'],$storeId);
+        $visited->setCustomerId($customerId)
+                ->setProductId($params['product_id'])
+                ->setStoreId($storeId)
+                ->setVisitedAt(Mage::getModel('core/date')->gmtDate())
+                ->save();
     }
 }

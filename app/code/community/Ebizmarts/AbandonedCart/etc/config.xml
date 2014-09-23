@@ -1,8 +1,16 @@
 <?xml version="1.0"?>
+<!--
+    Configuration file for Ebizmarts_AbandonedCart module, touch at you entire responsibility
+
+    @category   Ebizmarts
+    @package    Ebizmarts_AbandonedCart
+    @author     Ebizmarts Team <info@ebizmarts.com>
+    @license    http://opensource.org/licenses/osl-3.0.php
+-->
 <config>
     <modules>
         <Ebizmarts_AbandonedCart>
-            <version>0.1.17</version>
+            <version>0.1.26</version>
         </Ebizmarts_AbandonedCart>
     </modules>
     <global>
@@ -25,6 +33,12 @@
             </ebizmarts_abandonedcart>
             <ebizmarts_abandonedcart_resource>
                 <class>Ebizmarts_AbandonedCart_Model_Resource</class>
+                <deprecatedNode>ebizmarts_abandonedcart_mysql4</deprecatedNode>
+                <entities>
+                    <mailssent>
+                        <table>magemonkey_mails_sent</table>
+                    </mailssent>
+                </entities>
             </ebizmarts_abandonedcart_resource>
         </models>
         <blocks>
@@ -42,6 +56,9 @@
                 <setup>
                     <module>Ebizmarts_AbandonedCart</module>
                 </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
             </ebizmarts_abandonedcart_setup>
         </resources>
         <fieldsets>
@@ -82,6 +99,16 @@
                 </Ebizmarts_AbandonedCart>
             </modules>
         </translate>
+        <events>
+            <admin_system_config_changed_section_ebizmarts_abandonedcart>
+                <observers>
+                    <ebizmarts_abandoned_save_config>
+                        <class>ebizmarts_abandonedcart/eventObserver</class>
+                        <method>saveConfig</method>
+                    </ebizmarts_abandoned_save_config>
+                </observers>
+            </admin_system_config_changed_section_ebizmarts_abandonedcart>
+        </events>
     </adminhtml>
 
     <frontend>
@@ -119,6 +146,9 @@
             <general>
                 <subject>Abandoned Cart Email</subject>
                 <mandrill-tag>AbandonedCart</mandrill-tag>
+                <autologin>0</autologin>
+                <page>checkout/cart</page>
+                <incremental>0</incremental>
             </general>
         </ebizmarts_abandonedcart>
     </default>

@@ -15,7 +15,7 @@ class Magebuzz_Testimonial_Block_Testimonial extends Mage_Core_Block_Template {
 	public function _prepareLayout() {
 		parent::_prepareLayout();
 		$this->getLayout()->getBlock('head')->setTitle(Mage::helper('testimonial')->__('Testimonial'));
-		$pager = $this->getLayout()->createBlock('page/html_pager', 'testimonial.pager')->setTemplate('testimonial/pager.phtml');
+		$pager = $this->getLayout()->createBlock('page/html_pager', 'testimonial.pager');
 
         if(Mage::getStoreConfig('testimonial/general_option/enable_testimonial_paging')){
             $fieldPerPage = Mage::getStoreConfig('testimonial/general_option/divide_page');

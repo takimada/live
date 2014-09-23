@@ -1,4 +1,13 @@
 <?php
+
+/**
+ *
+ * @category   Ebizmarts
+ * @package    Ebizmarts_AbandonedCart
+ * @author     Ebizmarts Team <info@ebizmarts.com>
+ * @license    http://opensource.org/licenses/osl-3.0.php
+ */
+
 class Ebizmarts_AbandonedCart_Model_Cron
 {
 //    const EMAIL_TEMPLATE_XML_PATH = 'ebizmarts_abandonedcart/general/template';
@@ -23,7 +32,10 @@ class Ebizmarts_AbandonedCart_Model_Cron
      */
     protected function _proccess($store)
     {
-        Mage::app()->setCurrentStore($store);
+        //Mage::app()->setCurrentStore($store);
+        Mage::unregister('_singleton/core/design_package' );
+        Mage::app()->setCurrentStore(Mage_Core_Model_App::ADMIN_STORE_ID);
+        Mage::getSingleton('core/design_package' )->setStore($store);
 
         $adapter = Mage::getSingleton('core/resource')->getConnection('sales_read');
         $days = Mage::getStoreConfig(Ebizmarts_AbandonedCart_Model_Config::DAYS, $store);
@@ -122,7 +134,9 @@ class Ebizmarts_AbandonedCart_Model_Cron
             }
             //
             //$url = Mage::getBaseUrl('web').'ebizmarts_abandonedcart/abandoned/loadquote?id='.$quote->getEntityId();
-            $url = Mage::getModel('core/url')->setStore($store)->getUrl().'ebizmarts_abandonedcart/abandoned/loadquote?id='.$quote->getEntityId();
+            srand((double)microtime()*1000000);
+            $token = md5(rand(0,9999999));
+            $url = Mage::getModel('core/url')->setStore($store)->getUrl('',array('_nosid'=>true)).'ebizmarts_abandonedcart/abandoned/loadquote?id='.$quote->getEntityId().'&token='.$token;
 
             $data = array('AbandonedURL'=>$url, 'AbandonedDate' => $quote->getUpdatedAt());
             // send email
@@ -135,6 +149,7 @@ class Ebizmarts_AbandonedCart_Model_Cron
                 $name = $quote->getCustomerFirstname().' '.$quote->getCustomerLastname();
                 $quote2 = Mage::getModel('sales/quote')->loadByIdWithoutStore($quote->getId());
                 $unsubscribeUrl = Mage::getModel('core/url')->setStore($store)->getUrl().'ebizautoresponder/autoresponder/unsubscribe?list=abandonedcart&email='.$email.'&store='.$store;
+                $couponcode = '';
                 if($sendcoupon && $quote2->getEbizmartsAbandonedcartCounter() + 1 == $sendcoupondays)
                 {
                     $templateId = Mage::getStoreConfig(Ebizmarts_AbandonedCart_Model_Config::EMAIL_TEMPLATE_XML_PATH);
@@ -151,14 +166,16 @@ class Ebizmarts_AbandonedCart_Model_Cron
                 }
                 else {
                     $templateId = Mage::getStoreConfig(Ebizmarts_AbandonedCart_Model_Config::EMAIL_TEMPLATE_XML_PATH);
-                    $vars = array('quote'=>$quote,'url'=>$url,'unsubscribeurl'=>$unsubscribeUrl);
+                    $vars = array('quote'=>$quote,'url'=>$url,'unsubscribeurl'=>$unsubscribeUrl,'tags'=>array($mandrillTag));
 
                 }
                 $translate = Mage::getSingleton('core/translate');
                 $mail = Mage::getModel('core/email_template')->setTemplateSubject($mailsubject)->sendTransactional($templateId,$sender,$email,$name,$vars,$store);
                 $translate->setTranslateInLine(true);
                 $quote2->setEbizmartsAbandonedcartCounter($quote2->getEbizmartsAbandonedcartCounter()+1);
+                $quote2->setEbizmartsAbandonedcartToken($token);
                 $quote2->save();
+                Mage::helper('ebizmarts_abandonedcart')->saveMail('abandoned cart',$email,$name,$couponcode,$store);
             }
         }
 
