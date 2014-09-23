@@ -60,34 +60,6 @@
                         <input type="password" id="login" name="login[password]" class="required-entry input-text" value="" /></div>
                     <?php echo $this->getChildHtml('form.additional.info'); ?>
                     <div class="clear"></div>
-                    <div class="input-box input-left" style="margin-top: 10px;"><label for="username"><?php echo Mage::helper('adminhtml')->__('Language:') ?></label>
-                        <br />
-                        <?php
-                            $locale  = Mage::app()->getLocale();
-
-                            $lang = 'en_US';
-                            if (Mage::helper('macpain_als')->getLanguageCookie()) {
-                                $lang = Mage::helper('macpain_als')->getLanguageCookie();
-                            }
-                            
-                            $html = $this->getLayout()->createBlock('adminhtml/html_select')
-                                ->setName('locale')
-                                ->setId('interface_locale')
-                                ->setTitle(Mage::helper('page')->__('Interface Language'))
-                                ->setExtraParams('style="width:200px"')
-                                ->setValue($lang)
-                                ->setOptions($locale->getTranslatedOptionLocales())
-                                ->getHtml();
-
-                                echo $html;
-                        ?>
-                        <br />
-                        <label for="lang_cookie">
-                        <input type="checkbox" id="lang_cookie" name="lang_cookie" class="" />
-                         <input type="hidden" id="save_user_lang" name="save_user_lang" class="" />
-                        <?php echo Mage::helper('adminhtml')->__('Save language cookie for next login') ?></label><br />
-                        </div>
-                    <div class="clear"></div>
                     <div class="form-buttons">
                         <a class="left" href="<?php echo Mage::helper('adminhtml')->getUrl('adminhtml/index/forgotpassword', array('_nosecret' => true)) ?>"><?php echo Mage::helper('adminhtml')->__('Forgot your password?') ?></a>
                         <input type="submit" class="form-button" value="<?php echo Mage::helper('adminhtml')->__('Login') ?>" title="<?php echo Mage::helper('adminhtml')->__('Login') ?>" /></div>
