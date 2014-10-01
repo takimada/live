@@ -46,22 +46,6 @@
             </misspell_setup>
         </resources>
         <events>
-            <catalogsearch_index_process_complete>
-                <observers>
-                    <misspell_index_complete>
-                        <class>misspell/observer</class>
-                        <method>onIndexComplete</method>
-                    </misspell_index_complete>
-                </observers>
-            </catalogsearch_index_process_complete>
-            <catalogsearch_index_process_start>
-                <observers>
-                    <misspell_index_start>
-                        <class>misspell/observer</class>
-                        <method>onIndexStart</method>
-                    </misspell_index_start>
-                </observers>
-            </catalogsearch_index_process_start>
             <searchautocomplete_prepare_collection>
                 <observers>
                     <misspell_prepare_collection>
@@ -70,6 +54,15 @@
                     </misspell_prepare_collection>
                 </observers>
             </searchautocomplete_prepare_collection>
+            <controller_action_postdispatch_catalogsearch_result_index>
+                <observers>
+                    <mirasvit_misspell_postdispatch_catalogsearch_result_index>
+                        <type>singleton</type>
+                        <class>misspell/observer</class>
+                        <method>onPostdispatchCatalogsearchResultIndex</method>
+                    </mirasvit_misspell_postdispatch_catalogsearch_result_index>
+                </observers>            
+            </controller_action_postdispatch_catalogsearch_result_index>     
         </events>
     </global>
     <adminhtml>
@@ -134,4 +127,24 @@
             </updates>
         </layout>
     </frontend>
+    <crontab>
+        <jobs>
+            <misspell>
+                <schedule>
+                    <cron_expr>9 3 * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>misspell/indexer::reindexAll</model>
+                </run>
+            </misspell>
+        </jobs>
+    </crontab>
+    <default>
+        <misspell>
+            <general>
+                <misspell>1</misspell>
+                <fallback>1</fallback>
+            </general>
+        </misspell>
+    </default>
 </config>

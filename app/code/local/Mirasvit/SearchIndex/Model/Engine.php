@@ -9,15 +9,31 @@
  *
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
- * @version   2.2.8
- * @revision  277
- * @copyright Copyright (C) 2013 Mirasvit (http://mirasvit.com/)
+ * @version   2.3.1
+ * @revision  710
+ * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
  */
 
 
 abstract class Mirasvit_SearchIndex_Model_Engine
 {
     abstract public function query($queryText, $store, $index);
+
+    protected function _normalize($input)
+    {
+        if (!count($input)) {
+            return $input;
+        }
+
+        $result = array();
+        $max    = max(array_values($input));
+        $max    = $max ? $max : 1;
+        foreach ($input as $key => $value) {
+            $result[$key] = intval($value / $max * 100);
+        }
+
+        return $result;
+    }
 
     protected function _getReadAdapter()
     {

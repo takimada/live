@@ -1,178 +1,132 @@
 <?php
-
 /**
- * Mage_Core_Model_Email_Template rewrite class
- *
- * @category   Ebizmarts
- * @package    Ebizmarts_Mandrill
- * @author     Ebizmarts Team <info@ebizmarts.com>
- * @license    http://opensource.org/licenses/osl-3.0.php
+ * Author : Ebizmarts <info@ebizmarts.com>
+ * Date   : 8/7/14
+ * Time   : 4:27 PM
+ * File   : Template.php
+ * Module : Ebizmarts_Mandrill
  */
-
-class Ebizmarts_Mandrill_Model_Email_Template extends Mage_Core_Model_Email_Template {
-
-	protected $_mandrill = null;
-    protected $replyTo = null;
-	protected $_bcc = array();
-
-	public function getMail() {
-
-		//Check if should use Mandrill Transactional Email Service
-        if(FALSE === Mage::helper('mandrill')->useTransactionalService()){
-            return parent::getMail();
-        }
-
-		if(is_null($this->_mandrill)){
-			$this->_mandrill = Mage::helper('mandrill')->api();
-			$this->_mandrill->setApiKey(Mage::helper('mandrill')->getApiKey());
-		}
-		return $this->_mandrill;
-	}
-
-	/**
-	 * Add BCC emails to list to send.
-	 *
-	 * @return Ebizmarts_Mandrill_Model_Email_Template
-	 */
-    public function addBcc($bcc) {
-		$helper = Mage::helper('mandrill');
-    	if(FALSE === $helper->useTransactionalService()){
-            return parent::addBcc($bcc);
-        }
-        if (is_array($bcc)) {
-            foreach ($bcc as $email) {
-                $this->_bcc[] = $email;
-            }
-        }
-        elseif ($bcc) {
-            $this->_bcc[] = $bcc;
-        }
-        return $this;
-
-    }
+class Ebizmarts_Mandrill_Model_Email_Template extends Mage_Core_Model_Email_Template
+{
+//    protected $_bcc = array();
+    protected $_mail = null;
 
     /**
-     * Send mail to recipient
-     *
-     * @param   array|string       $email        E-mail(s)
-     * @param   array|string|null  $name         receiver name(s)
-     * @param   array              $variables    template variables
-     * @return  boolean
-     **/
-    public function send($email, $name = null, array $variables = array()) {
-
-        $helper = Mage::helper('mandrill');
-
-		//Check if should use Mandrill Transactional Email Service
-        if(FALSE === $helper->useTransactionalService()){
-            return parent::send($email, $name, $variables);
+     * @param array|string $email
+     * @param null $name
+     * @param array $variables
+     * @return bool
+     */
+    public function send($email, $name = null, array $variables = array())
+    {
+        $storeId = Mage::app()->getStore()->getId();
+        if(!Mage::getStoreConfig(Ebizmarts_Mandrill_Model_System_Config::ENABLE,$storeId)) {
+           return parent::send($email, $name,$variables);
         }
-
         if (!$this->isValidForSend()) {
             Mage::logException(new Exception('This letter cannot be sent.')); // translation is intentionally omitted
             return false;
         }
-
-        $emails = array_values((array)$email);
-
-		if(count($this->_bcc) > 0){
-//			$bccEmail = $this->_bcc[0];
-            $bccEmail = $this->_bcc;
-		}else{
-			$bccEmail = '';
-		}
-
-        $names = is_array($name) ? $name : (array)$name;
-        $names = array_values($names);
-        foreach ($emails as $key => $email) {
-            if (!isset($names[$key])) {
-                $names[$key] = substr($email, 0, strpos($email, '@'));
+        $emails = array_values( (array)$email );
+        $names = is_array( $name ) ? $name : (array)$name;
+        $names = array_values( $names );
+        foreach ( $emails as $key => $email ) {
+            if ( ! isset( $names[$key] ) ) {
+                $names[ $key ] = substr( $email, 0, strpos( $email, '@' ) );
             }
         }
 
-        $variables['email'] = reset($emails);
-        $variables['name'] = reset($names);
+        // Get message
+        $this->setUseAbsoluteLinks( true );
+        $variables['email'] = reset( $emails );
+        $variables['name'] = reset( $names );
+        $message = $this->getProcessedTemplate( $variables, true );
+
+        $email = array( 'subject' => $this->getProcessedTemplateSubject( $variables ), 'to' => array() );
 
         $mail = $this->getMail();
 
-        $this->setUseAbsoluteLinks(true);
-        $text = $this->getProcessedTemplate($variables, true);
-
-        try {
-
-            $message = array (
-					        'subject'     => $this->getProcessedTemplateSubject($variables),
-					        'from_name'   => $this->getSenderName(),
-					        'from_email'  => $this->getSenderEmail(),
-					        'to_email'    => $emails,
-					        'to_name'     => $names,
-					        'bcc_address' => $bccEmail,
-					        'headers'	  => array('Reply-To' => $this->replyTo)
-				        );
-
-			if($this->isPlain()) {
-		 		$message['text'] = $text;
-			} else {
-				$message['html'] = $text;
-			}
-            if(isset($variables['tags']) && count($variables['tags'])) {
-                $message ['tags'] = $variables['tags'];
+        for ( $i = 0; $i < count( $emails ); $i++ ) {
+            if ( isset( $names[ $i ] ) ) {
+                $email['to'][] = array(
+                    'email' => $emails[ $i ],
+                    'name' => $names[ $i ]
+                );
             }
             else {
-                $templateId = (string)$this->getId();
-                $templates = parent::getDefaultTemplates();
-                if (isset($templates[$templateId])) {
-                	$message ['tags'] =  array(substr($templates[$templateId]['label'], 0, 50));
-				} else {
-				        if($this->getTemplateCode()){
-				        	$message ['tags'] = array(substr($this->getTemplateCode(), 0, 50));
-				        } else {
-				        	$message ['tags'] = array(substr($templateId, 0, 50));
-				        }
-				}
+                $email['to'][] = array(
+                    'email' => $emails[ $i ],
+                    'name' => ''
+                );
             }
+        }
+        foreach($mail->getBcc() as $bcc)
+        {
+            $email['to'][] = array(
+                'email' => $bcc,
+                'type' => 'bcc'
+            );
+        }
 
-            $sent = $mail->sendEmail($message);
-            if($mail->errorCode){
-				return false;
-			}
+        $email['from_name'] = $this->getSenderName();
+        $email['from_email'] = $this->getSenderEmail();
+        $email['headers'] = $mail->getHeaders();
+        if(isset($variables['tags']) && count($variables['tags'])) {
+            $email ['tags'] = $variables['tags'];
+        }
 
-        }catch (Exception $e) {
-            Mage::logException($e);
+        if(isset($variables['tags']) && count($variables['tags'])) {
+            $email ['tags'] = $variables['tags'];
+        }
+        else {
+            $templateId = (string)$this->getId();
+            $templates = parent::getDefaultTemplates();
+            if (isset($templates[$templateId])) {
+                $email ['tags'] =  array(substr($templates[$templateId]['label'], 0, 50));
+            } else {
+                if($this->getTemplateCode()){
+                    $email ['tags'] = array(substr($this->getTemplateCode(), 0, 50));
+                } else {
+                    $email ['tags'] = array(substr($templateId, 0, 50));
+                }
+            }
+        }
+
+        if($att = $mail->getAttachments()) {
+            $email['attachments'] = $att;
+        }
+        if( $this->isPlain() )
+            $email['text'] = $message;
+        else
+            $email['html'] = $message;
+
+        try {
+            $result = $mail->messages->send( $email );
+        }
+        catch( Exception $e ) {
+            Mage::logException( $e );
             return false;
         }
-
         return true;
+
     }
 
-    public function setReplyTo($email) {
-        if(FALSE === Mage::helper('mandrill')->useTransactionalService()) {
-            return parent::setReplyTo($email);
+    /**
+     * @return Mandrill_Message|Zend_Mail
+     */
+    public function getMail()
+    {
+        $storeId = Mage::app()->getStore()->getId();
+        if(!Mage::getStoreConfig(Ebizmarts_Mandrill_Model_System_Config::ENABLE,$storeId)) {
+            return parent::getMail();
         }
-
-		$this->replyTo = $email;
-        return $this;
+        if($this->_mail) {
+            return $this->_mail;
+        }
+        else {
+            $storeId = Mage::app()->getStore()->getId();
+            $this->_mail = new Mandrill_Message(Mage::getStoreConfig( Ebizmarts_Mandrill_Model_System_Config::APIKEY,$storeId ));
+            return $this->_mail;
+        }
     }
-
-	public function createAttachment($body,
-                                     $mimeType    = Zend_Mime::TYPE_OCTETSTREAM,
-                                     $disposition = Zend_Mime::DISPOSITION_ATTACHMENT,
-                                     $encoding    = Zend_Mime::ENCODING_BASE64,
-                                     $filename    = null)
-    {
-
-    }
-    public function addAttachment(Zend_Mime_Part $att)
-    {
-
-    }
-
-    public function addTo($email, $name = null)
-    {
-    	if(FALSE === Mage::helper('mandrill')->useTransactionalService()) {
-	        array_push($this->_bcc, $email);
-	        return $this;
-    	}
-    }
-
 }

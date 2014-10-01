@@ -9,14 +9,18 @@
  *
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
- * @version   2.2.8
- * @revision  277
- * @copyright Copyright (C) 2013 Mirasvit (http://mirasvit.com/)
+ * @version   2.3.1
+ * @revision  710
+ * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
  */
 
 
-
-
+/**
+ * ÐÐ»Ð°ÑÑ Ð´Ð»Ñ Ð²ÑÑÐµÑÐ»ÐµÐ½Ð¸Ñ ÑÐ°ÑÑÐ¾ÑÐ½Ð¸Ñ Ð¼ÐµÐ¶Ð´Ñ Ð´Ð²ÑÐ¼Ñ ÑÑÑÐ¾ÐºÐ°Ð¼Ð¸ Ñ ÑÑÐµÑÐ¾Ð¼ Ð¿ÐµÑÐµÑÑÐ°Ð½Ð¾Ð²Ð¾Ðº
+ *
+ * @category Mirasvit
+ * @package  Mirasvit_Misspell
+ */
 class Mirasvit_Misspell_Model_Dameraulevenshtein extends Varien_Object
 {
     // Measures the Damerau-Levenshtein distance of two words

@@ -2,7 +2,6 @@ jQuery.noConflict();
 jQuery(function($) {
 
 SearchAutocomplete = Backbone.View.extend({
-    el            : '.UI-SEARCHAUTOCOMPLETE',
     url           : null,
     result        : null,
     suggest       : null,
@@ -19,36 +18,49 @@ SearchAutocomplete = Backbone.View.extend({
         'change .UI-CATEGORY' : 'onChangeCategory'
     },
 
-    initialize: function() {
+    initialize: function()
+    {
         var self = this;
         _.bindAll(self);
+    },
+
+    init: function(el)
+    {
+        var self = this;
+
+        self.setElement(el);
 
         self.url           = self.$el.attr('data-url');
         self.delay         = self.$el.attr('data-delay');
         self.queryMinChars = self.$el.attr('data-minchars');
-        self.$listenField  = $('.UI-SEARCH');
-        self.$suggestField = $('.UI-SEARCH-SUGGEST');
-        self.$placeholder  = $('.UI-PLACEHOLDER');
-        self.$loader       = $('.UI-LOADER');
-        self.$category     = $('.UI-CATEGORY');
-        self.$categoryText = $('.UI-CATEGORY-TEXT');
+        self.$listenField  = $('.UI-SEARCH', self.$el);
+        self.$suggestField = $('.UI-SEARCH-SUGGEST', self.$el);
+        self.$placeholder  = $('.UI-PLACEHOLDER', self.$el);
+        self.$loader       = $('.UI-LOADER', self.$el);
+        self.$category     = $('.UI-CATEGORY', self.$el);
+        self.$categoryText = $('.UI-CATEGORY-TEXT', self.$el);
         self.result        = '';
         self.query         = self.$listenField.val();
+
+        self.baseWidth = $('.UI-NAV-INPUT').width();
 
         self.onChangeCategory();
     },
 
-    onChangeCategory: function() {
+    onChangeCategory: function()
+    {
         var self = this;
         var text = $('option:selected', self.$category).text();
 
         self.$categoryText.html(text);
-        $('.UI-NAV-INPUT').css('margin-left', self.$categoryText.width() + 35);
-        self.$placeholder.css('width', $('.UI-NAV-INPUT').width() + 13);
+        $('.UI-NAV-INPUT').css('padding-left', self.$categoryText.width() + 35);
+        $('.UI-CATEGORY').css('width', self.$categoryText.width() + 35);
+        // $('.UI-NAV-INPUT').css('width', self.baseWidth -(self.$categoryText.width() + 35));
         self.result = '';
     },
 
-    onKeydown: function(e) {
+    onKeydown: function(e)
+    {
         var self = this;
         e.stopPropagation();
 
@@ -70,11 +82,6 @@ SearchAutocomplete = Backbone.View.extend({
                 self.prev();
                 break;
 
-            case 39: // right arrow
-                e.preventDefault();
-                // self.suggest();
-                break;
-
             case 40: // down arrow
                 e.preventDefault();
                 self.next();
@@ -82,7 +89,8 @@ SearchAutocomplete = Backbone.View.extend({
         }
     },
 
-    onKeyup: function(e) {
+    onKeyup: function(e)
+    {
         var self = this;
         e.stopPropagation();
         e.preventDefault();
@@ -119,7 +127,8 @@ SearchAutocomplete = Backbone.View.extend({
         }
     },
 
-    onBlur: function(e) {
+    onBlur: function(e)
+    {
         var self = this;
 
         setTimeout(function() {
@@ -127,7 +136,8 @@ SearchAutocomplete = Backbone.View.extend({
         }, 300);
     },
 
-    onFocus: function (e) {
+    onFocus: function (e)
+    {
         var self = this;
 
         if (self.query.length >= self.queryMinChars) {
@@ -139,7 +149,8 @@ SearchAutocomplete = Backbone.View.extend({
         }
     },
 
-    mouseover: function (e) {
+    mouseover: function (e)
+    {
         var self = this;
 
         $('.active', self.$placeholder).removeClass('active');
@@ -147,11 +158,13 @@ SearchAutocomplete = Backbone.View.extend({
         $(e.currentTarget).addClass('active');
     },
 
-    mouseout: function (e) {
+    mouseout: function (e)
+    {
         $(e.currentTarget).removeClass('active');
     },
 
-    click: function (e) {
+    click: function (e)
+    {
         var self = this;
         e.stopPropagation();
         e.preventDefault();
@@ -159,14 +172,15 @@ SearchAutocomplete = Backbone.View.extend({
         self.select();
     },
 
-    next: function (e) {
+    next: function (e)
+    {
         var self = this;
         var next;
 
         var $active = $('.active', self.$placeholder);
         $active.removeClass('active');
 
-        if ($active.length == 0) {
+        if ($active.length === 0) {
             next = $($('li', self.$placeholder).get(0));
         } else {
             next = $active.next();
@@ -177,14 +191,15 @@ SearchAutocomplete = Backbone.View.extend({
         }
     },
 
-    prev: function (e) {
+    prev: function (e)
+    {
         var self = this;
         var prev;
 
         var active = $('.active', self.$placeholder);
         active.removeClass('active');
 
-        if (active.length == 0) {
+        if (active.length === 0) {
             prev = $($('li', self.$placeholder).get($('li', self.$placeholder).length - 1));
         } else {
             prev = active.prev();
@@ -195,7 +210,8 @@ SearchAutocomplete = Backbone.View.extend({
         }
     },
 
-    select: function() {
+    select: function()
+    {
         var self = this;
 
         if ($('.active', self.$placeholder).length) {
@@ -206,7 +222,8 @@ SearchAutocomplete = Backbone.View.extend({
         return this.hide();
     },
 
-    lookup: function () {
+    lookup: function ()
+    {
         var self = this;
 
         self.query = self.$listenField.val();
@@ -217,37 +234,47 @@ SearchAutocomplete = Backbone.View.extend({
         }
     },
 
-    process: function(query) {
+    process: function(query)
+    {
         var self = this;
 
-        self.$loader.show();
-
         var cat = '';
-        if (self.$category.val() != undefined) {
+        if (self.$category.val() !== undefined) {
             cat = '&' + self.$category.attr('name') + '=' + self.$category.val();
         }
 
         $.ajax({
-            url      : encodeURI(self.url + '?q=' + query + '&cat=' + cat),
+            url      : self.url + '?q=' + encodeURIComponent(query) + cat,
             dataType : 'json',
             type     : 'GET',
+            beforeSend: function() {
+                clearTimeout(self.processTimer);
+                self.processTimer = setTimeout(function() {
+                    self.$loader.show();
+                }, 250);
+            },
             success  : function(response) {
+                clearTimeout(self.processTimer);
+
                 self.$loader.hide();
 
-                if (response.items.length) {
-                    self.show(response.items);
-                } else {
-                    self.hide();
+                if (response.query.toLowerCase().trim() === self.$listenField.val().toLowerCase().trim()) {
+                    if (response.items.length) {
+                        self.show(response.items);
+                    } else {
+                        self.hide();
+                    }
                 }
             }
         });
     },
 
-    show: function(html) {
+    show: function(html)
+    {
         var self = this;
 
-        if (html == undefined) {
-            if (self.result == '') {
+        if (html ==- undefined) {
+            if (self.result === '') {
                 return;
             }
         } else {
@@ -269,7 +296,8 @@ SearchAutocomplete = Backbone.View.extend({
         return this;
     },
 
-    hide: function () {
+    hide: function ()
+    {
         var self = this;
 
         self.$placeholder.hide();
@@ -278,15 +306,24 @@ SearchAutocomplete = Backbone.View.extend({
         return this;
     },
 
-    highlighter: function (item) {
+    highlighter: function (item)
+    {
         var self = this;
 
         $('.highlight', item).each(function(key, el) {
-            var $el   = $(el);
-            var query = self.$listenField.val().replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&');
-            var html  = $el.html();
-            html      = html.replace(new RegExp('(' + query + ')', 'ig'), function ($1, match) {
-                return '<strong>' + match + '</strong>'
+            var $el     = $(el);
+            var arQuery = self.$listenField.val().split(' ');
+            var html    = $el.html();
+
+            arQuery.each(function(word) {
+                if ($.trim(word)) {
+                    word = word.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&');
+                    if ("strong".indexOf(word) == -1) {
+                        html = html.replace(new RegExp('(' + word + ')', 'ig'), function ($1, match) {
+                            return '<strong>' + match + '</strong>';
+                        });
+                    }
+                }
             });
 
             $el.html(html);
@@ -295,7 +332,10 @@ SearchAutocomplete = Backbone.View.extend({
 });
 
 $(function() {
-    searchAutocomplete = new SearchAutocomplete();
+    _.each($('.UI-SEARCHAUTOCOMPLETE'), function (el) {
+        var autocomplete = new SearchAutocomplete();
+        autocomplete.init(el);
+    });
 });
 
 });

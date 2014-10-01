@@ -33,7 +33,8 @@
 div.inchoo-socialconnect-register,
 div.inchoo-socialconnect-checkout,
 div.inchoo-socialconnect-login {
-    margin-top: 28px;
+    margin-top: 0px;
+    margin-right: 285px;
 }
 
 div.inchoo-socialconnect-login .content {

@@ -102,10 +102,11 @@ class Ebizmarts_MageMonkey_Block_Lists extends Mage_Core_Block_Template
 					}else{
 						$listName = $this->__('General Subscription');
 					}
+                    $ig = $api->listInterestGroupings($listData['data'][0]['id']);
 					$this->_generalList = array(
 												'id'   => $listData['data'][0]['id'],
 												'name' => $listName,
-												'interest_groupings' => $this->helper('monkey')->filterShowGroupings($api->listInterestGroupings($listData['data'][0]['id'])),
+												'interest_groupings' => $this->helper('monkey')->filterShowGroupings($ig),
 											   );
 				}
 			}
@@ -398,4 +399,16 @@ class Ebizmarts_MageMonkey_Block_Lists extends Mage_Core_Block_Template
 
 		return $checkbox->getLabelHtml() . $checkbox->getElementHtml();
 	}
+    public function getCanModify()
+    {
+        return Mage::getStoreConfig('monkey/general/changecustomergroup');
+    }
+    public function getForce()
+    {
+        $force = Mage::getStoreConfig('monkey/general/checkout_subscribe');
+        if($force==3||$force==4) {
+            return true;
+        }
+        return false;
+    }
 }

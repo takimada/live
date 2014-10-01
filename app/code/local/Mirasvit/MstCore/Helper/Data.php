@@ -9,15 +9,16 @@
  *
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
- * @version   2.2.8
- * @revision  277
- * @copyright Copyright (C) 2013 Mirasvit (http://mirasvit.com/)
+ * @version   2.3.1
+ * @revision  710
+ * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
  */
 
 
 class Mirasvit_MstCore_Helper_Data extends Mage_Core_Helper_Data
 {
-    public function isModuleInstalled($modulename) {
+    public function isModuleInstalled($modulename)
+    {
         $modules = Mage::getConfig()->getNode('modules')->children();
         $modulesArray = (array)$modules;
 
@@ -26,10 +27,10 @@ class Mirasvit_MstCore_Helper_Data extends Mage_Core_Helper_Data
         } else {
             return false;
         }
-
     }
 
-    public function pr($arr, $ip = false, $die = false) {
+    public function pr($arr, $ip = false, $die = false)
+    {
         if (!$ip) {
             pr($arr);
         } elseif ($_SERVER['REMOTE_ADDR'] == $ip) {
@@ -39,9 +40,30 @@ class Mirasvit_MstCore_Helper_Data extends Mage_Core_Helper_Data
             }
         }
     }
+
+    public function copyConfigData($oldPath, $newPath, $callbackFunction = false)
+    {
+        if ($oldPath == $newPath) {
+            throw new Exception("Old path should now be equal to the new path. Otherwise, we will have possible data loses.");
+        }
+        $resource = Mage::getSingleton('core/resource');
+        $connection = $resource->getConnection('core_write');
+        $query = "SELECT * FROM {$resource->getTableName('core/config_data')} where path='$oldPath'";
+        $results = $connection->fetchAll($query);
+        foreach ($results as $row) {
+            $query = "REPLACE INTO {$resource->getTableName('core/config_data')} (scope, scope_id, path, value)
+                VALUES (?, ?, ?, ?)";
+            $value = $row['value'];
+            if ($callbackFunction) {
+                $value = call_user_func($callbackFunction, $value, $row['scope'], $row['scope_id']);
+            }
+            $connection->query($query, array($row['scope'], $row['scope_id'], $newPath, $value));
+        }
+    }
 }
 
 if (!function_exists('pr')) {
+
     function pr($arr)
     {
         echo '<pre>';

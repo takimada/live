@@ -9,14 +9,18 @@
  *
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
- * @version   2.2.8
- * @revision  277
- * @copyright Copyright (C) 2013 Mirasvit (http://mirasvit.com/)
+ * @version   2.3.1
+ * @revision  710
+ * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
  */
 
 
-
-
+/**
+ * ÐÑÐ²ÐµÑÐ°ÐµÑ Ð·Ð° ÑÐ°Ð±Ð¾ÑÑ/Ð¿ÑÐµÐ¾Ð±ÑÐ°Ð·Ð¾Ð²Ð°Ð½Ð¸Ðµ ÑÑÑÐ¾Ðº
+ *
+ * @category Mirasvit
+ * @package  Mirasvit_Misspell
+ */
 class Mirasvit_Misspell_Helper_String extends Mage_Core_Helper_String
 {
     public function getGram()

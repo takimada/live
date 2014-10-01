@@ -25,6 +25,7 @@
 				<class>Mirasvit_SearchAutocomplete_Helper</class>
 			</searchautocomplete>
 		</helpers>
+
 	</global>
 	<frontend>
 		<routers>
@@ -52,6 +53,16 @@
                 </Mirasvit_SearchAutocomplete>
             </modules>
         </translate>
+        <events>
+            <controller_front_send_response_before>
+                <observers>
+                    <mirasvit_searchautocomplete>
+                        <class>searchautocomplete/processor</class>
+                        <method>cacheResponse</method>
+                    </mirasvit_searchautocomplete>
+                </observers>
+            </controller_front_send_response_before>
+        </events>
 	</frontend>
 	<adminhtml>
         <acl>
@@ -93,4 +104,12 @@
             </general>
         </searchautocomplete>
     </default>
+    <crontab>
+        <jobs>
+            <searchautocomplete_crawler>
+                <schedule><cron_expr>5 2 * * *</cron_expr></schedule>
+                <run><model>searchautocomplete/crawler::crawl</model></run>
+            </searchautocomplete_crawler>
+        </jobs>
+    </crontab>
 </config>

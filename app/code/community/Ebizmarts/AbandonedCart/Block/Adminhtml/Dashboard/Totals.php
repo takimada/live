@@ -94,18 +94,20 @@ class Ebizmarts_AbandonedCart_Block_Adminhtml_Dashboard_Totals extends Mage_Admi
         // get Mandrill statistics
         if(Mage::helper('core')->isModuleEnabled('Ebizmarts_Mandrill')
             && (version_compare(Mage::getConfig()->getNode()->modules->Ebizmarts_Mandrill->version, '1.0.4', '>'))
-            && Mage::helper('mandrill')->useTransactionalService()) {
+            && Mage::helper('ebizmarts_mandrill')->useTransactionalService()) {
             if(!$isFilter) {
                 $stores = Mage::app()->getStores();
                 $__particular = array('sent' => 0, 'soft_bounces' => 0,'hard_bounces'=>0,'unique_opens'=>0,'unique_clicks'=>0);
                 foreach($stores as $__store => $val) {
                     $storeid = Mage::app()->getStore($__store)->getId();
                     $aux = $this->__getMandrillStatistics($period,$storeid);
-                    $__particular['sent'] += $aux['sent'];
-                    $__particular['soft_bounces'] += $aux['soft_bounces'];
-                    $__particular['hard_bounces'] += $aux['hard_bounces'];
-                    $__particular['unique_opens'] += $aux['unique_opens'];
-                    $__particular['unique_clicks'] += $aux['unique_clicks'];
+                    if($aux) {
+                        $__particular['sent'] += $aux['sent'];
+                        $__particular['soft_bounces'] += $aux['soft_bounces'];
+                        $__particular['hard_bounces'] += $aux['hard_bounces'];
+                        $__particular['unique_opens'] += $aux['unique_opens'];
+                        $__particular['unique_clicks'] += $aux['unique_clicks'];
+                    }
                 }
                 $particular = $__particular;
             }
@@ -163,10 +165,9 @@ class Ebizmarts_AbandonedCart_Block_Adminhtml_Dashboard_Totals extends Mage_Admi
      */
     private function __getMandrillStatistics($period,$store)
     {
-        $mandrill = Mage::helper('mandrill')->api();
-        $mandrill->setApiKey(Mage::helper('mandrill')->getApiKey($store));
+        $api = new Mandrill_Message(Mage::getStoreConfig(Ebizmarts_Mandrill_Model_System_Config::APIKEY,$store));
         $mandrillTag = Mage::getStoreConfig(Ebizmarts_AbandonedCart_Model_Config::MANDRILL_TAG, $store)."_$store";
-        $tags = $mandrill->tagsInfo($mandrillTag);
+        $tags = $api->tags->info($mandrillTag);
         if(!$tags) {
             return false;
         }
@@ -191,6 +192,9 @@ class Ebizmarts_AbandonedCart_Block_Adminhtml_Dashboard_Totals extends Mage_Admi
                 unset($general['stats']);
                 return $general;
 
+        }
+        if(!isset($general['stats'])){
+            return false;
         }
         $stats = (array)$general['stats'];
         $particular = (array)$stats[$index];

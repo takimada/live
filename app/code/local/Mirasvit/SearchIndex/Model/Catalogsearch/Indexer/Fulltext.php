@@ -9,39 +9,19 @@
  *
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
- * @version   2.2.8
- * @revision  277
- * @copyright Copyright (C) 2013 Mirasvit (http://mirasvit.com/)
+ * @version   2.3.1
+ * @revision  710
+ * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
  */
 
 
-/*******************************************
-Mirasvit
-This source file is subject to the Mirasvit Software License, which is available at http://mirasvit.com/license/.
-Do not edit or add to this file if you wish to upgrade the to newer versions in the future.
-If you wish to customize this module for your needs
-Please refer to http://www.magentocommerce.com for more information.
-@category Mirasvit
-@copyright Copyright (C) 2012 Mirasvit (http://mirasvit.com.ua), Vladimir Drok <dva@mirasvit.com.ua>, Alexander Drok<alexander@mirasvit.com.ua>
-*******************************************/
-
 class Mirasvit_SearchIndex_Model_Catalogsearch_Indexer_Fulltext extends Mage_CatalogSearch_Model_Indexer_Fulltext
 {
-    /**
-     * Retrieve Indexer name
-     *
-     * @return string
-     */
     public function getName()
     {
         return Mage::helper('searchindex')->__('Search Index');
     }
 
-    /**
-     * Retrieve Indexer description
-     *
-     * @return string
-     */
     public function getDescription()
     {
         $labels = array();
@@ -52,20 +32,25 @@ class Mirasvit_SearchIndex_Model_Catalogsearch_Indexer_Fulltext extends Mage_Cat
         return Mage::helper('searchindex')->__('Rebuild search index (%s)', implode(', ', $labels));
     }
 
+    protected function _getIndexer()
+    {
+        return Mage::getSingleton('searchindex/catalogsearch_fulltext');
+    }
+
     public function getIndexes()
     {
         return Mage::helper('searchindex/index')->getIndexes();
     }
 
-    /**
-     * Rebuild all index data
-     *
-     */
     public function reindexAll()
     {
+        $uid = Mage::helper('mstcore/debug')->start();
+
         foreach ($this->getIndexes() as $index) {
             $indexer = $index->getIndexer();
             $indexer->reindexAll();
         }
+
+        Mage::helper('mstcore/debug')->end($uid);
     }
 }

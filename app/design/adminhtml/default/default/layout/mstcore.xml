@@ -2,9 +2,9 @@
 <layout>
     <default>
         <reference name="head">
-            <action method="addCss">
-                <name>mstcore/css/base.css</name>
-            </action>
+            <action method="addCss"><name>mstcore/css/base.css</name></action>
+            <action method="addJs"><name>mirasvit/code/mstcore/adminhtml/help.js</name></action>
+            <action method="addJs"><name>mirasvit/core/tooltip.js</name></action>
         </reference>
     </default>
 

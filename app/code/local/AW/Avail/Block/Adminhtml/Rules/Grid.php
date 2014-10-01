@@ -19,7 +19,7 @@
  *
  * @category   AW
  * @package    AW_Avail
- * @version    1.2.2
+ * @version    1.2.4
  * @copyright  Copyright (c) 2010-2012 aheadWorks Co. (http://www.aheadworks.com)
  * @license    http://ecommerce.aheadworks.com/AW-LICENSE.txt
  */
@@ -160,6 +160,11 @@ class AW_Avail_Block_Adminhtml_Rules_Grid extends Mage_Adminhtml_Block_Widget_Gr
     public function getRowUrl($row)
     {
         return $this->getUrl('*/*/edit', array('id' => $row->getRuleId()));
+    }
+
+    public function getGridUrl()
+    {
+        return $this->getUrl('*/*/grid', array('_current' => true));
     }
 
     protected function filterStore($collection, $column)

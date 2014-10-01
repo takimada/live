@@ -7,7 +7,10 @@
             </action>
         </reference>
         <reference name="product.info.options.wrapper">
-            <block type="avail/options" name="product.info.options.configurable" as="options_configurable" before="-" template="catalog/product/view/type/options/configurable.phtml"/>
+            <block type="avail/options" name="product.info.options.configurable" as="options_configurable" before="-" template="catalog/product/view/type/options/configurable.phtml">
+                <block type="core/text_list" name="product.info.options.configurable.renderers" as="attr_renderers" />
+                <block type="core/text_list" name="product.info.options.configurable.after" as="after" />
+            </block>
         </reference>
         <reference name = "before_body_end">
             <block type = "avail/options" name = "awavail_options" template = "aw_avail/options.phtml"/>

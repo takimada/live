@@ -1,13 +1,13 @@
 <?php $testimonial=$this->getTestimonial(); ?>
 <div class="customer-testimonials">
 	<div class="page-title">
-		<h1><?php echo $this->__('Customer Testimonials');?></h1>
+		<h1><?php echo $this->__('Müşteri Yorumları');?></h1>
         <?php if(Mage::getStoreConfig('testimonial/testimonial_options/allow_customers_write_testimonial') == 1):?>
 		<div class="submit-testimonial">
 				<button class="button" onclick="setLocation('<?php echo $this->getFormUrl(); ?>')">
 					<span>
 						<span>
-							<?php echo $this->__('Submit Your Testimonial');?>					
+							<?php echo $this->__('Görüş Bildir');?>					
 						</span>
 					</span>
 				</button>
@@ -45,7 +45,7 @@
 		<?php endforeach;?>
 		<?php echo $this->getPagerHtml(); ?>
 	<?php else: ?>
-		<p class="note-msg"><?php echo $this->__('There is no testimonial submitted.'); ?></p>
+		<p class="note-msg"><?php echo $this->__('Paylaşılan görüş bulunmamaktadır.'); ?></p>
 	<?php endif ?>
 </div>
 

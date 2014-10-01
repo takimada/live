@@ -9,14 +9,16 @@
  *
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
- * @version   2.2.8
- * @revision  277
- * @copyright Copyright (C) 2013 Mirasvit (http://mirasvit.com/)
+ * @version   2.3.1
+ * @revision  710
+ * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
  */
 
 
-
-
+/**
+ * @category Mirasvit
+ * @package  Mirasvit_Misspell
+ */
 class Mirasvit_Misspell_Model_Resource_Suggest_Collection extends Mage_Core_Model_Mysql4_Collection_Abstract
 {
     /**

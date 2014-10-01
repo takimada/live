@@ -33,4 +33,5 @@ class Moo_Catalog_Model_Gallery_CloudZoom_SmoothMove
         }
         return $result;
     }
+
 }

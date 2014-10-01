@@ -9,34 +9,87 @@
  *
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
- * @version   2.2.8
- * @revision  277
- * @copyright Copyright (C) 2013 Mirasvit (http://mirasvit.com/)
+ * @version   2.3.1
+ * @revision  710
+ * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
  */
 
 
-
-
+/**
+ * @category Mirasvit
+ * @package  Mirasvit_Misspell
+ */
 class Mirasvit_Misspell_Model_Observer
 {
-    protected $_isFullSearchReindex = false;
-
-    public function onIndexComplete($observer)
+    public function onPostdispatchCatalogsearchResultIndex($observer)
     {
-        if ($this->_isFullSearchReindex) {
-            Mage::getModel('misspell/indexer')->reindexAll();
+        $queryHelper = Mage::helper('misspell/query');
+
+        if ($queryHelper->getCountResult($queryHelper->getCurrentPhase()) == 0) {
+            $result = $this->doSpellCorrection();
+
+            // if spell correction return false
+            if (!$result) {
+                $result = $this->doFallbackCorrection();
+            }
         }
     }
 
-    public function onIndexStart($observer)
+    public function doSpellCorrection()
     {
-        if ($observer->getData('product_ids') == null) {
-            $this->_isFullSearchReindex = true;
+        if (!Mage::getStoreConfig('misspell/general/misspell')) {
+            return false;
         }
+        $queryHelper  = Mage::helper('misspell/query');
+        $currentPhase = $queryHelper->getCurrentPhase();
+
+        $suggestedPhase = $queryHelper->suggestMisspellPhase($currentPhase);
+
+        if ($suggestedPhase
+            && $suggestedPhase != $queryHelper->getCurrentPhase()
+            && $suggestedPhase != $queryHelper->getMisspellPhase()) {
+
+            //do redirect
+            if ($queryHelper->getCountResult($suggestedPhase)) {
+                $url = $queryHelper->getMisspellUrl($queryHelper->getCurrentPhase(), $suggestedPhase);
+
+                Mage::app()->getFrontController()->getResponse()->setRedirect($url);
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function doFallbackCorrection()
+    {
+        if (!Mage::getStoreConfig('misspell/general/fallback')) {
+            return false;
+        }
+
+        $queryHelper  = Mage::helper('misspell/query');
+        $currentPhase = $queryHelper->getCurrentPhase();
+
+        $suggestedPhase = $queryHelper->suggestFallbackPhase($currentPhase);
+
+        if ($suggestedPhase
+            && $suggestedPhase != $queryHelper->getCurrentPhase()
+            && $suggestedPhase != $queryHelper->getFallbackPhase()
+            ) {
+
+            $url = $queryHelper->getFallbackUrl($currentPhase, $suggestedPhase);
+
+            Mage::app()->getFrontController()->getResponse()->setRedirect($url);
+
+            return true;
+        }
+
+        return false;
     }
 
     public function onPrepareCollection()
     {
-        Mage::helper('catalogsearch')->setSuggestQuery();
+        // Mage::helper('catalogsearch')->setSuggestQuery();
     }
 }

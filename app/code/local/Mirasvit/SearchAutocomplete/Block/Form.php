@@ -9,22 +9,25 @@
  *
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
- * @version   2.2.8
- * @revision  277
- * @copyright Copyright (C) 2013 Mirasvit (http://mirasvit.com/)
+ * @version   2.3.1
+ * @revision  710
+ * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
  */
 
 
-
-
-
+/**
+ * ÐÐ»Ð¾Ðº ÑÐ¾ÑÐ¼Ñ Ð¿Ð¾Ð¸ÑÐºÐ°
+ * 
+ * @category Mirasvit
+ * @package  Mirasvit_SearchAutocomplete
+ */
 class Mirasvit_SearchAutocomplete_Block_Form extends Mage_Core_Block_Template
 {
     public function getAjaxUrl()
     {
         $url = Mage::getUrl('searchautocomplete/ajax/get');
 
-        if (isset($_SERVER['HTTPS'])) {
+        if (Mage::app()->getStore()->isCurrentlySecure()) {
             $url = str_replace('http://', 'https://', $url);
         }
 
@@ -52,6 +55,13 @@ class Mirasvit_SearchAutocomplete_Block_Form extends Mage_Core_Block_Template
         return $collection;
     }
 
+    public function getIndexes()
+    {
+        $indexes = Mage::helper('searchautocomplete')->getIndexes(false);
+
+        return $indexes;
+    }
+
     protected function getUserCategories()
     {
         $categories = explode(',', Mage::getStoreConfig('searchautocomplete/general/categories'));
@@ -77,6 +87,7 @@ class Mirasvit_SearchAutocomplete_Block_Form extends Mage_Core_Block_Template
         if (!$filterType) {
             $filterType = 'category';
         }
+     
         return $filterType;
     }
 

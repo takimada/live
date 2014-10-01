@@ -9,42 +9,16 @@
  *
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
- * @version   2.2.8
- * @revision  277
- * @copyright Copyright (C) 2013 Mirasvit (http://mirasvit.com/)
+ * @version   2.3.1
+ * @revision  710
+ * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
  */
 
 
-/**
- * Mirasvit
- *
- * This source file is subject to the Mirasvit Software License, which is available at http://mirasvit.com/license/.
- * Do not edit or add to this file if you wish to upgrade the to newer versions in the future.
- * If you wish to customize this module for your needs
- * Please refer to http://www.magentocommerce.com for more information.
- *
- * @category  Mirasvit
- * @package   Mirasvit_SearchIndex
- * @copyright Copyright (C) 2013 Mirasvit (http://mirasvit.com)
- */
-
-
-/**
- * Represent Indexer model
- *
- * @category Mirasvit
- * @package  Mirasvit_SearchIndex
- */
 abstract class Mirasvit_SearchIndex_Model_Indexer_Abstract extends Mage_Core_Model_Abstract
 {
     const TABLE_PREFIX     = 'm_searchindex_';
     protected $_connection = null;
-
-    public function getIndexModel()
-    {
-        $arr = explode('_', get_class($this));
-        return Mage::helper('searchindex/index')->getIndexModel(strtolower($arr[4]));
-    }
 
     public function getTableName()
     {
@@ -72,7 +46,7 @@ abstract class Mirasvit_SearchIndex_Model_Indexer_Abstract extends Mage_Core_Mod
     protected function _getTableName()
     {
         $tablePrefix = (string) Mage::getConfig()->getTablePrefix();
-        return $tablePrefix.self::TABLE_PREFIX.$this->getIndexCode();
+        return $tablePrefix.self::TABLE_PREFIX.strtolower($this->getIndexCode()).'_'.$this->getIndexModel()->getId();
     }
 
     protected function _isTableExists()
@@ -104,6 +78,18 @@ abstract class Mirasvit_SearchIndex_Model_Indexer_Abstract extends Mage_Core_Mod
                 'unsigned' => true,
                 'is_null'  => false,
                 'default'  => '1',
+            ),
+            'searchindex_weight' => array(
+                'type'     => 'int(1)',
+                'unsigned' => false,
+                'is_null'  => false,
+                'default'  => '0',
+            ),
+            'data_index' => array(
+                'type'     => 'text',
+                'unsigned' => false,
+                'is_null'  => true,
+                'default'  => '',
             )
         );
 
@@ -229,6 +215,7 @@ abstract class Mirasvit_SearchIndex_Model_Indexer_Abstract extends Mage_Core_Mod
                 $lastEntityId     = $entity->getData($this->getPrimaryKey());
                 $data['store_id'] = $storeId;
                 $data['updated']  = 1;
+                $data['data_index'] = implode(' ', $data);
                 $rows[]           = $data;
             }
 

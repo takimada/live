@@ -11,7 +11,7 @@ $_url             = $this->getAjaxUrl();
     data-minchars="<?php echo Mage::getStoreConfig('searchautocomplete/general/min_chars') ?>"
     data-delay="<?php echo Mage::getStoreConfig('searchautocomplete/general/delay') ?>">
 
-    <label for="search"><?php echo $this->__('Search') ?></label>
+    <!--<label for="search"><?php echo $this->__('Search') ?></label>-->
     <div class="nav">
 
         <?php if ($_filterType == 'category'): ?>
@@ -37,7 +37,7 @@ $_url             = $this->getAjaxUrl();
 
     </div>
     <div class="nav-submit-button">
-        <button type="submit" title="<?php echo $this->__('Go') ?>" class="button"><?php echo $this->__('Go') ?></button>
+        <button type="submit" title="<?php echo $this->__('Go') ?>" class="button"><?php /* echo $this->__('Go') */ ?></button>
     </div>
     <div style="display:none" class="searchautocomplete-placeholder UI-PLACEHOLDER"></div>
 </form>

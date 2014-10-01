@@ -82,8 +82,7 @@ class Inchoo_SocialConnect_Helper_Facebook extends Mage_Core_Helper_Abstract
     {
         $customer = Mage::getModel('customer/customer');
 
-        $customer->setWebsiteId(Mage::app()->getWebsite()->getId())
-                ->setEmail($email)
+        $customer->setEmail($email)
                 ->setFirstname($firstName)
                 ->setLastname($lastName)
                 ->setInchooSocialconnectFid($facebookId)
@@ -94,7 +93,7 @@ class Inchoo_SocialConnect_Helper_Facebook extends Mage_Core_Helper_Abstract
         $customer->setConfirmation(null);
         $customer->save();
 
-        $customer->sendNewAccountEmail('confirmed', '', Mage::app()->getStore()->getId());
+        $customer->sendNewAccountEmail();
 
         Mage::getSingleton('customer/session')->setCustomerAsLoggedIn($customer);            
 

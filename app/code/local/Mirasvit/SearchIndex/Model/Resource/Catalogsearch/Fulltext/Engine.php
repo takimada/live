@@ -9,13 +9,14 @@
  *
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
- * @version   2.2.8
- * @revision  277
- * @copyright Copyright (C) 2013 Mirasvit (http://mirasvit.com/)
+ * @version   2.3.1
+ * @revision  710
+ * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
  */
 
 
-class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext_Engine extends Mage_CatalogSearch_Model_Mysql4_Fulltext_Engine
+class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext_Engine
+    extends Mage_CatalogSearch_Model_Mysql4_Fulltext_Engine
 {
     protected $_columns = null;
 
@@ -30,10 +31,17 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext_Engine extends 
      */
     public function saveEntityIndex($entityId, $storeId, $index, $entity = 'product')
     {
+        $uid = Mage::helper('mstcore/debug')->start();
+
         $index['product_id'] = $entityId;
         $index['store_id']   = $storeId;
         $index['updated']    = 1;
         $this->_getWriteAdapter()->insert($this->getMainTable(), $index);
+
+        Mage::helper('mstcore/debug')->end($uid, array(
+            '$entityId' => $entityId,
+            '$index'    => $index,
+            '$storeId'  => $storeId));
 
         return $this;
     }
@@ -48,15 +56,20 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext_Engine extends 
      */
     public function saveEntityIndexes($storeId, $entityIndexes, $entity = 'product')
     {
+        $uid = Mage::helper('mstcore/debug')->start();
+
         $adapter = $this->_getWriteAdapter();
         $data    = array();
         $storeId = (int)$storeId;
 
-        $this->_addCategoryData($entityIndexes);
-        $this->_addTagData($entityIndexes);
+        $this->_addCategoryData($entityIndexes, $storeId)
+            ->_addWeights($entityIndexes, $storeId)
+            ->_addTagData($entityIndexes)
+            ->_addEntityIdData($entityIndexes)
+            ->_addCustomOptions($entityIndexes);
 
         foreach ($entityIndexes as $entityId => $index) {
-            foreach($index as $attr => $value) {
+            foreach ($index as $attr => $value) {
                 if (!in_array($attr, array('product_id', 'store_id', 'updated', 'fulltext_id'))) {
                     $index[$attr] = Mage::helper('searchindex')->prepareString($value);
                 }
@@ -67,9 +80,12 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext_Engine extends 
             $index['updated']    = 1;
             $data[]              = $index;
         }
+
         if ($data) {
             $adapter->insertOnDuplicate($this->getMainTable(), $data, array('data_index'));
         }
+
+        Mage::helper('mstcore/debug')->end($uid, array('$entityIndexes' => $entityIndexes, '$storeId' => $storeId));
 
         return $this;
     }
@@ -83,6 +99,8 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext_Engine extends 
      */
     public function prepareEntityIndex($index, $separator = ' ')
     {
+        $uid = Mage::helper('mstcore/debug')->start();
+
         $values = array();
         $columns = $this->getTableColumns();
 
@@ -109,6 +127,8 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext_Engine extends 
             }
         }
 
+        Mage::helper('mstcore/debug')->end($uid, array('$index' => $index, '$result' => $result));
+
         return $result;
     }
 
@@ -118,47 +138,86 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext_Engine extends 
      * @param array $productIds in keys
      * @return Mirasvit_SearchSphinx_Model_Resource_Fulltext_Engine
      */
-    protected function _addCategoryData(&$index)
+    protected function _addCategoryData(&$index, $storeId)
     {
-        if (!Mage::getStoreConfig('searchindex/catalog/category_name')) {
+        if (!$this->getIndexModel()->getIndexInstance()->getProperty('include_category')) {
             return $this;
         }
 
-        $productIds = array_keys($index);
+        $tableColumns = $this->getTableColumns();
 
-        $adapter = $this->_getWriteAdapter();
+        foreach ($tableColumns as $column) {
+            if (substr($column, 0, strlen('category_')) == 'category_') {
+                $attrCode = substr($column, strlen('category_'));
+                $this->_addCategoryDataByAttribute($index, $storeId, $attrCode);
+            }
+        }
+
+        return $this;
+    }
+
+    protected function _addCategoryDataByAttribute(&$index, $storeId, $attrCode)
+    {
+        $uid = Mage::helper('mstcore/debug')->start();
+
+        $productIds = array_keys($index);
+        $adapter    = $this->_getWriteAdapter();
+        $attr       = $this->_getCategoryAttribute($attrCode);
+
+        if (!$attr || !$attr->getId()) {
+            return $this;
+        }
+
+        $nameSelect = $adapter->select()
+            ->from(array('cc' => $this->getTable('catalog/category')),
+                    array(new Zend_Db_Expr("GROUP_CONCAT(vc.value SEPARATOR ' ')")))
+            ->joinLeft(
+                    array('vc' => $attr->getBackend()->getTable()),
+                    'cc.entity_id = vc.entity_id',
+                    array())
+            ->where("LOCATE(CONCAT('/', CONCAT(cc.entity_id, '/')), CONCAT(ce.path, '/'))")
+            ->where('vc.attribute_id = ?', $attr->getId());
+
         $columns = array(
             'product_id' => 'product_id',
-            'category'   => new Zend_Db_Expr("GROUP_CONCAT(value SEPARATOR ' ')"),
+            'category'   => new Zend_Db_Expr('('.$nameSelect.')'),
         );
 
-        $attrName = $this->_getCategoryAttribute('name');
-
         $select = $adapter->select()
-            ->from(array($this->getTable('catalog/category_product_index')), $columns)
+            ->from(array($this->getTable('catalog/category_product')), $columns)
             ->joinLeft(
-                    array('vc' => $attrName->getBackend()->getTable()),
-                    'category_id = vc.entity_id',
-                    array('value'))
-            ->where('product_id IN (?)', $productIds)
-            ->where('vc.attribute_id = ?', $attrName->getId())
-            ->group('product_id');
-
+                    array('ce' => $this->getTable('catalog/category')),
+                    'category_id = ce.entity_id',
+                    array())
+            ->where('product_id IN (?)', $productIds);
         $result = array();
-        foreach ($adapter->fetchAll($select) as $row) {
-            $index[$row['product_id']]['data_index'] .= '|'.$row['category'];
+
+
+        foreach ($index as $productId => $data) {
+            $index[$productId]['category_'.$attrCode] = '';
         }
+
+        foreach ($adapter->fetchAll($select) as $row) {
+            $index[$row['product_id']]['data_index']          .= '|'.$row['category'];
+            $index[$row['product_id']]['category_'.$attrCode] .= ' '.$row['category'];
+        }
+
+
+        Mage::helper('mstcore/debug')->end($uid, array('$index' => $index));
 
         return $this;
     }
 
     protected function _addTagData(&$index)
     {
-        if (!Mage::getStoreConfig('searchindex/catalog/tags')) {
+        $uid = Mage::helper('mstcore/debug')->start();
+
+        if (!$this->getIndexModel()->getIndexInstance()->getProperty('include_tag')) {
             return $this;
         }
 
-        $productIds = array_keys($index);
+        $productIds   = array_keys($index);
+        $tableColumns = $this->getTableColumns();
 
         $adapter = $this->_getWriteAdapter();
         $columns = array(
@@ -174,18 +233,119 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext_Engine extends 
             ->where('tr.product_id IN (?)', $productIds)
             ->group('product_id');
 
+        if (in_array('tags', $tableColumns)) {
+            foreach ($index as $productId => $data) {
+                $index[$productId]['tags'] = '';
+            }
+        }
+
         $result = array();
         foreach ($adapter->fetchAll($select) as $row) {
             $index[$row['product_id']]['data_index'] .= '|'.$row['tags'];
+            if (in_array('tags', $tableColumns)) {
+                $index[$productId]['tags'] .= ' '.$row['tags'];
+            }
         }
+
+        Mage::helper('mstcore/debug')->end($uid, array('$index' => $index));
+
+        return $this;
     }
 
-    /**
-     * Return eav attribute by code
-     * @param  string $attributeCode attribute code
-     *
-     * @return Mage_Model_Resource_Eav_Attribute attribute model
-     */
+    protected function _addWeights(&$index, $storeId)
+    {
+        $productIds = array_keys($index);
+        $adapter    = $this->_getWriteAdapter();
+
+        $weightAttr = $this->_getCategoryAttribute('searchindex_weight');
+
+        if ($weightAttr) {
+            $columns = array(
+                'product_id' => 'product_id',
+                'weight'     => new Zend_Db_Expr("SUM(value)"),
+            );
+
+            $select = $adapter->select()
+                ->from(array($this->getTable('catalog/category_product_index')), $columns)
+                ->joinLeft(
+                        array('vc' => $weightAttr->getBackend()->getTable()),
+                        'category_id = vc.entity_id',
+                        array('value'))
+                ->where('product_id IN (?)', $productIds)
+                ->where('vc.attribute_id = ?', $weightAttr->getId())
+                ->group('product_id');
+
+            foreach ($adapter->fetchAll($select) as $row) {
+                $index[$row['product_id']]['searchindex_weight'] += $row['weight'];
+            }
+        }
+
+        $weightAttr = $this->_getProductAttribute('searchindex_weight');
+
+        if ($weightAttr) {
+            $columns = array(
+                'entity_id' => 'entity_id',
+                'weight'    => new Zend_Db_Expr("SUM(value)"),
+            );
+
+            $select = $adapter->select()
+                ->from(array($weightAttr->getBackend()->getTable()), $columns)
+                ->where('entity_id IN (?)', $productIds)
+                ->where('attribute_id = ?', $weightAttr->getId())
+                ->group('entity_id');
+
+            foreach ($adapter->fetchAll($select) as $row) {
+                $index[$row['entity_id']]['searchindex_weight'] += $row['weight'];
+            }
+        }
+
+        return $this;
+    }
+
+    protected function _addEntityIdData(&$index)
+    {
+        if (!$this->getIndexModel()->getIndexInstance()->getProperty('include_id')) {
+            return $this;
+        }
+
+        foreach ($index as $entityId => $value) {
+            $index[$entityId]['data_index'] .= '|'.$entityId;
+        }
+
+        return $this;
+    }
+
+    protected function _addCustomOptions(&$index)
+    {
+        if (!$this->getIndexModel()->getIndexInstance()->getProperty('include_custom_options')) {
+            return $this;
+        }
+
+        $productIds = array_keys($index);
+        $adapter    = $this->_getWriteAdapter();
+
+        $select = $adapter->select()
+            ->from(array('main_table' => $this->getTable('catalog/product_option')), array('product_id'))
+            ->joinLeft(
+                    array('otv' => $this->getTable('catalog/product_option_type_value')),
+                    'main_table.option_id = otv.option_id',
+                    array('sku' => new Zend_Db_Expr("GROUP_CONCAT(otv.`sku` SEPARATOR ' ')")))
+            ->joinLeft(
+                    array('ott' => $this->getTable('catalog/product_option_type_title')),
+                    'otv.option_type_id = ott.option_type_id',
+                    array('title' => new Zend_Db_Expr("GROUP_CONCAT(ott.`title` SEPARATOR ' ')")))
+            ->where('main_table.product_id IN (?)', $productIds)
+            ->group('product_id');
+
+        $result = array();
+        foreach ($adapter->fetchAll($select) as $row) {
+            $index[$row['product_id']]['data_index'] .= '|'.$row['title'];
+            $index[$row['product_id']]['data_index'] .= '|'.$row['sku'];
+        }
+
+        return $this;
+    }
+
     protected function _getCategoryAttribute($attributeCode)
     {
         $entityTypeId = Mage::getSingleton('eav/config')->getEntityType('catalog_category')->getId();
@@ -193,7 +353,7 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext_Engine extends 
         $attribute = Mage::getModel('catalog/resource_eav_attribute')
             ->loadByCode($entityTypeId, $attributeCode);
         if (!$attribute->getId()) {
-            Mage::throwException(Mage::helper('catalog')->__('Invalid attribute %s', $attributeCode));
+            return false;
         }
         $entity = Mage::getSingleton('eav/config')
             ->getEntityType(Mage_Catalog_Model_Category::ENTITY)
@@ -203,12 +363,38 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext_Engine extends 
         return $attribute;
     }
 
+    protected function _getProductAttribute($attributeCode)
+    {
+        $entityTypeId = Mage::getSingleton('eav/config')->getEntityType('catalog_product')->getId();
+
+        $attribute = Mage::getModel('catalog/resource_eav_attribute')
+            ->loadByCode($entityTypeId, $attributeCode);
+        if (!$attribute->getId()) {
+            return false;
+        }
+        $entity = Mage::getSingleton('eav/config')
+            ->getEntityType(Mage_Catalog_Model_Product::ENTITY)
+            ->getEntity();
+        $attribute->setEntity($entity);
+
+        return $attribute;
+    }
+
     protected function getTableColumns()
     {
+        $uid = Mage::helper('mstcore/debug')->start();
+
         if ($this->_columns == null) {
             $this->_columns = array_keys($this->_getWriteAdapter()->describeTable($this->getMainTable()));
         }
 
+        Mage::helper('mstcore/debug')->end($uid, $this->_columns);
+
         return $this->_columns;
+    }
+
+    protected function getIndexModel()
+    {
+        return Mage::helper('searchindex/index')->getIndex('mage_catalog_product');
     }
 }

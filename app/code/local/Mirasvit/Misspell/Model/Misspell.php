@@ -9,12 +9,18 @@
  *
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
- * @version   2.2.8
- * @revision  277
- * @copyright Copyright (C) 2013 Mirasvit (http://mirasvit.com/)
+ * @version   2.3.1
+ * @revision  710
+ * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
  */
 
 
+/**
+ * ÐÐ»Ð°ÑÑ (Ð°Ð»Ð³Ð¾ÑÐ¸ÑÐ¼) Ð¾ÑÐ²ÐµÑÐ°ÐµÑ Ð·Ð° Ð¿Ð¾Ð¸ÑÐº Ð¿ÑÐ°Ð²Ð¸Ð»ÑÐ½Ð¾Ð¹ ÐºÐ»ÑÑÐµÐ²Ð¾Ð¹ ÑÑÐ°Ð·Ñ
+ *
+ * @category Mirasvit
+ * @package  Mirasvit_Misspell
+ */
 class Mirasvit_Misspell_Model_Misspell extends Varien_Object
 {
     protected $_helper = null;
@@ -35,7 +41,8 @@ class Mirasvit_Misspell_Model_Misspell extends Varien_Object
         $this->_keys  = array();
         $final        = array();
 
-        $queries = $this->_helper->splitWords($baseQuery, false, 0);
+        $baseQuery = $this->_helper->cleanString($baseQuery);
+        $queries   = $this->_helper->splitWords($baseQuery, false, 0);
         foreach ($queries as $query) {
             $len = $this->_helper->strlen($query);
 
@@ -59,15 +66,17 @@ class Mirasvit_Misspell_Model_Misspell extends Varien_Object
 
             $basePer  = $this->similarity($query, $keyword);
             $splitPer = $this->similarity($query, $splitKeyword);
+            
             if ($basePer > $splitPer) {
                 $final[] = $keyword;
             } else {
                 $final[] = $splitKeyword;
             }
-
         }
 
         $result = implode(' ', $final);
+
+        // echo $this->similarity($result, $baseQuery);
 
         if ($this->similarity($result, $baseQuery) < 50) {
             $result = '';
@@ -134,17 +143,23 @@ class Mirasvit_Misspell_Model_Misspell extends Varien_Object
         $tableName  = Mage::getSingleton('core/resource')->getTableName('misspell/misspell');
 
         $select    = $connection->select();
-        $relevancy = new Zend_Db_Expr('(-ABS(LENGTH(keyword) - '.$len.') + MATCH (trigram) AGAINST("'.$trigram.'")) AS relevancy');
+        $relevancy = new Zend_Db_Expr('(-ABS(LENGTH(keyword) - '.$len.') + MATCH (trigram) AGAINST("'.$trigram.'")) + freq AS relevancy');
         $select->from($tableName, array('keyword', $relevancy, 'freq'))
             ->order('relevancy desc')
-            ->limit(5);
+            ->limit(10);
 
-        $keywords   = $connection->fetchAll($select);
+        $keywords = $connection->fetchAll($select);
+        $maxFreq  = 0.0001;
+        foreach ($keywords as $keyword) {
+            $maxFreq = max($keyword['freq'], $maxFreq);
+        }
+
         $preresults = array();
         foreach ($keywords as $keyword) {
-            $preresults[$keyword['keyword']] = $this->similarity($query, $keyword['keyword']) + $keyword['freq'];
+            $preresults[$keyword['keyword']] = $this->similarity($query, $keyword['keyword']) + $keyword['freq'] * (10 / $maxFreq);
         }
         arsort($preresults);
+
         $keys   = array_keys($preresults);
         $result = array();
         if (count($keys) > 0) {
@@ -155,6 +170,7 @@ class Mirasvit_Misspell_Model_Misspell extends Varien_Object
         } else {
             $result = array('keyword' => $query, 'diff' => 100);
         }
+
         return $result;
     }
 
@@ -166,7 +182,7 @@ class Mirasvit_Misspell_Model_Misspell extends Varien_Object
             if ($chr != $this->_helper->strtolower($chr)) {
                 $nchr = $this->_helper->substr($str, $i, 1);
                 $nchr = strtoupper($nchr);
-                $str = substr_replace($str, $nchr, $i, 1);
+                $str  = substr_replace($str, $nchr, $i, 1);
             }
         }
         return $str;
@@ -178,11 +194,5 @@ class Mirasvit_Misspell_Model_Misspell extends Varien_Object
         $percentage  = $levenshtein->similarityi($keyword, $result);
 
         return $percentage;
-    }
-
-    protected function _getMinFtLength()
-    {
-        $variables  = $this->_getConnection()->fetchPairs('SHOW VARIABLES');
-        return (!isset($variables['have_innodb']) || $variables['have_innodb'] != 'YES') ? false : true;
     }
 }

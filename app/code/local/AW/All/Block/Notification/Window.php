@@ -19,10 +19,11 @@
  *
  * @category   AW
  * @package    AW_Avail
- * @version    1.2.2
+ * @version    1.2.4
  * @copyright  Copyright (c) 2010-2012 aheadWorks Co. (http://www.aheadworks.com)
  * @license    http://ecommerce.aheadworks.com/AW-LICENSE.txt
  */
+
 
 class AW_All_Block_Notification_Window extends Mage_Adminhtml_Block_Notification_Window
 {
@@ -33,14 +34,13 @@ class AW_All_Block_Notification_Window extends Mage_Adminhtml_Block_Notification
         if (!Mage::getStoreConfig('awall/install/run')) {
             $c = Mage::getModel('core/config_data');
             $c
-                    ->setScope('default')
-                    ->setPath('awall/install/run')
-                    ->setValue(time())
-                    ->save();
+                ->setScope('default')
+                ->setPath('awall/install/run')
+                ->setValue(time())
+                ->save();
             $this->setHeaderText($this->__("aheadWorks Notifications Setup"));
             $this->setIsFirstRun(1);
             $this->setIsHtml(1);
-
         }
     }
 
@@ -48,6 +48,8 @@ class AW_All_Block_Notification_Window extends Mage_Adminhtml_Block_Notification
     {
         if ($this->getIsHtml()) {
             $this->setTemplate('aw_all/notification/window.phtml');
+        } else {
+            $this->setTemplate('aw_all/notification/window/standard.phtml');
         }
         return parent::_toHtml();
     }
@@ -66,6 +68,4 @@ class AW_All_Block_Notification_Window extends Mage_Adminhtml_Block_Notification
             return $this->getData('notice_message_text');
         }
     }
-
-
 }

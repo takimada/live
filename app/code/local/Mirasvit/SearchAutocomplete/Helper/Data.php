@@ -9,14 +9,16 @@
  *
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
- * @version   2.2.8
- * @revision  277
- * @copyright Copyright (C) 2013 Mirasvit (http://mirasvit.com/)
+ * @version   2.3.1
+ * @revision  710
+ * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
  */
 
 
-
-
+/**
+ * @category Mirasvit
+ * @package  Mirasvit_SearchAutocomplete
+ */
 class Mirasvit_SearchAutocomplete_Helper_Data extends Mage_Core_Helper_Data
 {
     protected $_indexes = null;
@@ -57,7 +59,7 @@ class Mirasvit_SearchAutocomplete_Helper_Data extends Mage_Core_Helper_Data
                     $this->_indexes[$index->getCode()] = $index->getTitle();
                 }
             } else {
-                $this->_indexes['catalog'] = '';
+                $this->_indexes['mage_catalog_product'] = '';
             }
         }
 
@@ -65,7 +67,7 @@ class Mirasvit_SearchAutocomplete_Helper_Data extends Mage_Core_Helper_Data
             $displayedIndexes = $this->_indexes;
             $forDisplay = explode(',', Mage::getStoreConfig('searchautocomplete/general/indexes'));
             foreach ($displayedIndexes as $code => $label) {
-                if (!in_array($code, $forDisplay) && $code != 'catalog') {
+                if (!in_array($code, $forDisplay) && $code != 'mage_catalog_product') {
                     unset($displayedIndexes[$code]);
                 }
             }

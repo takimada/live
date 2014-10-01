@@ -9,9 +9,9 @@
  *
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
- * @version   2.2.8
- * @revision  277
- * @copyright Copyright (C) 2013 Mirasvit (http://mirasvit.com/)
+ * @version   2.3.1
+ * @revision  710
+ * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
  */
 
 
@@ -27,9 +27,15 @@ class Mirasvit_MstCore_Model_Feed_Updates extends Mirasvit_MstCore_Model_Feed_Ab
     public function refresh()
     {
         try {
+            $params = array();
+            $params['domain'] = Mage::getBaseUrl();
+            foreach (Mage::getConfig()->getNode('modules')->children() as $name => $module) {
+                $params['modules'][$name] = (string) $module->version;
+            }
+
             Mage::app()->saveCache(time(), Mirasvit_MstCore_Helper_Config::UPDATES_FEED_URL);
 
-            $xml = $this->getFeed(Mirasvit_MstCore_Helper_Config::UPDATES_FEED_URL);
+            $xml = $this->getFeed(Mirasvit_MstCore_Helper_Config::UPDATES_FEED_URL, $params);
 
             $items = array();
             if ($xml) {

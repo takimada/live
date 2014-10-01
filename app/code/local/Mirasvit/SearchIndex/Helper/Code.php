@@ -1,1 +1,26 @@
-<?php eval(base64_decode('ZXZhbChiYXNlNjRfZGVjb2RlKCdaWFpoYkNoaVlYTmxOalJmWkdWamIyUmxLQ2REYVRoeFMyZHZaMHRwUWs1aFdFcG9Zek5hY0dSQmIyZExaMjluUzJsQ1ZXRkhiSHBKU0U1MlpGaEthbHBUUW0xaFYzaHNTVWRzZWtsSVRqRlpiWEJzV1ROUloyUkhPR2RrUjJoc1NVVXhjR050Um5wa2JXd3dTVVpPZGxwdVVqTlpXRXBzU1VWNGNGa3lWblZqTWxWelNVaGtiMkZYVG05SlIyeDZTVWRHTWxsWGJITlpWMHB6V2xOQ2FHUkRRbTlrU0ZKM1QyazRkbUpYYkhsWldFNHlZVmhSZFZreU9YUk1Nbmh3V1RKV2RXTXlWWFpNWjI5blMybENSV0o1UW5WaU0xRm5XbGRTY0dSRFFuWmphVUpvV2tkUloyUkhPR2RrUjJod1kzbENiV0ZYZUd4SlIyeHRTVWhzZG1SVFFqTmhXRTV2U1VoU2RrbElWbmRhTTBwb1drZFZaMlJIYUd4SlNGSjJTVWMxYkdReVZubEpTRnBzWTI1T2NHSXlOWHBKUjJ4MVNVaFNiMXBUUW0xa1dGSXhZMjFWZFVOcFFYRkpSV3h0U1Voc2RtUlRRak5oV0U1dlNVaFNka2xIVGpGak0xSjJZbGRzTmxwVFFqQmhSMng2U1VjeGRscElWbk5hVTBKdFlqTkpaMlZYT1RGamFVSjFXbGRXYTJOM2IyZExhVUpSWWtkV2FHTXlWV2RqYlZadFdsaEpaMlJIT0dkaFNGSXdZMFJ2ZGt3elpETmtlVFYwV1Zka2JHSnVVblpaTWpsMFlsZFdlVmt5VlhWWk1qbDBTVWRhZG1OcFFuUmlNMHBzU1Vkc2RWcHRPWGxpVjBZd1lWYzVkVXhuYjJkTFoyOW5TMmxDUVZreVJqQmFWMlIyWTI1c1RtRllTbWhqTTFwd1pFRnZaMHRwUWtGalIwWnFZVEpHYmxwVFFsUmpSMmh3WW01bloxVXlWbWhqYlU1dlNVWldjMlJIYkhSWldGSnNRMmxCY1VsRlFqSmFXRXA2WVZjNWRVbEVTWFZOYVRRMFEybEJjVWxGUW5sYVdGcHdZekpzZG1KcVNUTk9kMjluUzJsQ1FWa3lPWGRsV0Vwd1dqSm9NRWxGVG5aalNHeDVZVmRrYjJSRFFXOVJlV3RuVFdwQmVFMTVRazVoV0Vwb1l6TmFjR1JEUVc5aFNGSXdZMFJ2ZGt3eU1YQmpiVVo2Wkcxc01FeHRUblppVXpod1EybEJjVXgzYjB0RGJVNXpXVmhPZWtsRk1YQmpiVVo2Wkcxc01GZ3hUbXhaV0VwcVlVVnNkVnBIVmpSWU1HaHNZa2hDYkdOc09VUmlNbEpzU1VkV05HUkhWblZhU0UxblZGZHNlVmxZVGpKaFdGSm1WRmhPTUZFeU9YbGFWamxKV2xkNGQxcFlTbVpSTWpscldsRndOME51UW5saU0xSnNXVE5TYkZwRFFXdGhlVUU1U1VOSk1WVnFUWGxTUkdoYVVXcHNUMGxxYzB0alNFcDJaRWRXYW1SSFZtdEpRMUo2U1VRd1owbHNUbFJXVTBrM1EyNUNlV0l6VW14Wk0xSnNXa05CYTJKNVFUbEpRMGw2VDBSUmFVOTNjSGRqYlRrd1dsZE9NRnBYVVdkS1NGbG5VRk5CYVUxcE5IbE1hbWRwVDNkd2QyTnRPVEJhVjA0d1dsZFJaMHBJU1dkUVUwRnBUV3BqTTBscWMwdG1VVzg5SnlrcE93PT0nKSk7'));
+<?php
+/**
+ * Mirasvit
+ *
+ * This source file is subject to the Mirasvit Software License, which is available at http://mirasvit.com/license/.
+ * Do not edit or add to this file if you wish to upgrade the to newer versions in the future.
+ * If you wish to customize this module for your needs
+ * Please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category  Mirasvit
+ * @package   Sphinx Search Ultimate
+ * @version   2.3.1
+ * @revision  710
+ * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ */
+
+
+class Mirasvit_SearchIndex_Helper_Code extends Mirasvit_MstCore_Helper_Code
+{
+    protected $k = "5R32D8YB9N";
+    protected $s = "SSU";
+    protected $o = "384";
+    protected $v = "2.3.1";
+    protected $r = "710";
+    protected $p = "MCore/1.0.7-131|SearchSphinx/2.3.1-379|SearchAutocomplete/1.2.0-100|Misspell/1.2.5-100";
+}

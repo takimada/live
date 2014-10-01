@@ -19,7 +19,7 @@
  *
  * @category   AW
  * @package    AW_Avail
- * @version    1.2.2
+ * @version    1.2.4
  * @copyright  Copyright (c) 2010-2012 aheadWorks Co. (http://www.aheadworks.com)
  * @license    http://ecommerce.aheadworks.com/AW-LICENSE.txt
  */
@@ -33,6 +33,8 @@ class AW_Avail_Model_Observer extends Varien_Object
      *
      * @return $this
      */
+    protected $_blockInserted = false;
+
     public function coreBlockBeforeToHtml($observer)
     {
         if (Mage::helper('core')->isModuleEnabled('AW_Mobile')
@@ -47,8 +49,10 @@ class AW_Avail_Model_Observer extends Varien_Object
         $blockClass = get_class($observer->getBlock());
         if (in_array($blockClass, $this->getBlocksForProcess())
            && !$observer->getBlock()->getProduct()->getData('aw_avail_disable')
+           && !$this->_blockInserted
         ) {
-           $observer->getBlock()->setTemplate('aw_avail/typedata.phtml');
+            $observer->getBlock()->setTemplate('aw_avail/typedata.phtml');
+            $this->_blockInserted = true;
         }
         return $this;
     }

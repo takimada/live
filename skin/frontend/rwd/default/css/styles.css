@@ -2038,7 +2038,7 @@ a.button:hover {
 }
 
 .std ul li {
-  margin-left: 5px;
+  /*margin-left: 5px;*/
 }
 
 .std .note {
@@ -9716,7 +9716,7 @@ div.calendar table td.button {
   text-transform: none;
 }
 
-.index_col1 { float:left; width:300px; }
+.index_col1 { float:left; width:300px;padding-right: 20px; }
 .index_col2 { float:right; width:900px; }
 
 .block_brands { margin:0 0 29px 0; padding:0 4px; }
@@ -9727,4 +9727,4 @@ div.calendar table td.button {
 .block_brands li.last { border:0 !important; }
 .banner { margin:0 0 35px 0; }
 
-
+.searchautocomplete .nav-submit-button .button {display:none }

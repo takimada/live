@@ -2,7 +2,6 @@ jQuery.noConflict();
 jQuery(function($) {
 
 SearchAutocompleteForm = Backbone.View.extend({
-    el     : '.UI-SEARCHAUTOCOMPLETE',
     events : {
         'focus .UI-SEARCH' : 'focus',
         'blur .UI-SEARCH'  : 'blur',
@@ -12,8 +11,13 @@ SearchAutocompleteForm = Backbone.View.extend({
     initialize: function() {
         var self = this;
         _.bindAll(self);
+    },
 
-        self.$field    = $('.UI-SEARCH');
+    init: function(el) {
+        var self = this;
+        self.setElement(el);
+
+        self.$field    = $('.UI-SEARCH', self.$el);
         self.emptyText = self.$el.attr('data-tip');
 
         self.blur();
@@ -49,7 +53,10 @@ SearchAutocompleteForm = Backbone.View.extend({
 });
 
 $(function() {
-    searchAutocompleteForm = new SearchAutocompleteForm();
+    _.each($('.UI-SEARCHAUTOCOMPLETE'), function (el) {
+        var form = new SearchAutocompleteForm();
+        form.init(el);
+    });
 });
 
 });

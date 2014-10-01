@@ -10,7 +10,7 @@
 <config>
     <modules>
         <Ebizmarts_Autoresponder>
-            <version>0.1.6</version>
+            <version>0.1.7</version>
         </Ebizmarts_Autoresponder>
     </modules>
     <global>
@@ -178,6 +178,15 @@
                 </observers>
             </admin_system_config_changed_section_mandrill>
         </events>
+        <translate>
+            <modules>
+                <Ebizmarts_Autoresponder>
+                    <files>
+                        <default>Ebizmarts_Autoresponder.csv</default>
+                    </files>
+                </Ebizmarts_Autoresponder>
+            </modules>
+        </translate>
     </adminhtml>
     <frontend>
         <layout>
@@ -214,6 +223,15 @@
                 </observers>
             </review_product_post_after>
         </events>
+        <translate>
+            <modules>
+                <Ebizmarts_Autoresponder>
+                    <files>
+                        <default>Ebizmarts_Autoresponder.csv</default>
+                    </files>
+                </Ebizmarts_Autoresponder>
+            </modules>
+        </translate>
     </frontend>
 
     <crontab>
@@ -223,7 +241,7 @@
                     <cron_expr>0 1 * * *</cron_expr>
                 </schedule>
                 <run>
-                    <model>ebizmarts_autoresponder/cron::process</model>
+                    <model>ebizmarts_autoresponder/cron::autoresponder</model>
                 </run>
             </ebizmarts_autoresponder>
             <ebizmarts_autoresponder_backtostock_cleanup>

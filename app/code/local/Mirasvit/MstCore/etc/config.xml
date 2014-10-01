@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Mirasvit_MstCore>
-            <version>1.0.6</version>
+            <version>1.0.8</version>
         </Mirasvit_MstCore>
     </modules>
     <global>
@@ -22,6 +22,12 @@
                     <logger>
                         <table>m_mstcore_logger</table>
                     </logger>
+                    <urlrewrite>
+                        <table>m_mstcore_urlrewrite</table>
+                    </urlrewrite>
+                    <attachment>
+                        <table>m_mstcore_attachment</table>
+                    </attachment>
                 </entities>
             </mstcore_resource>
         </models>
@@ -37,6 +43,26 @@
                 </setup>
             </mstcore_setup>
         </resources>
+        <events>
+            <controller_front_init_routers>
+                <observers>
+                    <mstcore>
+                        <type>singleton</type>
+                        <class>Mirasvit_MstCore_Controller_Router</class>
+                        <method>addUrlsRouter</method>
+                    </mstcore>
+                </observers>
+            </controller_front_init_routers>
+            <model_save_before>
+                <observers>
+                    <mstcore>
+                        <type>singleton</type>
+                        <class>Mirasvit_MstCore_Helper_Code</class>
+                        <method>onModelSaveBefore</method>
+                    </mstcore>
+                </observers>
+            </model_save_before>
+        </events>
     </global>
     <adminhtml>
         <layout>
@@ -69,6 +95,9 @@
                                         <mstcore>
                                             <title>Mirasvit System</title>
                                         </mstcore>
+                                        <mstcore_store>
+                                            <title>Mirasvit Extensions Store</title>
+                                        </mstcore_store>
                                         <mstcore_logger>
                                             <title>Mirasvit Extensions Store</title>
                                         </mstcore_logger>
@@ -118,11 +147,22 @@
                 </Mirasvit_MstCore>
             </modules>
         </translate>
+        <routers>
+            <mstcore>
+                <use>standard</use>
+                <args>
+                    <module>Mirasvit_MstCore</module>
+                    <frontName>mstcore</frontName>
+                </args>
+            </mstcore>
+        </routers>
     </frontend>
     <crontab>
         <jobs>
             <mstcore_logger_cron>
-                <schedule><cron_expr>3 3 * * *</cron_expr></schedule>
+                <schedule>
+                    <cron_expr>0 * * * *</cron_expr>
+                </schedule>
                 <run>
                     <model>mstcore/logger::clean</model>
                 </run>

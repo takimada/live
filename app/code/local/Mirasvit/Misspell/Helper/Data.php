@@ -9,14 +9,16 @@
  *
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
- * @version   2.2.8
- * @revision  277
- * @copyright Copyright (C) 2013 Mirasvit (http://mirasvit.com/)
+ * @version   2.3.1
+ * @revision  710
+ * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
  */
 
 
-
-
+/**
+ * @category Mirasvit
+ * @package  Mirasvit_Misspell
+ */
 class Mirasvit_Misspell_Helper_Data extends Mage_CatalogSearch_Helper_Data
 {
     public function getSuggestQueryText()
@@ -24,7 +26,8 @@ class Mirasvit_Misspell_Helper_Data extends Mage_CatalogSearch_Helper_Data
         $model = Mage::getModel('misspell/suggest')->loadByQuery($this->_queryText);
         $suggest = $model->getSuggest();
 
-        if (strtolower($this->_queryText) == strtolower($suggest) || !$suggest) {
+        if (Mage::helper('misspell/string')->strtolower($this->_queryText) == Mage::helper('misspell/string')->strtolower($suggest)
+            || !$suggest) {
             return $this->_queryText;
         }
 
@@ -33,21 +36,11 @@ class Mirasvit_Misspell_Helper_Data extends Mage_CatalogSearch_Helper_Data
 
     public function clearText($text)
     {
-        $text = strtolower($text);
-        $text = preg_replace('/[-\+()|"\'\><!\[\]~=\^\:,\/?.@#$€;]/', ' ', $text);
+        $text = Mage::helper('misspell/string')->strtolower($text);
+        $text = preg_replace('/[-\+()|"\'\><!\[\]~=\^\:,\/?.@#$â¬;]/', ' ', $text);
         $text = str_replace('  ', ' ', $text);
 
         return trim($text);
-    }
-
-    public function getOriginalQueryText()
-    {
-        return parent::getQueryText();
-    }
-
-    public function getCountResults()
-    {
-        return Mage::getSingleton('catalogsearch/layer')->getProductCollection()->count();
     }
 
     /**

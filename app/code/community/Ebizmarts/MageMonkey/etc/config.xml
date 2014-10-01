@@ -10,11 +10,17 @@
 <config>
     <modules>
         <Ebizmarts_MageMonkey>
-             <version>1.1.21</version>
+             <version>1.1.22</version>
         </Ebizmarts_MageMonkey>
     </modules>
     <global>
     	<events>
+            <newsletter_subscription_un_email_template>
+
+                <label>Newsletter unsubscription success</label>
+                <file>newsletter_unsub_success.html</file>
+                <type>html</type>
+            </newsletter_subscription_un_email_template>
             <newsletter_subscriber_save_before>
                 <observers>
                     <monkey_subscribe_observer>
@@ -52,8 +58,15 @@
                     <ecommerce><table>magemonkey_ecommerce360</table></ecommerce>
                     <bulksync_export><table>magemonkey_bulksync_export</table></bulksync_export>
                     <bulksync_import><table>magemonkey_bulksync_import</table></bulksync_import>
+                    <asyncsubscribers><table>magemonkey_async_subscribers</table></asyncsubscribers>
+                    <asyncorders><table>magemonkey_async_orders</table></asyncorders>
                 </entities>
             </monkey_mysql4>
+            <newsletter>
+                <rewrite>
+                    <subscriber>Ebizmarts_MageMonkey_Model_Subscriber</subscriber>
+                </rewrite>
+            </newsletter>
         </models>
         <resources>
             <monkey_setup>
@@ -235,6 +248,8 @@
 				<cron_export>1000</cron_export>
 				<order_status>all_status</order_status>
 				<enable_log>1</enable_log>
+                <checkout_async>1</checkout_async>
+                <markfield>HASCLICKED</markfield>
     		</general>
             <notifications>
                 <updates_url><![CDATA[http://store.ebizmarts.com/media/feeds/]]></updates_url>
@@ -246,16 +261,32 @@
         <jobs>
             <magemonkey_bulksync_export_subscribers>
                 <schedule><cron_expr>0 * * * *</cron_expr></schedule>
-                <run><model>monkey/cron::processExportJobs</model></run>
+                <run><model>monkey/cron::bulksyncExportSubscribers</model></run>
             </magemonkey_bulksync_export_subscribers>
             <magemonkey_bulksync_import_subscribers>
                 <schedule><cron_expr>0 * * * *</cron_expr></schedule>
-                <run><model>monkey/cron::processImportJobs</model></run>
+                <run><model>monkey/cron::bulksyncImportSubscribers</model></run>
             </magemonkey_bulksync_import_subscribers>
             <magemonkey_autoexport_subscribers>
                 <schedule><cron_expr>0 * * * *</cron_expr></schedule>
-                <run><model>monkey/cron::processAutoExportJobs</model></run>
+                <run><model>monkey/cron::autoExportSubscribers</model></run>
             </magemonkey_autoexport_subscribers>
+            <magemonkey_sendorders_asynch>
+                <schedule><cron_expr>*/15 * * * *</cron_expr></schedule>
+                <run><model>monkey/cron::sendordersAsync</model></run>
+            </magemonkey_sendorders_asynch>
+            <magemonkey_cleanorders_asynch>
+                <schedule><cron_expr>0 0 1 * *</cron_expr></schedule>
+                <run><model>monkey/cron::cleanordersAsync</model></run>
+            </magemonkey_cleanorders_asynch>
+            <magemonkey_sendsubscribers_asynch>
+                <schedule><cron_expr>*/15 * * * *</cron_expr></schedule>
+                <run><model>monkey/cron::sendSubscribersAsync</model></run>
+            </magemonkey_sendsubscribers_asynch>
+            <magemonkey_cleansubscribers_asynch>
+                <schedule><cron_expr>0 0 1 * *</cron_expr></schedule>
+                <run><model>monkey/cron::cleanSubscribersAsync</model></run>
+            </magemonkey_cleansubscribers_asynch>
         </jobs>
     </crontab>
 </config>

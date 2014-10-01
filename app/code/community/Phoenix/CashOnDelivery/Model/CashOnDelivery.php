@@ -156,9 +156,6 @@ class Phoenix_CashOnDelivery_Model_CashOnDelivery extends Mage_Payment_Model_Met
      */
     public function isAvailable($quote = null)
     {
-        if(!Mage::getSingleton('customer/session')->isLoggedIn()) {
-            return false;
-        }
         if (!parent::isAvailable($quote)) {
             return false;
         }

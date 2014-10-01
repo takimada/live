@@ -9,14 +9,16 @@
  *
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
- * @version   2.2.8
- * @revision  277
- * @copyright Copyright (C) 2013 Mirasvit (http://mirasvit.com/)
+ * @version   2.3.1
+ * @revision  710
+ * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
  */
 
 
-
-
+/**
+ * @category Mirasvit
+ * @package  Mirasvit_Misspell
+ */
 class Mirasvit_Misspell_Model_Suggest extends Mage_Core_Model_Abstract
 {
     /**
@@ -31,7 +33,6 @@ class Mirasvit_Misspell_Model_Suggest extends Mage_Core_Model_Abstract
     public function loadByQuery($query)
     {
         $this->setQuery($query);
-        $this->_getResource()->loadByQuery($this);
 
         if (!$this->getId()) {
             $suggestText = Mage::getModel('misspell/misspell')->getSuggest($query);

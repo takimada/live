@@ -9,9 +9,9 @@
  *
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
- * @version   2.2.8
- * @revision  277
- * @copyright Copyright (C) 2013 Mirasvit (http://mirasvit.com/)
+ * @version   2.3.1
+ * @revision  710
+ * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
  */
 
 
@@ -27,6 +27,9 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext extends Mage_Ca
 
     public function rebuildTable()
     {
+        set_time_limit(0);
+        $uid = Mage::helper('mstcore/debug')->start();
+
         $tableName = $this->getMainTable();
         $adapter   = $this->_getWriteAdapter();
 
@@ -40,7 +43,14 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext extends Mage_Ca
 
         // Drop columns
         foreach (array_keys($dropColumns) as $columnName) {
-            if (!in_array($columnName, array('product_id', 'store_id', 'data_index', 'fulltext_id', 'updated'))) {
+            if (!in_array($columnName, array(
+                    'product_id',
+                    'store_id',
+                    'data_index',
+                    'fulltext_id',
+                    'updated',
+                    'searchindex_weight')
+                )) {
                 $adapter->dropColumn($tableName, $columnName);
             }
         }
@@ -50,15 +60,23 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext extends Mage_Ca
             $adapter->addColumn($tableName, $columnName, $columnProp);
         }
 
+        Mage::helper('mstcore/debug')->end($uid);
+
         return $this;
     }
 
     protected function getColumns()
     {
+        $uid = Mage::helper('mstcore/debug')->start();
+
         if ($this->_columns === null) {
             $this->_columns = array();
-            $this->_columns['updated'] = "int(1) NOT NULL default '1'";
-            $columns        = array();
+            $this->_columns['updated']            = "int(1) NOT NULL default '1'";
+            $this->_columns['searchindex_weight'] = "int(11) NOT NULL default '0'";
+
+            $columns = array();
+
+            $attributes = $this->getIndexModel()->getIndexInstance()->getAttributes();
 
             foreach ($this->_getSearchableAttributes() as $attribute) {
                 $cols = $attribute->getFlatColumns();
@@ -67,34 +85,98 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext extends Mage_Ca
                     continue;
                 }
 
-                if (isset($cols[$attribute->getAttributeCode().'_value'])) {
-                    $columns[$attribute->getAttributeCode()] = $cols[$attribute->getAttributeCode().'_value']['type'].' NULL';
+                $attributeCode = $attribute->getAttributeCode();
+
+                if (isset($cols[$attributeCode.'_value'])) {
+                    $columns[$attributeCode] = $cols[$attributeCode.'_value']['type'].' NULL';
                 } else {
-                    $columns[$attribute->getAttributeCode()] = $cols[$attribute->getAttributeCode()]['type'].' NULL';
+                    $columns[$attributeCode] = $cols[$attributeCode]['type'].' NULL';
                 }
             }
 
-            $attributes = unserialize(Mage::getStoreConfig('searchindex/catalog/attribute'));
-            if (!is_array($attributes)) {
-                $attributes = array();
-            }
-            foreach ($attributes as $attribute) {
-                if (isset($columns[$attribute['attribute']])) {
-                    $this->_columns[$attribute['attribute']] = $columns[$attribute['attribute']];
+            foreach ($attributes as $attributeCode => $weight) {
+                if (isset($columns[$attributeCode])) {
+                    $this->_columns[$attributeCode] = $columns[$attributeCode];
+                } else {
+                    $this->_columns[$attributeCode] = 'text NULL';
                 }
             }
         }
 
+        Mage::helper('mstcore/debug')->end($uid, $this->_columns);
 
         return $this->_columns;
     }
 
     protected function _getProductChildIds($productId, $typeId)
     {
-        if (!Mage::getStoreConfig('searchindex/catalog/bundled')) {
+        if (!$this->getIndexModel()->getIndexInstance()->getProperty('include_bundled')) {
             return null;
         }
 
-        return parent::_getProductChildIds($productId, $typeId);
+        $result = parent::_getProductChildIds($productId, $typeId);
+
+        return $result;
+    }
+
+    protected function _saveProductIndexes($storeId, $productIndexes)
+    {
+        $uid = Mage::helper('mstcore/debug')->start();
+
+        if ($this->_engine) {
+            $this->_addRelatedData($productIndexes, $storeId);
+            $this->_engine->saveEntityIndexes($storeId, $productIndexes);
+        }
+
+        Mage::helper('mstcore/debug')->end($uid);
+
+        return $this;
+    }
+
+    protected function _addRelatedData(&$index, $storeId)
+    {
+        $staticFields = array();
+        foreach ($this->_getSearchableAttributes('static') as $attribute) {
+            $staticFields[] = $attribute->getAttributeCode();
+        }
+
+        $x = 0;
+        $a = 0;
+        $b = 0;
+        $c = 0;
+        foreach ($index as $entityId => $data) {
+            try {
+                $productChildren = array();
+
+                $arGrouped = $this->_getProductChildIds($entityId, 'grouped');
+                if (is_array($arGrouped) && count($arGrouped)) {
+                    $productChildren = array_merge($productChildren, $arGrouped);
+                }
+
+                $arConfigurable = $this->_getProductChildIds($entityId, 'configurable');
+                if (is_array($arConfigurable) && count($arConfigurable)) {
+                    $productChildren = array_merge($productChildren, $arConfigurable);
+                }
+
+                if (count($productChildren)) {
+                    $relatedProducts = $this->_getSearchableProducts($storeId, $staticFields, $productChildren, 0);
+                    foreach ($relatedProducts as $pr) {
+                        foreach ($pr as $attr => $value) {
+                            if (isset($index[$entityId][$attr])) {
+                                $index[$entityId][$attr] .= ' '.$value;
+                                $index[$entityId]['data_index'] .= ' '.$value;
+                            }
+                        }
+                    }
+                }
+            } catch (Exception $e) {}
+        }
+
+        return $this;
+    }
+
+    public function getIndexModel()
+    {
+        return Mage::helper('searchindex/index')->getIndex('mage_catalog_product');
     }
 }

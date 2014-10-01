@@ -19,7 +19,7 @@ class Ebizmarts_MageMonkey_Model_Observer
 	 */
 	public function handleSubscriber(Varien_Event_Observer $observer)
 	{
-		if(!Mage::helper('monkey')->canMonkey()){
+        if(!Mage::helper('monkey')->canMonkey()){
 			return $observer;
 		}
 
@@ -33,12 +33,13 @@ class Ebizmarts_MageMonkey_Model_Observer
 			return $observer;
 		}
 
-		if(Mage::getSingleton('core/session')->getMonkeyCheckout(TRUE)){
+
+		if(!Mage::getSingleton('core/session')->getMonkeyCheckout()){
 			return $observer;
 		}
 
 		$email  = $subscriber->getSubscriberEmail();
-		if($subscriber->getMcStoreId()){
+		/*if($subscriber->getMcStoreId()){
 			$listId = Mage::helper('monkey')->getDefaultList($subscriber->getMcStoreId());
 		}
 		elseif($subscriber->getStoreId()){
@@ -46,7 +47,7 @@ class Ebizmarts_MageMonkey_Model_Observer
 		}
 		else{
 			$listId = Mage::helper('monkey')->getDefaultList(Mage::app()->getStore()->getId());
-		}
+		}*/
 		$subscriber->setImportMode(TRUE);
 		$isConfirmNeed = FALSE;
 		if( !Mage::helper('monkey')->isAdmin() &&
@@ -59,11 +60,15 @@ class Ebizmarts_MageMonkey_Model_Observer
 		}
 
         //Check if customer is not yet subscribed on MailChimp
+        $monkeyPost = Mage::getSingleton('core/session')->getMonkeyPost();
+        if($monkeyPost) {
+            $post = unserialize($monkeyPost);
+            foreach($post['list'] as $listSubscribed){
+                $listId = $listSubscribed['subscribed'];
 		$isOnMailChimp = Mage::helper('monkey')->subscribedToList($email, $listId);
 
         //Flag only is TRUE when changing to SUBSCRIBE
         if( TRUE === $subscriber->getIsStatusChanged() ){
-
 			if($isOnMailChimp == 1){
 				return $observer;
 			}
@@ -73,8 +78,26 @@ class Ebizmarts_MageMonkey_Model_Observer
        			Mage::getSingleton('core/session')->addSuccess(Mage::helper('monkey')->__('Confirmation request has been sent.'));
  			}
 
-			Mage::getSingleton('monkey/api')->listSubscribe($listId, $email, $this->_mergeVars($subscriber), 'html', $isConfirmNeed);
+            $mergeVars = $this->_mergeVars($subscriber, FALSE, $listId);
 
+            if(Mage::getStoreConfig('monkey/general/checkout_async'))
+            {
+                $subs = Mage::getModel('monkey/asyncsubscribers');
+                $subs->setMapfields(serialize($mergeVars))
+                    ->setEmail($email)
+                    ->setLists($listId)
+                    ->setConfirm($isConfirmNeed)
+                    ->setProccessed(0)
+                    ->setCreatedAt(Mage::getModel('core/date')->gmtDate())
+                    ->save();
+            }
+            else {
+			    Mage::getSingleton('monkey/api')->listSubscribe($listId, $email, $mergeVars, 'html', $isConfirmNeed);
+            }
+
+        }
+            }
+            Mage::getSingleton('core/session')->getMonkeyPost(TRUE);
         }
         // This code unsubscribe users if it's on MailChimp and the status it's unconfirmed
         /*else{
@@ -315,24 +338,23 @@ class Ebizmarts_MageMonkey_Model_Observer
 	{
 		$post = Mage::app()->getRequest()->getPost();
 		if(!Mage::helper('monkey')->canMonkey()){
-			return;
+			return $observer;
 		}
 
 		$customer = $observer->getEvent()->getCustomer();
 
 		//Handle additional lists subscription on Customer Create Account
-		Mage::helper('monkey')->additionalListsSubscription($customer);
+		Mage::helper('monkey')->additionalListsSubscription($customer, $post);
 
 		$oldEmail = $customer->getOrigData('email');
 		if(!$oldEmail){
 			return $observer;
 		}
-
-		$mergeVars = $this->_mergeVars($customer, TRUE);
 		$api   = Mage::getSingleton('monkey/api', array('store' => $customer->getStoreId()));
 		$lists = $api->listsForEmail($oldEmail);
 		if(is_array($lists)){
 			foreach($lists as $listId){
+                $mergeVars = $this->_mergeVars($customer, TRUE, $listId);
 				$api->listUpdateMember($listId, $oldEmail, $mergeVars);
 			}
 		}
@@ -360,12 +382,12 @@ class Ebizmarts_MageMonkey_Model_Observer
 		}
 
 		if(Mage::app()->getRequest()->isPost()){
-			$subscribe = Mage::app()->getRequest()->getPost('magemonkey_subscribe');
+			$subscribe  = Mage::app()->getRequest()->getPost('magemonkey_subscribe');
+            $force      = Mage::app()->getRequest()->getPost('magemonkey_force');
 
 			Mage::getSingleton('core/session')->setMonkeyPost( serialize(Mage::app()->getRequest()->getPost()) );
-
-			if(!is_null($subscribe)){
-				Mage::getSingleton('core/session')->setMonkeyCheckout($subscribe);
+			if(!is_null($subscribe)||!is_null($force)){
+				Mage::getSingleton('core/session')->setMonkeyCheckout(true);
 			}
 		}
 	}
@@ -378,8 +400,9 @@ class Ebizmarts_MageMonkey_Model_Observer
 	 */
 	public function registerCheckoutSuccess(Varien_Event_Observer $observer)
 	{
+
 		if(!Mage::helper('monkey')->canMonkey()){
-			return;
+			return $observer;
 		}
 
 		$orderId = (int)current($observer->getEvent()->getOrderIds());
@@ -395,8 +418,9 @@ class Ebizmarts_MageMonkey_Model_Observer
 				$order->setEbizmartsMagemonkeyCampaignId($campaign_id);
 			}
 			$sessionFlag = Mage::getSingleton('core/session')->getMonkeyCheckout();
-			$forceSubscription = Mage::helper('monkey')->canCheckoutSubscribe();
-			if($sessionFlag || $forceSubscription == 3){
+//			$forceSubscription = Mage::helper('monkey')->canCheckoutSubscribe();
+//            if($sessionFlag || $forceSubscription == 3 || $forceSubscription == 4){
+			if($sessionFlag){
 				//Guest Checkout
 				if( (int)$order->getCustomerGroupId() === Mage_Customer_Model_Group::NOT_LOGGED_IN_ID ){
 					Mage::helper('monkey')->registerGuestCustomer($order);
@@ -413,7 +437,7 @@ class Ebizmarts_MageMonkey_Model_Observer
 			}
 
 			//Multiple lists on checkout
-			$monkeyPost = Mage::getSingleton('core/session')->getMonkeyPost(TRUE);
+			$monkeyPost = Mage::getSingleton('core/session')->getMonkeyPost();
 			if($monkeyPost){
 
 				$post = unserialize($monkeyPost);
@@ -435,44 +459,104 @@ class Ebizmarts_MageMonkey_Model_Observer
 	 * @param bool $includeEmail
 	 * @return array
 	 */
-	protected function _mergeVars($object = NULL, $includeEmail = FALSE)
-	{
-		//Initialize as GUEST customer
-		$customer = new Varien_Object;
+	protected function _mergeVars($object = NULL, $includeEmail = FALSE, $currentList = NULL)
+    {
 
-		$regCustomer   = Mage::registry('current_customer');
-		$guestCustomer = Mage::registry('mc_guest_customer');
+        //Initialize as GUEST customer
+        $customer = new Varien_Object;
 
-		if( Mage::helper('customer')->isLoggedIn() ){
-			$customer = Mage::helper('customer')->getCustomer();
-		}elseif($regCustomer){
-			$customer = $regCustomer;
-		}elseif($guestCustomer){
-			$customer = $guestCustomer;
-		}else{
-			if(is_null($object)){
-				$customer->setEmail($object->getSubscriberEmail())
-					 ->setStoreId($object->getStoreId());
-			}else{
-				$customer = $object;
-			}
+        $regCustomer = Mage::registry('current_customer');
+        $guestCustomer = Mage::registry('mc_guest_customer');
 
-		}
+        if (Mage::helper('customer')->isLoggedIn()) {
+            $customer = Mage::helper('customer')->getCustomer();
+        } elseif ($regCustomer) {
+            $customer = $regCustomer;
+        } elseif ($guestCustomer) {
+            $customer = $guestCustomer;
+        } else {
+            if (is_null($object)) {
+                $customer->setEmail($object->getSubscriberEmail())
+                    ->setStoreId($object->getStoreId());
+            } else {
+                $customer = $object;
+            }
 
-		if(is_object($object)){
-			if($object->getListGroups()){
-				$customer->setListGroups($object->getListGroups());
-			}
+        }
 
-			if($object->getMcListId()){
-				$customer->setMcListId($object->getMcListId());
-			}
-		}
+        if (is_object($object)) {
+            if ($object->getListGroups()) {
+                $customer->setListGroups($object->getListGroups());
+            }
 
-		$mergeVars = Mage::helper('monkey')->getMergeVars($customer, $includeEmail);
+            if ($object->getMcListId()) {
+                $customer->setMcListId($object->getMcListId());
+            }
+        }
 
-		return $mergeVars;
-	}
+        $mergeVars = Mage::helper('monkey')->getMergeVars($customer, $includeEmail);
+        // add groups
+        $monkeyPost = Mage::getSingleton('core/session')->getMonkeyPost();
+        $defaultList = Mage::getStoreConfig('monkey/general/list', $object->getStoreId());
+
+
+        if ($monkeyPost) {
+            $post = unserialize($monkeyPost);
+            //if can change customer set the groups set by customer else set the groups on MailChimp config
+            if ($currentList && Mage::getStoreConfig('monkey/general/changecustomergroup', $object->getStoreId()) == 1) {
+                $subscribeGroups = array(0 => array());
+                foreach ($post['list'][$currentList] as $toGroups => $value) {
+                    if (is_numeric($toGroups)) {
+                        $subscribeGroups[0]['id'] = $toGroups;
+                        $subscribeGroups[0]['groups'] = implode(', ', array_unique($post['list'][$currentList][$subscribeGroups[0]['id']]));
+                    }
+                }
+                $groups = NULL;
+            } else {
+                $groups = Mage::getStoreConfig('monkey/general/cutomergroup', $object->getStoreId());
+                $groups = explode(",", $groups);
+                if (is_array($groups)) {
+                    $subscribeGroups = array();
+                    $_prevGroup = null;
+                    $checkboxes = array();
+                    foreach ($groups as $group) {
+                        $item = explode("_", $group);
+                        $currentGroup = $item[0];
+                        if ($currentGroup == $_prevGroup || $_prevGroup == null) {
+                            $checkboxes[] = $item[1];
+                            $_prevGroup = $currentGroup;
+                        } else {
+                            $subscribeGroups[] = array('id' => $_prevGroup, "groups" => str_replace('%C%', '\\,', implode(', ', $checkboxes)));
+                            $checkboxes = array();
+                            $_prevGroup = $currentGroup;
+                            $checkboxes[] = $item[1];
+                        }
+                    }
+                    $subscribeGroups[] = array('id' => $currentGroup, "groups" => str_replace('%C%', '\\,', implode(', ', $checkboxes)));
+
+                }
+            }
+            if ($subscribeGroups[0]['id'] && $subscribeGroups[0]['id'] != -1) {
+                $mergeVars["GROUPINGS"] = $subscribeGroups;
+            }
+
+            $force = Mage::getStoreConfig('monkey/general/checkout_subscribe', $object->getStoreId());
+            $map = Mage::getStoreConfig('monkey/general/markfield', $object->getStoreId());
+            if ($post['magemonkey_subscribe'] && $map != "") {
+                $listsChecked = explode(',', $post['magemonkey_subscribe']);
+                $hasClicked = in_array($currentList, $listsChecked);
+                if ($hasClicked && $force != 3) {
+                    $mergeVars[$map] = "Yes";
+                } else {
+                    $mergeVars[$map] = "No";
+                }
+            } else {
+                $mergeVars[$map] = "No";
+            }
+        }
+
+        return $mergeVars;
+    }
 
 	/** Add mass action option to Sales -> Order grid in admin panel to send orders to MC (Ecommerce360)
 	 *

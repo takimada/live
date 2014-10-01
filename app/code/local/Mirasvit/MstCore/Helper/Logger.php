@@ -9,25 +9,32 @@
  *
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
- * @version   2.2.8
- * @revision  277
- * @copyright Copyright (C) 2013 Mirasvit (http://mirasvit.com/)
+ * @version   2.3.1
+ * @revision  710
+ * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
  */
 
 
 class Mirasvit_MstCore_Helper_Logger extends Mage_Core_Helper_Abstract
 {
-    public function log($object, $message, $content = null, $level = null, $trace = false)
+    public function __construct()
     {
-        if(!Mage::getStoreConfig('mstcore/logger/enabled')) {
-            return $this;
+        Mage::getSingleton('mstcore/logger')->clean();
+    }
+
+    public function log($object, $message, $content = null, $level = null, $trace = false, $force = false)
+    {
+        if (!$force) {
+            if (!Mage::getStoreConfig('mstcore/logger/enabled')) {
+                return $this;
+            }
         }
 
         $logger = $this->_getLoggerObject();
         $logger->setData(array());
 
         $className = is_string($object) ? $object : get_class($object);
-        if(preg_match("/Mirasvit_([a-z]+)+/i", $className, $matches)) {
+        if (preg_match("/Mirasvit_([a-z]+)+/i", $className, $matches)) {
             if (isset($matches[1])) {
                 $logger->setModule($matches[1]);
             }
@@ -44,17 +51,17 @@ class Mirasvit_MstCore_Helper_Logger extends Mage_Core_Helper_Abstract
 
         $logger->save();
 
-        return $this;
+        return $logger;
     }
 
     public function logException($object, $message, $content = null, $trace = false)
     {
-        $this->log($object, $message, $content, Mirasvit_MstCore_Model_Logger::LOG_LEVEL_EXCEPTION);
+        return $this->log($object, $message, $content, Mirasvit_MstCore_Model_Logger::LOG_LEVEL_EXCEPTION, $trace, true);
     }
 
     public function logPerformance($object, $message, $time = null, $trace = false)
     {
-        $this->log($object, $message, $time, Mirasvit_MstCore_Model_Logger::LOG_LEVEL_PERFORMANCE);
+        return $this->log($object, $message, $time, Mirasvit_MstCore_Model_Logger::LOG_LEVEL_PERFORMANCE);
     }
 
     protected function _getLoggerObject()

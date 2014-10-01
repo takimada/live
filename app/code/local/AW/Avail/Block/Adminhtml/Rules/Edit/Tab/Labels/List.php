@@ -19,7 +19,7 @@
  *
  * @category   AW
  * @package    AW_Avail
- * @version    1.2.2
+ * @version    1.2.4
  * @copyright  Copyright (c) 2010-2012 aheadWorks Co. (http://www.aheadworks.com)
  * @license    http://ecommerce.aheadworks.com/AW-LICENSE.txt
  */
@@ -120,7 +120,7 @@ class AW_Avail_Block_Adminhtml_Rules_Edit_Tab_Labels_List extends Mage_Adminhtml
                 'label'   => Mage::helper('avail')->__('Delete'),
                 'onclick' => 'answer.del(this)',
                 'class'   => 'delete'
-            ))->toHtml()
+            ))
         );
 
         $this->setChild('addButton', $this->getLayout()->createBlock('adminhtml/widget_button')
@@ -128,7 +128,7 @@ class AW_Avail_Block_Adminhtml_Rules_Edit_Tab_Labels_List extends Mage_Adminhtml
                 'label'   => Mage::helper('avail')->__('Add New Rule'),
                 'onclick' => 'answer.add(this)',
                 'class'   => 'add'
-            ))->toHtml()
+            ))
         );
         return parent::_prepareLayout();
     }

@@ -37,7 +37,7 @@ Whoops, it looks like you have an invalid PHP version.</h3></div><p>Magento supp
 /**
  * Error reporting
  */
-error_reporting(E_ALL | E_STRICT);
+error_reporting(E_ALL);
 
 /**
  * Compilation includes configuration file
@@ -46,7 +46,7 @@ define('MAGENTO_ROOT', getcwd());
 
 $compilerConfig = MAGENTO_ROOT . '/includes/config.php';
 if (file_exists($compilerConfig)) {
-    include $compilerConfig;
+   // include $compilerConfig;
 }
 
 $mageFilename = MAGENTO_ROOT . '/app/Mage.php';
@@ -69,10 +69,10 @@ if (file_exists($maintenanceFile)) {
 require_once $mageFilename;
 
 #Varien_Profiler::enable();
-
-if (isset($_SERVER['MAGE_IS_DEVELOPER_MODE'])) {
-    Mage::setIsDeveloperMode(true);
-}
+//
+//if (isset($_SERVER['MAGE_IS_DEVELOPER_MODE'])) {
+//    Mage::setIsDeveloperMode(true);
+//}
 
 ini_set('display_errors', 1);
 

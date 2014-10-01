@@ -9,9 +9,9 @@
  *
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
- * @version   2.2.8
- * @revision  277
- * @copyright Copyright (C) 2013 Mirasvit (http://mirasvit.com/)
+ * @version   2.3.1
+ * @revision  710
+ * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
  */
 
 
@@ -343,7 +343,7 @@ class Mirasvit_MstCore_Model_Image extends Mage_Core_Model_Abstract
 			return $this;
 		}
 
-		//если высота не задана, мы сами ее вычисляем
+		//ÐµÑÐ»Ð¸ Ð²ÑÑÐ¾ÑÐ° Ð½Ðµ Ð·Ð°Ð´Ð°Ð½Ð°, Ð¼Ñ ÑÐ°Ð¼Ð¸ ÐµÐµ Ð²ÑÑÐ¸ÑÐ»ÑÐµÐ¼
         if ($this->_height == null) {
             $ratio = $this->_width / $this->getImageProcessor()->getOriginalWidth();
             if ($ratio > 1) {

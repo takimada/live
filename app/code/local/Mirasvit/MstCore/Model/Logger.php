@@ -9,9 +9,9 @@
  *
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
- * @version   2.2.8
- * @revision  277
- * @copyright Copyright (C) 2013 Mirasvit (http://mirasvit.com/)
+ * @version   2.3.1
+ * @revision  710
+ * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
  */
 
 
@@ -33,17 +33,41 @@ class Mirasvit_MstCore_Model_Logger extends Mage_Core_Model_Abstract
         $this->_init('mstcore/logger');
     }
 
+    public function save()
+    {
+        if ($this->isDeleted()) {
+            return $this->delete();
+        }
+
+        try {
+            $this->_beforeSave();
+            if ($this->_dataSaveAllowed) {
+                $this->_getResource()->save($this);
+                $this->_afterSave();
+            }
+        } catch (Exception $e) {
+            throw $e;
+        }
+        return $this;
+    }
+
     public function clean()
     {
-        $date = new Zend_Date();
-        $date->subDay(1);
+        $resource   = Mage::getSingleton('core/resource');
+        $connection = $resource->getConnection('core_write');
 
-        $collection = Mage::getModel('mstcore/logger')->getCollection()
-            ->addFieldToFilter('created_at', array('lt' => $date->toString('Y-MM-dd H:mm:s')));
+        $select = $connection->select()->from($resource->getTableName('mstcore/logger'), array('log_id'))
+            ->limit(1, 1000)
+            ->order('log_id desc');
+        $lastId = intval($connection->fetchOne($select));
 
-        foreach($collection as $entry) {
-            $entry->delete();
+        if ($lastId) {
+            $connection->delete(
+                $resource->getTableName('mstcore/logger'),
+                array('log_id < '.intval($lastId + 500))
+            );
         }
+
         return $this;
     }
 }

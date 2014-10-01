@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Mirasvit_SearchIndex>
-            <version>1.0.4</version>
+            <version>1.0.5.1</version>
         </Mirasvit_SearchIndex>
     </modules>
     <global>
@@ -14,6 +14,13 @@
                 </rewrite>
             </catalogsearch>
 
+            <!-- uncomment for enable extension for Global Search in Magento Admin !-->
+            <!-- <catalogsearch_resource>
+                <rewrite>
+                    <search_collection>Mirasvit_SearchIndex_Model_Catalogsearch_Resource_Search_Collection</search_collection>
+                </rewrite>
+            </catalogsearch_resource> -->
+
             <searchindex>
                 <class>Mirasvit_SearchIndex_Model</class>
                 <resourceModel>searchindex_resource</resourceModel>
@@ -21,6 +28,11 @@
 
             <searchindex_resource>
                 <class>Mirasvit_SearchIndex_Model_Resource</class>
+                <entities>
+                    <index>
+                        <table>m_searchindex</table>
+                    </index>
+                </entities>
             </searchindex_resource>
         </models>
         <helpers>
@@ -41,22 +53,14 @@
             </searchindex>
         </blocks>
         <events>
-            <cms_page_save_commit_after>
+            <catalogsearch_index_process_complete>
                 <observers>
-                    <index>
+                    <searchindex_index_process_complete>
                         <class>searchindex/observer</class>
-                        <method>processCmsPageSave</method>
-                    </index>
+                        <method>onIndexProcessComplete</method>
+                    </searchindex_index_process_complete>
                 </observers>
-            </cms_page_save_commit_after>
-            <cms_page_delete_commit_after>
-                <observers>
-                    <index>
-                        <class>searchindex/observer</class>
-                        <method>processCmsPageDelete</method>
-                    </index>
-                </observers>
-            </cms_page_delete_commit_after>
+            </catalogsearch_index_process_complete>
         </events>
     </global>
     <frontend>
@@ -87,6 +91,13 @@
         </routers>
     </frontend>
     <adminhtml>
+        <layout>
+            <updates>
+                <searchindex module="searchindex">
+                    <file>searchindex.xml</file>
+                </searchindex>
+            </updates>
+        </layout>
         <acl>
             <all>
                 <title>Allow Everything</title>
@@ -123,15 +134,11 @@
     </admin>
     <default>
         <searchindex>
-            <catalog>
-                <title>Catalog</title>
-            </catalog>
-            <cms>
-                <title>Other Results</title>
-            </cms>
-            <awblog>
-                <title>Aheadworks Blog</title>
-            </awblog>
+            <merge>
+                <match_expr>/[a-zA-z0-9]*-[a-zA-z0-9]*/</match_expr>
+                <replace_expr>/-/</replace_expr>
+                <replace_char></replace_char>
+            </merge>
         </searchindex>
     </default>
 </config>

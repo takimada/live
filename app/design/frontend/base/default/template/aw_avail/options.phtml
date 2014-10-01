@@ -19,7 +19,7 @@
  *
  * @category   AW
  * @package    AW_Avail
- * @version    1.2.2
+ * @version    1.2.4
  * @copyright  Copyright (c) 2010-2012 aheadWorks Co. (http://www.aheadworks.com)
  * @license    http://ecommerce.aheadworks.com/AW-LICENSE.txt
  */
@@ -42,6 +42,7 @@
             if (element.prevSetting) {
                 prevConfig = element.prevSetting.options[element.prevSetting.selectedIndex];
             }
+
             if (options) {
                 var index = 1;
                 for (var i = 0; i < options.length; i++) {
@@ -56,14 +57,19 @@
                     } else {
                         allowedProducts = options[i].products.clone();
                     }
+
                     if (allowedProducts.size() > 0) {
-                        options[i].allowedProducts = allowedProducts;
                         var instock = ' <?php echo $this->__('Out of stock') ?>';
-                        for (var j = 0; j < options[i].stock.length; j++) {
+                        for (var j = 0; j < options[i].products.length; j++) {
+                            if (allowedProducts.indexOf(options[i].products[j]) < 0) {
+                                continue;
+                            }
                             if (options[i].stock[j] > 0) {
                                 instock = ' <?php echo $this->__('In stock') ?>';
                             }
                         }
+
+                        options[i].allowedProducts = allowedProducts;
                         element.options[index] = new Option(this.getOptionLabel(options[i], options[i].price) + instock, options[i].id);
                         element.options[index].config = options[i];
                         index++;
@@ -82,15 +88,17 @@
             }
             for (var i = 0; i < element.options.length; i++) {
                 if (element.options[i].config) {
-
+                    var optionConfig = element.options[i].config
                     var instock = ' <?php echo $this->__('Out of stock') ?>';
-                    for (var j = 0; j < element.options[i].config.stock.length; j++) {
-                        if (element.options[i].config.stock[j] > 0) {
+                    for (var j = 0; j < optionConfig.products.length; j++) {
+                        if (optionConfig.allowedProducts.indexOf(optionConfig.products[j]) < 0) {
+                            continue;
+                        }
+                        if (optionConfig.stock[j] > 0) {
                             instock = ' <?php echo $this->__('In stock') ?>';
                         }
                     }
-
-                    element.options[i].text = this.getOptionLabel(element.options[i].config, element.options[i].config.price - selectedPrice) + instock;
+                    element.options[i].text = this.getOptionLabel(optionConfig, optionConfig.price - selectedPrice) + instock;
                 }
             }
             //AJAX REQUEST to controller if selected element have only 1 assocated product

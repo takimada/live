@@ -9,19 +9,27 @@
  *
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
- * @version   2.2.8
- * @revision  277
- * @copyright Copyright (C) 2013 Mirasvit (http://mirasvit.com/)
+ * @version   2.3.1
+ * @revision  710
+ * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
  */
 
 
-
-
+/**
+ * ÐÑÐ²ÐµÑÐ°ÐµÑ Ð·Ð° Ð¿Ð¾ÑÑÑÐ¾ÐµÐ½Ð¸Ðµ Ð¸Ð½Ð´ÐµÐºÑÐ° ÑÐ»Ð¾Ð² (ÑÐ°Ð±Ð»Ð¸ÑÐ° m_misspell)
+ *
+ * @category Mirasvit
+ * @package  Mirasvit_Misspell
+ */
 class Mirasvit_Misspell_Model_Indexer extends Varien_Object
 {
     protected $_likeTables = array(
         'catalogsearch_fulltext',
         'm_searchindex_',
+        'catalog_product_entity_text',
+        'catalog_product_entity_varchar',
+        'catalog_category_entity_text',
+        'catalog_category_entity_varchar',
     );
 
     public function reindexAll()
@@ -37,7 +45,7 @@ class Mirasvit_Misspell_Model_Indexer extends Varien_Object
         Mage::dispatchEvent('misspell_indexer_prepare', array('obj' => $obj));
 
         foreach ($obj->getData() as $key => $string) {
-            $this->_split($string, $preresults);
+            $this->_split($string, $preresults, 0);
         }
 
         foreach ($tables as $table) {
@@ -58,10 +66,13 @@ class Mirasvit_Misspell_Model_Indexer extends Varien_Object
                 continue;
             }
 
+            foreach ($columns as $idx => $col) {
+                $columns[$idx] = '`'.$col.'`';
+            }
+
             $select      = $connection->select();
             $fromColumns = new Zend_Db_Expr('CONCAT('.implode(",' ',", $columns).') as data_index');
             $select->from($table, $fromColumns);
-
 
             $result = $connection->query($select);
             while ($row = $result->fetch()) {
@@ -96,7 +107,7 @@ class Mirasvit_Misspell_Model_Indexer extends Varien_Object
         return count($preresults);
     }
 
-    protected function _split($string, &$results)
+    protected function _split($string, &$results, $increment = 1)
     {
         $helper = Mage::helper('misspell/string');
         $string = $helper->cleanString($string);
@@ -107,9 +118,9 @@ class Mirasvit_Misspell_Model_Indexer extends Varien_Object
                 && !is_numeric($word)) {
                 $word = $helper->strtolower($word);
                 if (!isset($results[$word])) {
-                    $results[$word] = 1;
+                    $results[$word] = $increment;
                 } else {
-                    $results[$word] ++;
+                    $results[$word] += $increment;
                 }
             }
         }

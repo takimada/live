@@ -19,7 +19,7 @@
  *
  * @category   AW
  * @package    AW_Avail
- * @version    1.2.2
+ * @version    1.2.4
  * @copyright  Copyright (c) 2010-2012 aheadWorks Co. (http://www.aheadworks.com)
  * @license    http://ecommerce.aheadworks.com/AW-LICENSE.txt
  */
@@ -71,8 +71,8 @@ class AW_Avail_Block_Adminhtml_Rules_Edit_Tab_Main extends Mage_Adminhtml_Block_
             'label' => Mage::helper('avail')->__('Rule Priority'),
             'title' => Mage::helper('avail')->__('Rule Priority'),
             'required' => false,
-            'after_element_html' => Mage::helper('avail')->__(
-                'Note, rules with greater priority value are processed first'
+            'note' => Mage::helper('avail')->__(
+                'Rules with greater priority value are processed first'
             )
         ));
         

@@ -9,9 +9,9 @@
  *
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
- * @version   2.2.8
- * @revision  277
- * @copyright Copyright (C) 2013 Mirasvit (http://mirasvit.com/)
+ * @version   2.3.1
+ * @revision  710
+ * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
  */
 
 
@@ -22,11 +22,15 @@ class Mirasvit_MstCore_Block_System_Config_Form_Extensions extends Mage_Adminhtm
         $html = $this->_getHeaderHtml($element);
 
         $html .= '<table class="form-list">';
-        $html .= '<tr><th style="padding: 5px;">Extension</th><th style="padding: 5px;">Your Version</th><th style="padding: 5px;">Latest Version</th></tr>';
+        $html .= '<tr><th style="padding: 5px;">Extension</th><th style="padding: 5px;">Your Version</th><th style="padding: 5px;">Latest Version</th><th></th></tr>';
         foreach ($this->getExtensions() as $extension) {
             $html .= $this->_renderExtension($extension);
         }
         $html .= '</table>';
+
+        $url = Mage::getSingleton('adminhtml/url')->getUrl('mstcore/adminhtml_validator/index', array('modules' => ''));
+
+        $html .= '<br><button onclick="window.location=\''.$url.'\'" type="button"><span>Run validation tests for all extensions</span></button>';
 
         $html .= $this->_getFooterHtml($element);
 
@@ -39,6 +43,19 @@ class Mirasvit_MstCore_Block_System_Config_Form_Extensions extends Mage_Adminhtm
         $tds[] = '<a href="'.$ext->getUrl().'">'.$ext->getName().'</a>';
         $tds[] = $ext->getVersion();
         $tds[] = $ext->getLatest();
+
+
+        $modules = array();
+        $path = $ext->getPath();
+        $path = explode('|', $path);
+        foreach ($path as $p) {
+            $p = explode('/', $p);
+            $modules[] = $p[0];
+        }
+        $modules = implode(',', $modules);
+        $url = Mage::getSingleton('adminhtml/url')->getUrl('mstcore/adminhtml_validator/index', array('modules' => $modules));
+
+        $tds[] = '<button onclick="window.location=\''.$url.'\'" type="button"><span>Run validation tests</span></button>';
         $tds[] = '';
 
         $html = '<tr>';
@@ -68,10 +85,12 @@ class Mirasvit_MstCore_Block_System_Config_Form_Extensions extends Mage_Adminhtm
             }
 
             $result[$extension['s']] = new Varien_Object(array(
-                'version' => $version,
-                'name'    => $info['name'],
-                'url'     => $info['url'],
-                'latest'  => $info['version'].'.'.$info['revision'],
+                'extension' => $extension['s'],
+                'version'   => $version,
+                'name'      => $info['name'],
+                'url'       => $info['url'],
+                'latest'    => $info['version'].'.'.$info['revision'],
+                'path'      => $extension['p'],
             ));
         }
         return $result;

@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Mirasvit_SearchSphinx>
-            <version>2.2.8</version>
+            <version>2.3.1</version>
         </Mirasvit_SearchSphinx>
     </modules>
     <global>
@@ -14,6 +14,14 @@
 
             <searchsphinx_resource>
                 <class>Mirasvit_SearchSphinx_Model_Resource</class>
+                <entities>
+                    <synonym>
+                        <table>m_searchsphinx_synonym</table>
+                    </synonym>
+                    <stopword>
+                        <table>m_searchsphinx_stopword</table>
+                    </stopword>
+                </entities>
             </searchsphinx_resource>
         </models>
         <helpers>
@@ -42,8 +50,27 @@
                     </searchsphinx_indexer_prepare>
                 </observers>
             </misspell_indexer_prepare>
+            <mstcore_toolbar_prepare>
+                <observers>
+                    <searchsphinx_toolbar_prepare>
+                        <class>searchsphinx/observer</class>
+                        <method>onMstCoreToolbarPrepare</method>
+                    </searchsphinx_toolbar_prepare>
+                </observers>
+            </mstcore_toolbar_prepare>
         </events>
     </global>
+    <frontend>
+        <routers>
+            <searchsphinx>
+                <use>standard</use>
+                <args>
+                    <module>Mirasvit_SearchSphinx</module>
+                    <frontName>searchsphinx</frontName>
+                </args>
+            </searchsphinx>
+        </routers>
+    </frontend>
     <adminhtml>
         <acl>
             <all>
@@ -84,20 +111,18 @@
             <general>
                 <indexer_expr>0 3 * * *</indexer_expr>
                 <indexer_delta_expr>*/15 * * * *</indexer_delta_expr>
+                <host>localhost</host>
+                <port>9315</port>
+                <external_host>localhost</external_host>
+                <external_port>9315</external_port>
             </general>
             <advanced>
                 <match_mode>4</match_mode>
-                <index>default</index>
-                <host>localhost</host>
-                <port>9315</port>
-                <stopwords>a:18:{s:18:"_1356783045123_123";a:1:{s:8:"stopword";s:1:"a";}s:18:"_1356783046202_202";a:1:{s:8:"stopword";s:2:"an";}s:18:"_1356783055402_402";a:1:{s:8:"stopword";s:3:"and";}s:17:"_1356783057097_97";a:1:{s:8:"stopword";s:3:"are";}s:18:"_1356783057641_641";a:1:{s:8:"stopword";s:2:"as";}s:18:"_1356783079314_314";a:1:{s:8:"stopword";s:2:"at";}s:18:"_1356783330579_579";a:1:{s:8:"stopword";s:2:"be";}s:18:"_1356783331163_163";a:1:{s:8:"stopword";s:3:"but";}s:18:"_1356783331714_714";a:1:{s:8:"stopword";s:2:"by";}s:18:"_1356783348578_578";a:1:{s:8:"stopword";s:3:"for";}s:17:"_1356783349033_33";a:1:{s:8:"stopword";s:2:"if";}s:18:"_1356783349530_530";a:1:{s:8:"stopword";s:2:"in";}s:18:"_1356783349986_986";a:1:{s:8:"stopword";s:4:"into";}s:18:"_1356783350497_497";a:1:{s:8:"stopword";s:2:"is";}s:18:"_1356783366529_529";a:1:{s:8:"stopword";s:2:"no";}s:17:"_1356783367041_41";a:1:{s:8:"stopword";s:3:"not";}s:18:"_1356783374673_673";a:1:{s:8:"stopword";s:2:"of";}s:17:"_1356783387018_18";a:1:{s:8:"stopword";s:2:"or";}}</stopwords>
-                <synonyms>a:3:{s:18:"_1356783397187_187";a:2:{s:4:"word";s:2:"PC";s:8:"synonyms";s:27:"computer, personal computer";}s:18:"_1356783482994_994";a:2:{s:4:"word";s:4:"feed";s:8:"synonyms";s:8:"foot, ft";}s:18:"_1356784958594_594";a:2:{s:4:"word";s:2:"TV";s:8:"synonyms";s:10:"television";}}</synonyms>
-            </advanced>
-            <dev>
+                <result_limit>0</result_limit>
                 <search_template>and</search_template>
                 <wildcard>1</wildcard>
                 <quorum>90</quorum>
-            </dev>
+            </advanced>
         </searchsphinx>
     </default>
     <crontab>
@@ -118,6 +143,15 @@
                     <model>searchsphinx/observer::reindexDelta</model>
                 </run>
             </searchsphinx_reindex_delta_job>
+
+            <searchsphinx_check_daemon>
+                <schedule>
+                    <cron_expr>* * * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>searchsphinx/observer::checkDaemon</model>
+                </run>
+            </searchsphinx_check_daemon>
         </jobs>
     </crontab>
 </config>

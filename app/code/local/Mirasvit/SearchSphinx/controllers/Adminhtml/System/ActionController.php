@@ -9,24 +9,24 @@
  *
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
- * @version   2.2.8
- * @revision  277
- * @copyright Copyright (C) 2013 Mirasvit (http://mirasvit.com/)
+ * @version   2.3.1
+ * @revision  710
+ * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
  */
 
 
-/*******************************************
-Mirasvit
-This source file is subject to the Mirasvit Software License, which is available at http://mirasvit.com/license/.
-Do not edit or add to this file if you wish to upgrade the to newer versions in the future.
-If you wish to customize this module for your needs
-Please refer to http://www.magentocommerce.com for more information.
-@category Mirasvit
-@copyright Copyright (C) 2012 Mirasvit (http://mirasvit.com.ua), Vladimir Drok <dva@mirasvit.com.ua>, Alexander Drok<alexander@mirasvit.com.ua>
-*******************************************/
+/**
+ * @category Mirasvit
+ * @package  Mirasvit_SearchSphinx
+ */
 class Mirasvit_SearchSphinx_Adminhtml_System_ActionController extends Mage_Adminhtml_Controller_Action
 {
-    protected function _getEngine()
+    protected function _getNativeEngine()
+    {
+        return Mage::getSingleton('searchsphinx/engine_sphinx_native');
+    }
+
+    protected function _getExternalEngine()
     {
         return Mage::getSingleton('searchsphinx/engine_sphinx');
     }
@@ -35,9 +35,9 @@ class Mirasvit_SearchSphinx_Adminhtml_System_ActionController extends Mage_Admin
     {
         $result = array();
         try {
-            $this->_getEngine()->reindex();
+            $message = $this->_getNativeEngine()->reindex();
 
-            $result['message'] = Mage::helper('searchsphinx')->__('Index has been successfully rebuilt');
+            $result['message'] = $message;
         } catch(Exception $e) {
             $result['message'] = nl2br($e->getMessage());
         }
@@ -48,7 +48,7 @@ class Mirasvit_SearchSphinx_Adminhtml_System_ActionController extends Mage_Admin
     public function reindexdeltaAction()
     {
         try {
-            $this->_getEngine()->reindexDelta();
+            $this->_getNativeEngine()->reindexDelta();
 
             $this->getResponse()->setBody('Reindex Delta completed!');
         } catch(Exception $e) {
@@ -60,15 +60,29 @@ class Mirasvit_SearchSphinx_Adminhtml_System_ActionController extends Mage_Admin
     {
         try {
             $result = array();
-            if ($this->_getEngine()->isSearchdRunning()) {
-                $this->_getEngine()->stop();
+            if ($this->_getNativeEngine()->isSearchdRunning()) {
+                $this->_getNativeEngine()->stop();
                 $result['message']   = Mage::helper('searchsphinx')->__('Stopped');
                 $result['btn_label'] = Mage::helper('searchsphinx')->__('Start Sphinx daemon');
             } else {
-                $this->_getEngine()->start();
+                $this->_getNativeEngine()->start();
                 $result['message']   = Mage::helper('searchsphinx')->__('Launched');
                 $result['btn_label'] = Mage::helper('searchsphinx')->__('Stop Sphinx daemon');
             }
+        } catch (Exception $e) {
+            $result['message'] = nl2br($e->getMessage());
+        }
+
+        $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+    }
+
+    public function generateAction()
+    {
+        $result = array();
+        try {
+            $path = $this->_getExternalEngine()->makeConfigFile();
+
+            $result['message'] = Mage::helper('searchsphinx')->__('Sphinx configuration file: '.$path);
         } catch(Exception $e) {
             $result['message'] = nl2br($e->getMessage());
         }

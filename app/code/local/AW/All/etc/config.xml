@@ -2,7 +2,7 @@
 <config>
     <modules>
         <AW_All>
-            <version>2.3.0</version><platform>ce</platform>
+            <version>2.3.1</version><platform>ce</platform>
         </AW_All>
     </modules>
 
@@ -118,7 +118,7 @@
                 <observers>
                     <awall_tabs_sorting>
                         <type>singleton</type>
-                        <class>awall/tabsSorting</class>
+                        <class>awall/observer</class>
                         <method>prepareAWTabs</method>
                     </awall_tabs_sorting>
                 </observers>

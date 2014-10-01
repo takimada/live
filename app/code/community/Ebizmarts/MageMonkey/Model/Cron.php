@@ -32,7 +32,7 @@ class Ebizmarts_MageMonkey_Model_Cron
 	 *
 	 * @return void
 	 */
-	public function processImportJobs()
+	public function bulksyncImportSubscribers()
 	{
 		$job = $this->_getJob('Import');
 		if(is_null($job)){
@@ -214,7 +214,7 @@ class Ebizmarts_MageMonkey_Model_Cron
 	 *
 	 * @return Ebizmarts_MageMonkey_Model_Cron
 	 */
-	public function processExportJobs()
+	public function bulksyncExportSubscribers()
 	{
 		$this->_limit = (int)Mage::getStoreConfig("monkey/general/cron_export");
 		$job = $this->_getJob('Export');
@@ -415,11 +415,89 @@ class Ebizmarts_MageMonkey_Model_Cron
 	 *
 	 *
 	 */
-	public function processAutoExportJobs()
+	public function autoExportSubscribers()
 	{
-		if (Mage::helper('monkey')->config('ecommerce360') == 3 && Mage::getModel('monkey/ecommerce360')->isActive()){
-			Mage::getModel('monkey/ecommerce360')->autoExportJobs();
-		}
+        $allStores = Mage::app()->getStores();
+        foreach($allStores as $storeId => $val) {
+            if (Mage::getStoreConfig("monkey/general/ecommerce360",$storeId) == 3 && Mage::getModel('monkey/ecommerce360')->isActive()){
+                Mage::getModel('monkey/ecommerce360')->autoExportJobs($storeId);
+            }
+        }
     }
+    public function processAutoExportOrders()
+    {
+        $allStores = Mage::app()->getStores();
+        foreach($allStores as $storeId => $val)
+        {
+            if(Mage::getStoreConfig("monkey/general/active",$storeId)) {
+                $this->_exportOrders($storeId);
+            }
+        }
+    }
+    public function sendordersAsync()
+    {
+        $collection = Mage::getModel('monkey/asyncorders')->getCollection();
+        $collection->addFieldToFilter('proccessed',array('eq'=>0));
+        $storeId = null;
+        foreach($collection as $item)
+        {
+            $info = (array)unserialize($item->getInfo());
+            $orderId = $info['order_id'];
+            unset($info['order_id']);
+            if($storeId!=$info['store_id']) {
+                $api = Mage::getSingleton('monkey/api',array('store' => $info['store_id']));
+                $storeId = $info['store_id'];
+            }
+            if(isset($info['campaign_id'])) {
+                $api->campaignEcommOrderAdd($info);
+            }
+            else {
+                $api->ecommOrderAdd($info);
+                $info['campaign_id'] = null;
+            }
+            $item->setProccessed(1)->save();
 
+            Mage::getModel('monkey/ecommerce')
+                ->setOrderIncrementId($info['id'])
+                ->setOrderId($orderId)
+                ->setMcCampaignId($info['campaign_id'])
+                ->setMcEmailId($info['email'])
+                ->setCreatedAt( Mage::getModel('core/date')->gmtDate() )
+                ->setStoreId($info['store_id'])
+                ->save();
+        }
+    }
+    public function cleanordersAsync()
+    {
+        $collection = Mage::getModel('monkey/asyncorders')->getCollection();
+        $collection->addFieldToFilter('proccessed',array('eq'=>1));
+        foreach($collection as $item)
+        {
+            $item->delete();
+        }
+    }
+    public function sendSubscribersAsync()
+    {
+        $collection = Mage::getModel('monkey/asyncsubscribers')->getCollection();
+        $collection->addFieldToFilter('proccessed',array('eq'=>0));
+        foreach($collection as $item)
+        {
+            $mergeVars = unserialize($item->getMapfields());
+            $listId = $item->getLists();
+            $email = $item->getEmail();
+            $isConfirmNeed = $item->getConfirm();
+            Mage::getSingleton('monkey/api')->listSubscribe($listId, $email, $mergeVars, 'html', $isConfirmNeed);
+            $item->setProccessed(1)->save();
+        }
+
+    }
+    public function cleanSubscribersAsync()
+    {
+        $collection = Mage::getModel('monkey/asyncsubscribers')->getCollection();
+        $collection->addFieldToFilter('proccessed',array('eq'=>1));
+        foreach($collection as $item)
+        {
+            $item->delete();
+        }
+    }
 }

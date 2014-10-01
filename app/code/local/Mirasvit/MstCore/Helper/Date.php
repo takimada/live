@@ -9,21 +9,22 @@
  *
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
- * @version   2.2.8
- * @revision  277
- * @copyright Copyright (C) 2013 Mirasvit (http://mirasvit.com/)
+ * @version   2.3.1
+ * @revision  710
+ * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
  */
 
 
 class Mirasvit_MstCore_Helper_Date extends Mage_Core_Helper_Data
 {
-    public function formatDateForSave($object, $field, $format = false) {
-        $_formated     = $object->getData($field . '_is_formated');
-        if (!$_formated && $object->hasData($field)) {
+    public function formatDateForSave($object, $field, $format = false)
+    {
+        $formated = $object->getData($field . '_is_formated');
+        if (!$formated && $object->hasData($field)) {
             try {
                 $value = $this->_formatDateForSave($object->getData($field), $format);
             } catch (Exception $e) {
-                throw Mage::exception('Mirasvit_MstCore', Mage::helper('mstcore')->__('Invalid date'));
+                throw Mage::exception('Mage_Core', Mage::helper('mstcore')->__('Invalid date'));
             }
 
             if (is_null($value)) {
@@ -49,27 +50,26 @@ class Mirasvit_MstCore_Helper_Date extends Mage_Core_Helper_Data
         if (empty($date)) {
             return null;
         }
+
         if ($format) {
             $date = Mage::app()->getLocale()->date($date,
                $format,
                null, false
             );
-        }
-        // unix timestamp given - simply instantiate date object
-        elseif (preg_match('/^[0-9]+$/', $date)) {
+        } elseif (preg_match('/^[0-9]+$/', $date)) {
+            // unix timestamp given - simply instantiate date object
             $date = new Zend_Date((int)$date);
-        }
-        // international format
-        else if (preg_match('#^\d{4}-\d{2}-\d{2}( \d{2}:\d{2}:\d{2})?$#', $date)) {
+        } else if (preg_match('#^\d{4}-\d{2}-\d{2}( \d{2}:\d{2}:\d{2})?$#', $date)) {
+            // international format
             $zendDate = new Zend_Date();
-            $date = $zendDate->setIso($date);
-        }
-        // parse this date in current locale, do not apply GMT offset
-        else {
+            $date     = $zendDate->setIso($date);
+        } else {
+            // parse this date in current locale, do not apply GMT offset
             $date = Mage::app()->getLocale()->date($date,
                Mage::app()->getLocale()->getDateFormat(Mage_Core_Model_Locale::FORMAT_TYPE_SHORT),
                null, false
             );
+
         }
         return $date->toString(Varien_Date::DATETIME_INTERNAL_FORMAT);
     }

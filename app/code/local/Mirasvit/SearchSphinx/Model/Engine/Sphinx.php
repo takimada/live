@@ -9,31 +9,32 @@
  *
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
- * @version   2.2.8
- * @revision  277
- * @copyright Copyright (C) 2013 Mirasvit (http://mirasvit.com/)
+ * @version   2.3.1
+ * @revision  710
+ * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
  */
 
 
-
 if (!@class_exists('SphinxClient')) {
-    $dir = Mage::getModuleDir('', 'Mirasvit_SearchSphinx').DS.'Model';
-    include $dir.DS.'sphinxapi.php';
+    include Mage::getBaseDir().DS.'lib'.DS.'Sphinx'.DS.'sphinxapi.php';
 }
 
+/**
+ * ÐÐ»Ð°ÑÑ ÑÐµÐ°Ð»Ð¸Ð·ÑÐµÑ Ð¼ÐµÑÐ¾Ð´Ñ Ð´Ð»Ñ:
+ *     Ð¾ÑÐ¿ÑÐ°Ð²ÐºÐ° Ð·Ð°Ð¿ÑÐ¾ÑÐ¾Ð² Ð½Ð° Ð¿Ð¾Ð¸ÑÐº
+ *     ÑÐ±Ð¾ÑÐºÐ° ÑÐ°Ð¹Ð»Ð° ÐºÐ¾Ð½ÑÐ¸Ð³ÑÑÐ°ÑÐ¸Ð¸
+ * ÐÐ°Ð·Ð°Ð²ÑÐ¹ ÐºÐ»Ð°ÑÑ Ð´Ð»Ñ ÑÐ°Ð±Ð¾ÑÑ Ð² ÑÐµÐ¶Ð¸Ð¼Ðµ Search Sphinx (on another server)
+ *
+ * @category Mirasvit
+ * @package  Mirasvit_SearchSphinx
+ */
 class Mirasvit_SearchSphinx_Model_Engine_Sphinx extends Mirasvit_SearchIndex_Model_Engine
 {
-    const SEARCHD                   = 'searchd';
-    const INDEXER                   = 'indexer';
-    const REINDEX_SUCCESS_MESSAGE   = 'rotating indices: succesfully sent SIGHUP to searchd';
     const PAGE_SIZE                 = 1000;
-    const MAX_MATCHES               = 50000;
 
+    protected $_config              = null;
+    protected $_sphinxFilepath      = null;
     protected $_configFilepath      = null;
-    protected $_synonymsFilepath    = null;
-    protected $_stopwordsFilepath   = null;
-    protected $_indexerCommand      = null;
-    protected $_searchdCommand      = null;
     protected $_sphinxCfgTpl        = null;
     protected $_sphinxSectionCfgTpl = null;
 
@@ -42,28 +43,37 @@ class Mirasvit_SearchSphinx_Model_Engine_Sphinx extends Mirasvit_SearchIndex_Mod
 
     protected $_matchMode           = null;
 
+    protected $_io                  = null;
+
     public function __construct()
     {
-        $binPath = Mage::getStoreConfig('searchsphinx/advanced/bin_path');
+        $this->_config              = Mage::getSingleton('searchsphinx/config');
+        $this->_sphinxFilepath      = Mage::getBaseDir('var').DS.'sphinx';
+        $this->_configFilepath      = $this->_sphinxFilepath.DS.'sphinx.conf';
 
-        $this->_configFilepath      = Mage::getBaseDir('var').'/sphinx/sphinx.conf';
-        $this->_synonymsFilepath    = Mage::getBaseDir('var').'/sphinx/synonyms.txt';
-        $this->_stopwordsFilepath   = Mage::getBaseDir('var').'/sphinx/stopwords.txt';
-
-        $this->_indexerCommand      = $binPath.self::INDEXER;
-        $this->_searchdCommand      = $binPath.self::SEARCHD;
         $this->_sphinxCfgTpl        = Mage::getModuleDir('etc', 'Mirasvit_SearchSphinx').DS.'conf'.DS.'sphinx.conf';
         $this->_sphinxSectionCfgTpl = Mage::getModuleDir('etc', 'Mirasvit_SearchSphinx').DS.'conf'.DS.'section.conf';
 
-        $this->_spxHost             = Mage::getStoreConfig('searchsphinx/advanced/host');
-        $this->_spxPort             = Mage::getStoreConfig('searchsphinx/advanced/port');
-
-        $this->_spxHost             = $this->_spxHost ? $this->_spxHost : 'localhost';
-        $this->_spxPort             = intval($this->_spxPort ? $this->_spxPort : '9315');
+        $this->_spxHost             = Mage::getStoreConfig('searchsphinx/general/external_host');
+        $this->_spxPort             = Mage::getStoreConfig('searchsphinx/general/external_port');
+        $this->_basePath            = Mage::getStoreConfig('searchsphinx/general/external_path');
 
         $this->_matchMode           = Mage::getStoreConfig('searchsphinx/advanced/match_mode', 0);
+
+        $this->_io                  = Mage::helper('searchsphinx/io');
+
+        return $this;
     }
 
+    /**
+     * ÐÐ±Ð²ÐµÑÑÐºÐ° Ð´Ð»Ñ ÑÑÐ½ÐºÑÐ¸Ð¸ _query
+     *
+     * @param  string  $queryText Ð¿Ð¾Ð¸ÑÐºÐ¾Ð²ÑÐ¹ Ð·Ð°Ð¿ÑÐ¾Ñ (Ð² Ð¾ÑÐ¸Ð³Ð¸Ð½Ð°Ð»ÑÐ½Ð¾Ð¼ Ð²Ð¸Ð´Ðµ)
+     * @param  integer $store     ÐÐ ÑÐµÐºÑÑÐµÐ³Ð¾ Ð¼Ð°Ð³Ð°Ð·Ð¸Ð½Ð°
+     * @param  object  $index     Ð¸Ð½Ð´ÐµÐºÑ Ð¿Ð¾ ÐºÐ¾ÑÐ¾ÑÐ¾Ð¼Ñ Ð½ÑÐ¶Ð½Ð¾ Ð¿ÑÐ¾Ð²ÐµÑÑÐ¸ Ð¿Ð¾Ð¸ÑÐº
+     *
+     * @return array Ð¼Ð°ÑÐ¸Ð² ÐÐ ÐµÐ»ÐµÐ¼ÐµÐ½ÑÐ¾Ð², Ð³Ð´Ðµ ÐÐ - ÐºÐ»ÑÑ, ÑÐµÐ»ÐµÐ²Ð°Ð½ÑÐ½Ð¾ÑÑÑ Ð·Ð½Ð°ÑÐµÐ½Ð¸Ðµ
+     */
     public function query($queryText, $store, $index)
     {
         $indexCode  = $index->getCode();
@@ -77,37 +87,63 @@ class Mirasvit_SearchSphinx_Model_Engine_Sphinx extends Mirasvit_SearchIndex_Mod
         return $this->_query($queryText, $store, $indexCode, $primaryKey, $attributes);
     }
 
-    protected function _query($query, $storeId, $indexCode, $entityKey, $attributes, $offset = 1)
+    /**
+     * ÐÑÐ¿ÑÐ°Ð²Ð»ÑÐµÑ Ð¿Ð¾Ð´Ð³Ð¾ÑÐ¾Ð²Ð»ÐµÐ½Ð½ÑÐ¹ Ð·Ð°Ð¿ÑÐ¾Ñ Ð½Ð° ÑÑÐ¸Ð½ÐºÑ, Ð¸ Ð¿ÑÐµÐ¾Ð±ÑÐ°Ð·ÑÐµÑ Ð¾ÑÐ²ÐµÑ Ð² Ð½ÑÐ¶Ð½ÑÐ¹ Ð²Ð¸Ð´
+     *
+     * @param  string  $query Ð¿Ð¾Ð¸ÑÐºÐ¾Ð²ÑÐ¹ Ð·Ð°Ð¿ÑÐ¾Ñ (Ð² Ð¾ÑÐ¸Ð³Ð¸Ð½Ð°Ð»ÑÐ½Ð¾Ð¼ Ð²Ð¸Ð´Ðµ)
+     * @param  integer $storeId    ÐÐ ÑÐµÐºÑÑÐµÐ³Ð¾ Ð¼Ð°Ð³Ð°Ð·Ð¸Ð½Ð°
+     * @param  string  $indexCode  ÐÐ¾Ð´ Ð¸Ð½Ð´ÐµÐºÑÐ°  Ð¿Ð¾ ÐºÐ¾ÑÐ¾ÑÐ¾Ð¼Ñ Ð½ÑÐ¶Ð½Ð¾ Ð¿ÑÐ¾Ð²ÐµÑÑÐ¸ Ð¿Ð¾Ð¸ÑÐº (mage_catalog_product ...)
+     * @param  string  $primaryKey Primary Key Ð¸Ð½Ð´ÐµÐºÑÐ° (entity_id, category_id, post_id ...)
+     * @param  array   $attributes ÐÐ°ÑÐ¸Ð² Ð°ÑÑÐ¸Ð±ÑÑÐ¾Ð² Ñ Ð²ÐµÑÐ°Ð¼Ð¸
+     * @param  integer $offset     Ð¡ÑÑÐ°Ð½Ð¸ÑÐ°
+     *
+     * @return array Ð¼Ð°ÑÐ¸Ð² ÐÐ ÐµÐ»ÐµÐ¼ÐµÐ½ÑÐ¾Ð², Ð³Ð´Ðµ ÐÐ - ÐºÐ»ÑÑ, ÑÐµÐ»ÐµÐ²Ð°Ð½ÑÐ½Ð¾ÑÑÑ Ð·Ð½Ð°ÑÐµÐ½Ð¸Ðµ
+     */
+    protected function _query($query, $storeId, $indexCode, $primaryKey, $attributes, $offset = 1)
     {
+        $uid = Mage::helper('mstcore/debug')->start();
+
         $client = new SphinxClient();
-        $client->setMaxQueryTime(30);
-        $client->setLimits(($offset - 1) * self::PAGE_SIZE, self::PAGE_SIZE, 100000);
+        $client->setMaxQueryTime(5000); //5 seconds
+        $client->setLimits(($offset - 1) * self::PAGE_SIZE, self::PAGE_SIZE, $this->_config->getResultLimit());
         $client->setSortMode(SPH_SORT_RELEVANCE);
         $client->setMatchMode($this->_matchMode);
         $client->setServer($this->_spxHost, $this->_spxPort);
         $client->SetFieldWeights($attributes);
+
         if ($storeId) {
             $client->SetFilter('store_id', $storeId);
         }
 
-        $correctQuery = $this->_correctQuery($query);
-        if (!$correctQuery) {
+        $sphinxQuery = $this->_buildQuery($query, $storeId);
+        Mage::helper('mstcore/debug')->dump($uid, array('query' => $query, 'sphinxQuery' => $sphinxQuery));
+
+        if (!$sphinxQuery) {
             return array();
         }
 
-        $result = $client->query($correctQuery, $indexCode);
+        $sphinxResult = $client->query($sphinxQuery, $indexCode);
 
-        if ($result === false) {
+        Mage::helper('mstcore/debug')->dump($uid, array(
+                '$this->_matchMode' => $this->_matchMode,
+                '$this->_spxHost'   => $this->_spxHost,
+                '$this->_spxPort'   => $this->_spxPort,
+                '$attributes'       => $attributes,
+                'sphinxResult'      => $sphinxResult
+            )
+        );
+
+        if ($sphinxResult === false) {
             Mage::throwException($client->GetLastError()."\nQuery: ".$query);
-        } elseif ($result['total'] > 0) {
+        } elseif ($sphinxResult['total'] > 0) {
             $entityIds = array();
-            foreach ($result['matches'] as $data) {
-                $entityIds[$data['attrs'][$entityKey]] = $data['weight'];
+            foreach ($sphinxResult['matches'] as $data) {
+                $entityIds[$data['attrs'][strtolower($primaryKey)]] = $data['weight'];
             }
 
-            if ($result['total'] > $offset * self::PAGE_SIZE
-                && $offset * self::PAGE_SIZE < self::MAX_MATCHES) {
-                $newIds = $this->_query($query, $storeId, $indexCode, $entityKey, $attributes, $offset + 1);
+            if ($sphinxResult['total'] > $offset * self::PAGE_SIZE
+                && $offset * self::PAGE_SIZE < $this->_config->getResultLimit()) {
+                $newIds = $this->_query($query, $storeId, $indexCode, $primaryKey, $attributes, $offset + 1);
                 foreach ($newIds as $key => $value) {
                    $entityIds[$key] = $value;
                 }
@@ -116,14 +152,23 @@ class Mirasvit_SearchSphinx_Model_Engine_Sphinx extends Mirasvit_SearchIndex_Mod
             $entityIds = array();
         }
 
+        // $entityIds = $this->_normalize($entityIds);
+
+        Mage::helper('mstcore/debug')->end($uid, $entityIds);
+
         return $entityIds;
     }
 
     /**
-     * @param  string $query
+     * Ð¡ÑÑÐ¾Ð¸Ñ Ð·Ð°Ð¿ÑÐ¾Ñ Ðº ÑÑÐ¸Ð½ÐºÑÑ
+     * ÐÐ°Ð¿ÑÐ¾Ñ ÑÐ¾ÑÑÐ¾Ð¸Ñ Ð¸Ð· ÑÐµÐºÑÐ¸Ð¹ (..) & (..) & ..
+     *
+     * @param  string  $query   Ð¿Ð¾Ð»ÑÐ·Ð¾Ð²Ð°ÑÐµÐ»ÑÑÐºÐ¸Ð¹ Ð·Ð°Ð¿ÑÐ¾Ñ
+     * @param  integer $storeId
+     *
      * @return string
      */
-    protected function _correctQuery($query)
+    protected function _buildQuery($query, $storeId)
     {
         if ($this->_matchMode != SPH_MATCH_EXTENDED) {
             return $query;
@@ -134,89 +179,99 @@ class Mirasvit_SearchSphinx_Model_Engine_Sphinx extends Mirasvit_SearchIndex_Mod
             return substr($query, 1);
         }
 
+        // Search by field
         if (substr($query, 0, 1) == '@') {
             return $query;
         }
 
-        $query     = ' '.$query.' ';
-        $stopwords = unserialize(Mage::getStoreConfig('searchsphinx/advanced/stopwords'));
-        foreach ($stopwords as $value) {
-            $word  = trim($value['stopword']);
-            $query = str_replace(' '.$word.' ', '', $query);
+        $arQuery = Mage::helper('searchsphinx/query')->buildQuery($query, $storeId, true);
+
+        if (!is_array($arQuery)) {
+            return false;
         }
 
-        $result = '';
-        $keywords = array();
-        $keywords = $this->_getSphinxKeyword($query);
+        $result = array();
+        foreach ($arQuery as $key => $array) {
+            if ($key == 'not like') {
+                $result[] = '-'.$this->_buildWhere($key, $array);
+            } else {
 
-        $searchTemplate = Mage::getStoreConfig('searchsphinx/dev/search_template');
-        switch ($searchTemplate) {
-            case 'and':
-                $result = implode(' & ', $keywords);
-            break;
-
-            case 'or':
-                $result = implode(' | ', $keywords);
-            break;
-
-            case 'quorum':
-                $quorum = intval(Mage::getStoreConfig('searchsphinx/dev/quorum'));
-                $quorum = ceil(count($keywords) /  100 * $quorum);
-                $query = addslashes($query);
-                $result = '"'.$query.'" / '.$quorum;
-            break;
+                $result[] = $this->_buildWhere($key, $array);
+            }
+        }
+        if (count($result)) {
+            $query = '(' . join(' & ', $result) . ')';
         }
 
-        return $result;
+        return $query;
     }
 
     /**
-     * @param  string $sQuery
+     * Ð¡ÑÑÐ¾Ð¸Ñ ÑÐµÐºÑÐ¸Ð¸ Ð·Ð°Ð¿ÑÐ¾ÑÐ°
+     *
+     * @param  string $type  ÑÐ¸Ð¿ ÑÐµÐºÑÐ¸Ð¸ AND/OR
+     * @param  array  $array ÑÐ»Ð¾Ð²Ð° Ð´Ð»Ñ ÑÐµÐºÑÐ¸Ð¸
+     *
      * @return string
      */
-    protected function _getSphinxKeyword($query)
+    protected function _buildWhere($type, $array)
     {
-        $wildcard = Mage::getStoreConfig('searchsphinx/dev/wildcard');
-        $synonyms = unserialize(Mage::getStoreConfig('searchsphinx/advanced/synonyms'));
-        $query = strtolower($query);
-        foreach ($synonyms as $data) {
-            $to = strtolower($data['word']);
-            foreach (explode(',', $data['synonyms']) as $syn) {
-
-                $syn = strtolower(trim($syn));
-                $query = str_replace($syn, $to, $query);
+        if (!is_array($array)) {
+            if (substr($array, 0, 1) == ' ') {
+                return '('.$this->escapeSphinxQL($array).')';
+            } else {
+                return '(*'.$this->escapeSphinxQL($array).'*)';
             }
+
         }
 
-        $aRequestString = preg_split('/[\s,-]+/', $query, 5);
-        $wildcard = Mage::getStoreConfig('searchsphinx/dev/wildcard');
-        if ($aRequestString) {
-            $aKeyword = array();
-            foreach ($aRequestString as $sValue) {
-                if (strlen(trim($sValue)) >= 1) {
-                    if ($wildcard) {
-                        $aKeyword[] .= "(".$sValue." | *".$sValue."*)";
-                    } else {
-                        $aKeyword[] .= "(".$sValue.")";
-                    }
+        foreach ($array as $key => $subarray) {
+            if ($key == 'or') {
+                $array[$key] = $this->_buildWhere($type, $subarray);
+                if (is_array($array[$key])) {
+                    $array = '('.implode(' | ', $array[$key]).')';
                 }
+            } elseif ($key == 'and') {
+                $array[$key] = $this->_buildWhere($type, $subarray);
+                if (is_array($array[$key])) {
+                    $array = '('.implode(' & ', $array[$key]).')';
+                }
+            } else {
+                $array[$key] = $this->_buildWhere($type, $subarray);
             }
         }
-        return $aKeyword;
+
+        return $array;
+
     }
 
+    protected function escapeSphinxQL($string)
+    {
+        $from = array ('.', ' ', '\\', '(',')','|','-','!','@','~','"','&', '/', '^', '$', '=', "'");
+        $to   = array ('', ' ', '\\\\', '\(','\)','\|','\-','\!','\@','\~','\"', '\&', '\/', '\^', '\$', '\=', "\'");
+
+        return str_replace($from, $to, $string);
+    }
+
+    /**
+     * Ð¡Ð¾Ð±Ð¸ÑÐ°ÐµÑ Ð¸ ÑÐ¾ÑÑÐ°Ð½ÑÐµÑ ÐºÐ¾Ð½ÑÐ¸Ð³ ÑÐ°Ð¹Ð» Ð´Ð»Ñ ÑÐ°Ð±Ð¾ÑÑ ÑÑÐ¸Ð½ÐºÑÐ° (sphinx.conf)
+     * Ð¤Ð°Ð¹Ð» ÑÐ¾ÑÑÐ°Ð½ÑÐµÑÑÑÑ Ð² ../var/sphinx/sphinx.conf
+     * Ð¨Ð°Ð±Ð»Ð¾Ð½ ÐºÐ¾Ð½ÑÐ¸Ð³Ð° Ð½Ð°ÑÐ¾Ð´Ð¸ÑÑÑÑ Ð² ÑÐ°ÑÑÐ¸ÑÐµÐ½Ð¸Ð¸ etc/config/sphinx.conf
+     *
+     * @return string Ð¿Ð¾Ð»Ð½ÑÐ¹ Ð¿ÑÑÑ Ðº ÑÐ°Ð¹Ð»Ñ
+     */
     public function makeConfigFile()
     {
-        if (!file_exists(Mage::getBaseDir('var').DS.'sphinx')) {
-            mkdir(Mage::getBaseDir('var').DS.'sphinx');
+        if (!$this->_io->directoryExists($this->_sphinxFilepath)) {
+            $this->_io->mkdir($this->_sphinxFilepath);
         }
 
         $data = array(
             'time'      => date('d.m.Y H:i:s'),
             'host'      => $this->_spxHost,
             'port'      => $this->_spxPort,
-            'logdir'    => Mage::getBaseDir('var').DS.'sphinx',
-            'sphinxdir' => Mage::getBaseDir('var').DS.'sphinx',
+            'logdir'    => $this->_basePath,
+            'sphinxdir' => $this->_basePath,
         );
 
         $formater = new Varien_Filter_Template();
@@ -226,25 +281,48 @@ class Mirasvit_SearchSphinx_Model_Engine_Sphinx extends Mirasvit_SearchIndex_Mod
         $indexes = Mage::helper('searchindex/index')->getIndexes();
         foreach ($indexes as $index) {
             $indexer = $index->getIndexer();
-            $config  .= "\n".$this->_getSectionConfig($index->getCode(), $indexer);
+            $config  .= PHP_EOL.$this->_getSectionConfig($index->getCode(), $indexer);
         }
 
-        file_put_contents($this->_configFilepath, $config);
+        if ($this->_io->isWriteable($this->_configFilepath)) {
+            $this->_io->write($this->_configFilepath, $config);
+        } else {
+            if ($this->_io->fileExists($this->_configFilepath)) {
+                Mage::throwException(sprintf("File %s does not writeable", $this->_configFilepath));
+            } else {
+                Mage::throwException(sprintf("Directory %s does not writeable", $this->_sphinxFilepath));
+            }
+        }
 
-        $this->_makeSynonymsFile();
-        $this->_makeStopwordsFile();
-
-        return $this;
+        return $this->_configFilepath;
     }
 
     /**
-     * @todo mode to .conf template file
+     * Ð¡Ð¾Ð±Ð¸ÑÐ°ÐµÑ ÑÐµÐºÑÐ¸Ñ Ð´Ð»Ñ ÐºÐ¾Ð½ÑÐ¸Ð³ ÑÐ°Ð¹Ð»Ð°
+     * ÐÐ°Ð¶Ð´ÑÐ¹ Ð¸Ð½Ð´ÐµÐºÑ Ð¸Ð¼ÐµÐµÑ ÑÐ²Ð¾Ñ ÑÐµÐºÑÐ¸Ñ
+     * Ð¡ÐµÐºÑÐ¸Ñ ÑÐ¾ÑÑÐ¾Ð¸Ñ source (Ð¾ÑÐºÑÐ´Ð°-ÑÑÐ¾ Ð±ÑÐ°ÑÑ) Ð¸ index (ÐºÑÐ´Ð° ÑÑÐ¾ Ð¿Ð¸ÑÐ°ÑÑ Ð¸ ÐºÐ°Ðº ÐµÐ³Ð¾ Ð¸Ð½Ð´ÐµÐºÑÐ¸ÑÐ¾Ð²Ð°ÑÑ)
+     * Ð¨Ð°Ð±Ð»Ð¾Ð½ ÑÐµÐºÑÐ¸Ð¸ Ð½Ð°ÑÐ¾Ð´Ð¸ÑÑÑÑ Ð² ÑÐ°ÑÑÐ¸ÑÐµÐ½Ð¸Ð¸ etc/config/section.conf
+     *
+     * @param  string $name    Ð½Ð°Ð·Ð²Ð°Ð½Ð¸Ðµ (ÐºÐ¾Ð´ Ð¸Ð½Ð´ÐµÐºÑÐ°)
+     * @param  object $indexer ÐÐ½Ð´ÐµÐºÑÐ°ÑÐ¾Ñ! Ð¸Ð½Ð´ÐµÐºÑÐ°
+     *
+     * @return string Ð³Ð¾ÑÐ¾Ð²Ð°Ñ ÑÐµÐºÑÐ¸Ñ
      */
     protected function _getSectionConfig($name, $indexer)
     {
+        $sqlHost = Mage::getConfig()->getNode('global/resources/default_setup/connection/host');
+        $sqlPort = 3306;
+
+        if (count(explode(':', $sqlHost)) == 2) {
+            $arr = explode(':', $sqlHost);
+            $sqlHost = $arr[0];
+            $sqlPort = $arr[1];
+        }
+
         $data = array(
             'name'             => $name,
-            'sql_host'         => Mage::getConfig()->getNode('global/resources/default_setup/connection/host'),
+            'sql_host'         => $sqlHost,
+            'sql_port'         => $sqlPort,
             'sql_user'         => Mage::getConfig()->getNode('global/resources/default_setup/connection/username'),
             'sql_pass'         => Mage::getConfig()->getNode('global/resources/default_setup/connection/password'),
             'sql_db'           => Mage::getConfig()->getNode('global/resources/default_setup/connection/dbname'),
@@ -252,10 +330,9 @@ class Mirasvit_SearchSphinx_Model_Engine_Sphinx extends Mirasvit_SearchIndex_Mod
             'sql_query'        => $this->_getSqlQuery($indexer),
             'sql_query_delta'  => $this->_getSqlQueryDelta($indexer),
             'sql_attr_uint'    => $indexer->getPrimaryKey(),
-            'stopwords'        => Mage::getBaseDir('var').DS.'sphinx'.DS.'stopwords.txt',
-            'exceptions'       => Mage::getBaseDir('var').DS.'sphinx'.DS.'synonyms.txt',
-            'index_path'       => Mage::getBaseDir('var').DS.'sphinx'.DS.$name,
-            'delta_index_path' => Mage::getBaseDir('var').DS.'delta',
+            'min_word_len'     => Mage::getStoreConfig(Mage_CatalogSearch_Model_Query::XML_PATH_MIN_QUERY_LENGTH),
+            'index_path'       => $this->_basePath.DS.$name,
+            'delta_index_path' => $this->_basePath.DS.$name.'_delta',
         );
 
         foreach ($data as $key => $value) {
@@ -269,188 +346,13 @@ class Mirasvit_SearchSphinx_Model_Engine_Sphinx extends Mirasvit_SearchIndex_Mod
         return $config;
     }
 
-    protected function _makeStopwordsFile()
-    {
-        $stopwords = unserialize(Mage::getStoreConfig('searchsphinx/advanced/stopwords'));
-        $tofile    = array();
-        foreach ($stopwords as $value) {
-            $word          = trim($value['stopword']);
-            $tofile[$word] = $word;
-        }
-
-        ksort($tofile);
-        file_put_contents($this->_stopwordsFilepath, implode("\n", $tofile));
-    }
-
-    protected function _makeSynonymsFile()
-    {
-        $synonyms = unserialize(Mage::getStoreConfig('searchsphinx/advanced/synonyms'));
-        $tofile   = array('word => synonym');
-
-        foreach ($synonyms as $value) {
-            $base    = $value['word'];
-            $words   = explode(',', $value['synonyms']);
-            $words[] = $base;
-
-            foreach ($words as $a) {
-                foreach ($words as $b) {
-                    $a = trim($a);
-                    $b = trim($b);
-                    if ($a && $b && $a != $b) {
-                        $tofile[$a.$b] = $a.' => '.$b;
-                        $tofile[$b.$a] = $b.' => '.$a;
-                    }
-                }
-            }
-        }
-
-        ksort($tofile);
-        file_put_contents($this->_synonymsFilepath, implode("\n", $tofile));
-    }
-
-    public function reindex($delta = false)
-    {
-        $this->makeConfigFile();
-
-        if (!$this->isIndexerFounded()) {
-            Mage::throwException($this->_indexerCommand.': command not found');
-        }
-
-        if (!$this->isIndexerRunning()) {
-            if ($delta) {
-                $index = 'delta';
-            }
-
-            $indexes = Mage::helper('searchindex/index')->getIndexes();
-            foreach ($indexes as $index) {
-                $exec   = $this->_exec($this->_indexerCommand.' --config '.$this ->_configFilepath.' --rotate '.$index->getCode());
-                $result = ($exec['status'] == 0) || (strpos($exec['data'], self::REINDEX_SUCCESS_MESSAGE) !== FALSE);
-
-                if (!$result) {
-                    Mage::throwException('Error on reindex '.$exec['data']);
-                }
-            }
-            $this->restart();
-        } else {
-            Mage::throwException('Reindex already run, please wait... '.$this->isIndexerRunning());
-        }
-
-        return $this;
-    }
-
-    public function start()
-    {
-        $this->stop();
-        if (!$this->isSearchdFounded()) {
-            Mage::throwException($this->_searchdCommand.': command not found');
-        }
-
-        $this->makeConfigFile();
-
-        $command = $this->_searchdCommand.' --config '.$this->_configFilepath;
-        $exec = $this->_exec($command);
-        if ($exec['status'] !== 0) {
-            Mage::throwException('Error when running searchd '.$exec['data']);
-        }
-
-        return $this;
-    }
-
-    public function stop()
-    {
-        $command = '/usr/bin/killall -9 '.self::SEARCHD;
-        $exec = $this->_exec($command);
-
-        return $this;
-    }
-
-    public function restart()
-    {
-        $this->makeConfigFile();
-
-        $this->stop();
-        $this->start();
-
-        return $this;
-    }
-
-    public function isIndexerRunning()
-    {
-        $status = false;
-
-        $command = 'ps aux | grep '.self::INDEXER.' | grep '.$this->_configFilepath;
-        $exec = $this->_exec($command);
-        if ($exec['status'] === 0) {
-            $pos = strpos($exec['data'], '--rotate');
-            if ($pos !== false) {
-                $status = $exec['data'];
-                break;
-            }
-        }
-
-        return $status;
-    }
-
-    public function isSearchdRunning()
-    {
-        if (!$this->isSearchdFounded()) {
-            return false;
-        }
-
-        $command = 'ps aux | grep '.self::SEARCHD.' | grep '.$this->_configFilepath;
-        $exec = $this->_exec($command);
-
-        if ($exec['status'] === 0) {
-            $pos = strpos($exec['data'], self::SEARCHD.' --config');
-
-            if ($pos !== false) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function isSearchdFounded()
-    {
-        $exec = $this->_exec('which '.$this->_searchdCommand);
-        if ($exec['status'] !== 0) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public function isIndexerFounded()
-    {
-        $exec = $this->_exec('which '.$this->_indexerCommand);
-        if ($exec['status'] !== 0) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public function reindexDelta()
-    {
-        return $this->reindex(true);
-    }
-
-    public function mergeDeltaWithMain()
-    {
-        $output = array();
-        @exec($this->_indexerCommand.' --config '.$this ->_configFilepath.' --merge '.$this->_spxIndex.' delta --merge-dst-range deleted 0 0 --rotate', $output, $error);
-    }
-
-    protected function _exec($command)
-    {
-        $status = null;
-        $data   = array();
-        exec($command, $data, $status);
-
-        return array('status' => $status, 'data' => implode("\n", $data));
-    }
-
+    /**
+     * ÐÐ¾Ð·Ð²ÑÐ°ÑÐ°ÐµÑ Ð½Ð°ÑÐ°Ð»ÑÐ½ÑÐ¹ sql Ð·Ð°Ð¿ÑÐ¾Ñ (ÑÑÑÐ°Ð½Ð¾Ð²Ð¸ÑÑ ÑÑÐ°ÑÑÑ Ð² updated = 0)
+     *
+     * @param  object $indexer
+     *
+     * @return string
+     */
     protected function _getSqlQueryPre($indexer)
     {
         $table = $indexer->getTableName();
@@ -460,6 +362,13 @@ class Mirasvit_SearchSphinx_Model_Engine_Sphinx extends Mirasvit_SearchIndex_Mod
         return $sql;
     }
 
+    /**
+     * ÐÐ¾Ð·Ð²ÑÐ°ÑÐ°ÐµÑ sql Ð·Ð°Ð¿ÑÐ¾Ñ, Ð²ÑÐ¿Ð¾Ð»Ð½ÑÑ ÐºÐ¾ÑÐ¾ÑÑÐ¹ ÑÑÐ¸Ð½ÐºÑ Ð¿Ð¾Ð»ÑÑÐ°ÐµÑ Ð²ÑÐµ! Ð¸Ð½Ð´ÐµÐºÑÐ¸ÑÑÐµÐ¼ÑÐµ Ð´Ð°Ð½Ð½ÑÐµ
+     *
+     * @param  object $indexer
+     *
+     * @return string
+     */
     protected function _getSqlQuery($indexer)
     {
         $table = $indexer->getTableName();
@@ -469,6 +378,13 @@ class Mirasvit_SearchSphinx_Model_Engine_Sphinx extends Mirasvit_SearchIndex_Mod
         return $sql;
     }
 
+    /**
+     * ÐÐ¾Ð·Ð²ÑÐ°ÑÐ°ÐµÑ sql Ð·Ð°Ð¿ÑÐ¾Ñ, Ð½Ð° Ð²ÑÐ±Ð¾ÑÐºÑ Ð²ÑÐµÑ ÐµÐ»ÐµÐ¼ÐµÐ½ÑÐ¾Ð² Ð´Ð»Ñ Ð´ÐµÐ»ÑÐ°-ÑÐµÐ¸Ð½Ð´ÐµÐºÑÐ° (Ð¾Ð±Ð½Ð¾Ð²Ð»ÐµÐ½Ð½ÑÑ ÑÐ»ÐµÐ¼ÐµÐ½ÑÐ¾Ð²)
+     *
+     * @param  object $indexer
+     *
+     * @return string
+     */
     protected function _getSqlQueryDelta($indexer)
     {
         $sql = $this->_getSqlQuery($indexer);

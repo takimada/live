@@ -9,17 +9,23 @@
  *
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
- * @version   2.2.8
- * @revision  277
- * @copyright Copyright (C) 2013 Mirasvit (http://mirasvit.com/)
+ * @version   2.3.1
+ * @revision  710
+ * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
  */
 
 
 class Mirasvit_MstCore_Model_Notification extends Mage_Core_Model_Abstract
 {
-    public function check($e) {
+    public function check($e)
+    {
         $section = Mage::app()->getRequest()->getParam('section');
+        $module = Mage::app()->getRequest()->getControllerModule();
+        
         if ($helper = Mage::helper('mstcore/code')->getCodeHelper2($section)) {
+            $helper->checkConfig();
+        }
+        if ($helper = Mage::helper('mstcore/code')->getCodeHelper2($module)) {
             $helper->checkConfig();
         }
     }

@@ -51,4 +51,5 @@ class Moo_Catalog_Model_Gallery_CloudZoom_Position
             )
         );
     }
+
 }

@@ -9,20 +9,21 @@
  *
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
- * @version   2.2.8
- * @revision  277
- * @copyright Copyright (C) 2013 Mirasvit (http://mirasvit.com/)
+ * @version   2.3.1
+ * @revision  710
+ * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
  */
 
 
-
-
+/**
+ * @category Mirasvit
+ * @package  Mirasvit_SearchAutocomplete
+ */
 class Mirasvit_Searchautocomplete_AjaxController extends Mage_Core_Controller_Front_Action
 {
     public function getAction()
     {
         $this->loadLayout();
-
         $query = Mage::helper('catalogsearch')->getQuery();
         $query->setStoreId(Mage::app()->getStore()->getId());
         $result = array();
@@ -46,10 +47,16 @@ class Mirasvit_Searchautocomplete_AjaxController extends Mage_Core_Controller_Fr
             if ($this->getRequest()->getParam('cat')) {
                 $resultBlock->setCategoryId(intval($this->getRequest()->getParam('cat')));
             }
+
+            if ($this->getRequest()->getParam('index')) {
+                $resultBlock->setIndexFilter($this->getRequest()->getParam('index'));
+            }
+
             $resultBlock->init();
 
             $result['items']   = $resultBlock->toHtml();
             $result['success'] = true;
+            $result['query']   = $query->getQueryText();
 
             Mage::helper('catalogsearch')->getQuery()->save();
         } else {
