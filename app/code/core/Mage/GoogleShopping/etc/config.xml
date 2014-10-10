@@ -197,6 +197,13 @@
                         <currency>CHF</currency>
                         <currency_name>Swiss Franc</currency_name>
                     </CH>
+                    <TR translate="name currency_name">
+                        <name>Turkey</name>
+                        <language>tr</language>
+                        <locale>tr_TR</locale>
+                        <currency>YTL</currency>
+                        <currency_name>Türk Lirası</currency_name>
+                    </TR>
                     <GB translate="name currency_name">
                         <name>United Kingdom</name>
                         <language>en</language>
