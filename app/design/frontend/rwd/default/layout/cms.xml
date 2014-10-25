@@ -39,11 +39,13 @@ Default layout, loads most of the pages
                 -->
                 <action method="setBlockId"><block_id>footer_links_company</block_id></action>
             </block>
-            <block type="cms/block" name="cms_footer_links_sm" after="footer_links2">
-                <!--
-                    The content of this block is taken from the database by its block_id.
-                    You can manage it in admin CMS -> Static Blocks
-                -->
+            <block type="cms/block" name="footer_links_site" after="footer_links">
+                <action method="setBlockId"><block_id>footer_links_site</block_id></action>
+            </block>
+			<block type="cms/block" name="footer_links_account" after="footer_links">
+                <action method="setBlockId"><block_id>footer_links_account</block_id></action>
+            </block>
+			<block type="cms/block" name="cms_footer_links_sm" after="footer_links">
                 <action method="setBlockId"><block_id>footer_links_sm</block_id></action>
             </block>
         </reference>

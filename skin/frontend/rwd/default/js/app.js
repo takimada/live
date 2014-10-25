@@ -219,8 +219,8 @@ $j(document).ready(function () {
     // Sub Menus
 
     nav.find('li.level1 a.has-children').on('click', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
+        //e.preventDefault();
+        //e.stopPropagation();
 
         var elem = $j(this).parent();
 

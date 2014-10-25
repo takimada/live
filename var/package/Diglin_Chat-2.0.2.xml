@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<package>
+    <name>Diglin_Chat</name>
+    <version>2.0.2</version>
+    <stability>stable</stability>
+    <license uri="http://www.opensource.org/licenses/osl-3.0.php">OSL v3.0</license>
+    <channel>community</channel>
+    <extends/>
+    <summary>Official Magento Extension to integrate into your Magento shop the Zopim Chat service. Customize the chat per store view.</summary>
+    <description>&lt;h1&gt;Zopim Live Chat - Official Version 2&lt;/h1&gt;&#xD;
+&lt;p&gt;&#xD;
+    &lt;a href="http://bit.ly/1kcTNL5"&gt;&lt;img src="http://www.zopim.com/static/www_new/images/refer/zopim_referral-1.1.png" /&gt;&lt;/a&gt;&#xD;
+&lt;/p&gt;&#xD;
+&#xD;
+&lt;h2&gt;Overview&lt;/h2&gt;&#xD;
+&#xD;
+&lt;p&gt;Did you know that 83% of consumers need some kind of customer support when making an online purchase? And 45% of customers abandon an online transaction if their questions or concerns are not addressed quickly.&lt;/p&gt;&#xD;
+&lt;p&gt;Businesses that interact with potential customers online are better placed to build a connection and increase their revenues. The Zopim live chat app will let you answer your customer&#x2019;s questions in real time and ease them into a purchase.&lt;/p&gt;&#xD;
+&lt;p&gt;With Zopim Live Chat, visitors to your website will be able to chat directly with you through the widget and you can manage multiple conversations through the online Dashboard.&lt;/p&gt;&#xD;
+&#xD;
+&lt;h3&gt;Key Features:&lt;/h3&gt;&#xD;
+&#xD;
+&lt;ul&gt;&#xD;
+    &lt;li&gt;Mobile optimized: your customers can chat with you from any device using our mobile optimized chat widget&lt;/li&gt;&#xD;
+    &lt;li&gt;Proactive chat: rather than chatting with every single person yourself, you can increase the chances of high value engagement (and more sales) by using Triggers to automatically reach every visitor&lt;/li&gt;&#xD;
+    &lt;li&gt;Advanced analytics: our analytics dashboard lets you monitor visitor flow, usage patterns, and lets you jump in whenever a customer might need help&lt;/li&gt;&#xD;
+&lt;/ul&gt;&#xD;
+&#xD;
+&lt;h3&gt;What makes Zopim the best choice for live chat?&lt;/h3&gt;&#xD;
+&lt;ul&gt;&#xD;
+    &lt;li&gt;We&#x2019;re the most popular live chat provider in the world - loved by over 150,000 businesses&lt;/li&gt;&#xD;
+    &lt;li&gt;A simple and highly customizable chat widget to complement your website and taste&lt;/li&gt;&#xD;
+    &lt;li&gt;User friendly dashboard lets you monitor visitor activity and manage chats&lt;/li&gt;&#xD;
+    &lt;li&gt;24 hour live chat support from our trained experts on any weekday (visit &lt;a href="http://bit.ly/1kcTNL5"&gt;Zopim.com&lt;/a&gt;)&lt;/li&gt;&#xD;
+    &lt;li&gt;Available in over 40 languages&lt;/li&gt;&#xD;
+&lt;/ul&gt;&#xD;
+&#xD;
+&lt;h3&gt;Some Geeky Facts&lt;/h3&gt;&#xD;
+&lt;ul&gt;&#xD;
+    &lt;li&gt;Works across most major desktop and mobile browsers (Internet Explorer 6+, Firefox, Google Chrome, Opera, Safari)&lt;/li&gt;&#xD;
+    &lt;li&gt;Average uptime is 99.8%.&lt;/li&gt;&#xD;
+    &lt;li&gt;HTML5 dashboard&lt;/li&gt;&#xD;
+    &lt;li&gt;iPhone, Android, and BlackBerry apps&lt;/li&gt;&#xD;
+    &lt;li&gt;Integrates seamlessly with UserVoice, Salesforce, Highrise, Batchbook, Zendesk, vTiger and many more.&lt;/li&gt;&#xD;
+&lt;/ul&gt;&#xD;
+&#xD;
+&lt;h2&gt;Documentation&lt;/h2&gt;&#xD;
+&#xD;
+&lt;h3&gt;Extension features&lt;/h3&gt;&#xD;
+&lt;p&gt;This module allows you to integrate the Zopim Chat service into your Magento installation in a quick way. You can sign in into Zopim from Magento backend, it will enable and automatically configure the basic configuration of your Zopim Widget.&lt;/p&gt;&#xD;
+&lt;p&gt;Additionally, you can use the advanced configuration to configure all options available from the Zopim Dashboard but directly from your Magento installation and per store view if needed:&lt;/p&gt;&#xD;
+&lt;ul&gt;&#xD;
+    &lt;li&gt;Chat Window theme (color, title, size, position)&lt;/li&gt;&#xD;
+    &lt;li&gt;Chat Badge (text, image, color)&lt;/li&gt;&#xD;
+    &lt;li&gt;Chat Bubble (title, color)&lt;/li&gt;&#xD;
+    &lt;li&gt;Concierge (title, byline, avatar picture)&lt;/li&gt;&#xD;
+    &lt;li&gt;Message Style (coming soon)&lt;/li&gt;&#xD;
+    &lt;li&gt;Minimized Chat Button (online and offline messages)&lt;/li&gt;&#xD;
+&lt;/ul&gt;&#xD;
+&#xD;
+&lt;h3&gt;Post installation&lt;/h3&gt;&#xD;
+&lt;p&gt;If you have an error 404 after install the extension and you get access to the configuration pages, do the followings:&lt;/p&gt;&#xD;
+&#xD;
+&lt;ul&gt;&#xD;
+    &lt;li&gt;Clear your cache, see the menu &lt;strong&gt;System &gt; Cache Management&lt;/strong&gt;&lt;/li&gt;&#xD;
+    &lt;li&gt;Login and logout from your backend to update the access control&lt;/li&gt;&#xD;
+    &lt;li&gt;Or after installation, save again the Administrator Role to get access to the configuration page of this module. Go to your Magento Backend, then Menu &lt;strong&gt;System &gt; Permissions &gt; Roles &gt; Administrator&lt;/strong&gt; and save again this role.&lt;/li&gt;&#xD;
+    &lt;li&gt;Just configure the key of your account by signin into your Zopim account from the Magento menu &lt;strong&gt;Zopim Chat &gt; Account Setup&lt;/strong&gt; to automatically set the basic configuration or go into the configuration &lt;strong&gt;System &gt; Configuration &gt; Diglin &gt; Zopim Chat&lt;/strong&gt; and fill manually the fields "Email Address" and "Key". If you don't have an account, you can get it one directly from the Magento configuration Zopim Chat page, thanks to the link or directly get one from &lt;a href="http://bit.ly/1kcTNL5"&gt;Zopim Website&lt;/a&gt;.&#xD;
+        If you do manually, you have to find this key. Go into the &lt;a href="http://dashboard.zopim.com"&gt;Zopim Dashboard&lt;/a&gt; then click on "Widget" in the sidebar and find the link "Embed Zopim Live Chat Widget. In the area where the html code is generated, you can find after &lt;strong&gt;//zopim.com/?xyzbufoisfgsigsgdgjbsk&lt;/strong&gt;. Copy the text after the question mark '?' to the Magento configuration field for the &lt;strong&gt;"Key of your account"&lt;/strong&gt;.&lt;/li&gt;&#xD;
+&lt;/ul&gt;&#xD;
+&#xD;
+&lt;h3&gt;Customized template&lt;/h3&gt;&#xD;
+&lt;p&gt;If you have a customized template, check that you have &lt;strong&gt;getChildHtml('before_body_end')&lt;/strong&gt; in files &lt;strong&gt;/frontend/mypackage/mytemplate/template/page/1column.phtml, 2columns-left.phtml, 2columns-right.phtml, 3columns.phtml and empty.phtml&lt;/strong&gt; after &lt;strong&gt;getChildHtml('footer')&lt;/strong&gt; Eventually you will need to copy the file &lt;strong&gt;app/design/frontend/base/default/layout/chat.xml&lt;/strong&gt; in your layout template.&lt;/p&gt;&#xD;
+&#xD;
+&lt;h2&gt;Demo&lt;/h2&gt;&#xD;
+&lt;ul&gt;&#xD;
+    &lt;li&gt;Frontend - &lt;a href="http://demo.diglin.com/magento/"&gt;http://demo.diglin.com/magento/&lt;/a&gt;&lt;/li&gt;&#xD;
+    &lt;li&gt;Backend (login: zopim / pass: zopim2014) - &lt;a href="http://demo.diglin.com/magento/admin"&gt;http://demo.diglin.com/magento/admin&lt;/a&gt;&lt;/li&gt;&#xD;
+&lt;/ul&gt;&#xD;
+&#xD;
+&lt;h2&gt;Support&lt;/h2&gt;&#xD;
+&lt;ul&gt;&#xD;
+    &lt;li&gt;Regarding the Magento Extension: for any questions, installation support or problem, please visit &lt;a href="http://support.diglin.com/"&gt;http://support.diglin.com/&lt;/a&gt;&lt;/li&gt;&#xD;
+    &lt;li&gt;Regarding Zopim Chat itself, please visit &lt;a href="http://bit.ly/1kcTNL5"&gt;http://www.zopim.com&lt;/a&gt;&lt;/li&gt;&#xD;
+    &lt;li&gt;Code is available on &lt;a href="https://github.com/diglin/Diglin_Chat"&gt;Github&lt;/a&gt;&lt;/li&gt;&#xD;
+&lt;/ul&gt;</description>
+    <notes>- 2.0.2: fix a bug on specific server configuration - Zend_Log error fix&#xD;
+- 2.0.0: Complete new version - support of the new widget and API</notes>
+    <authors><author><name>diglin</name><user>diglin</user><email>sly@diglin.com</email></author></authors>
+    <date>2014-05-22</date>
+    <time>09:12:10</time>
+    <contents><target name="mageetc"><dir name="modules"><file name="Diglin_Chat.xml" hash="ee814a25abef4007039bb6b6c7c5095a"/></dir></target><target name="magecommunity"><dir name="Diglin"><dir name="Chat"><dir name="Block"><dir name="Adminhtml"><dir name="Config"><dir name="Source"><file name="Heading.php" hash="7aa859ee89fc458d2915156bc68cefbc"/><file name="Hint.php" hash="b870ee1a0eea1ceb75f27faa72def9f2"/></dir></dir><file name="Dashboard.php" hash="a4d0892fb43ab0115f90b0deee55d893"/></dir><file name="Display.php" hash="68575831d709b9768e2139d171de9caa"/></dir><dir name="Helper"><file name="Data.php" hash="69875b40b36e98dbf1c17af7ebd55868"/></dir><dir name="Model"><dir name="Config"><dir name="Source"><file name="Api.php" hash="708d2687281bc14a8c13ff703582cc78"/><file name="Badgecolor.php" hash="cb4a360326283348c749373b027058b8"/><file name="Bubblecolor.php" hash="6bdb70b755e729cd95ce1dd41622255c"/><file name="Buttonposition.php" hash="53e97510125d87df2acea25b3940462c"/><file name="Classicthemes.php" hash="cc7860febf26fbb39983b15b4c756e38"/><file name="Language.php" hash="0842d7854a93f5307d06e7d590a6f5f1"/><file name="Layout.php" hash="6cbf67a004f4e44de213e4cec41061ea"/><file name="Mobileposition.php" hash="6431f2a9d8542b50dade4cfc0ae10afe"/><file name="Showhide.php" hash="24d7405b13060fc111318d3a65b2bcd4"/><file name="Simpleadvanced.php" hash="c41127c2c5cc74f8f57f79bc0270a6df"/><file name="Themes.php" hash="74a9122d0464578ee6e0e06b63ee203b"/><file name="Windowposition.php" hash="1aa8250dc578b816759fb37206c11a25"/><file name="Windowsize.php" hash="3236f370ebe39da335e589a8cf7f92da"/></dir></dir><dir name="Resource"><file name="Setup.php" hash="9935c98bab4a0b328400a69ee44a60fa"/></dir></dir><dir name="controllers"><dir name="Adminhtml"><file name="IndexController.php" hash="2567f02f376df74272f08f5fbd93bba0"/></dir></dir><dir name="data"><dir name="diglinchat_setup"><file name="data-upgrade-1.3.0-2.0.1.php" hash="406d1b5f62d8561da856f82111c457a6"/></dir></dir><dir name="etc"><file name="adminhtml.xml" hash="5ea4a51b111558c1d3c45dde16202753"/><file name="config.xml" hash="71c1e345cedef83dfe5bc75f8525c8fd"/><file name="system.xml" hash="d55a42e0bfef851718035df1574a14b0"/></dir></dir></dir></target><target name="magedesign"><dir name="frontend"><dir name="base"><dir name="default"><dir name="layout"><file name="chat.xml" hash="577c2e765ad336fb5b77ceaef3b16fb2"/></dir><dir name="template"><dir name="chat"><file name="test.phtml" hash="1b617e1f4e3b70c228cd6e03adf81895"/><file name="widget.phtml" hash="523956f4c147661de3d4b15e06f89d89"/></dir></dir></dir></dir></dir><dir name="adminhtml"><dir name="default"><dir name="default"><dir name="layout"><file name="chat.xml" hash="52b06472b199886b05543cf202a5c568"/></dir><dir name="template"><dir name="chat"><file name="account.phtml" hash="71239173d840640ada4a704c484d5044"/><file name="dashboard.phtml" hash="ce622d160176c15ad4d06f9e56295e9c"/></dir></dir></dir></dir></dir></target></contents>
+    <compatible/>
+    <dependencies><required><php><min>5.2.9</min><max>6.0.0</max></php></required></dependencies>
+</package>
