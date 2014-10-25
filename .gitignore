@@ -27,3 +27,5 @@ errors/local.xml
 development/db/*.sql
 development/db/*.sql.*
 sitemap.xml
+.idea
+nbproject
