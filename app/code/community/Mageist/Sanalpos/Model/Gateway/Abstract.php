@@ -616,7 +616,7 @@ abstract class Mageist_Sanalpos_Model_Gateway_Abstract extends Varien_Object {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSLVERSION, 3);
+        curl_setopt($ch, CURLOPT_SSLVERSION, 0);
 
         //curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
         //curl_setopt($ch, CURLOPT_PROXY, '127.0.0.1:1500');
